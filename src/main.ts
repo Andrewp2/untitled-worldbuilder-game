@@ -66,7 +66,6 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       <section id="blueprint-drawer" class="build-tray" aria-label="Blueprints">
         <h2>Blueprints</h2>
         <div class="plans">${plans.map(plan => `<button class="plan ${plan}" id="build-${plan}" ${plan === 'warden' ? 'hidden' : ''} aria-pressed="false" aria-label="Build ${blueprintNames[plan]}: ${describeCost(recipes[plan])}" title="${blueprintNames[plan]} · ${describeCost(recipes[plan])}"><span class="plan-picture">${blueprintIcon(plan)}</span><b class="plan-stock" aria-hidden="true"></b><span class="plan-cost" aria-hidden="true">${costIcons(recipes[plan])}</span></button>`).join('')}
-          <button id="mode-dismantle" class="plan salvage" aria-label="Take apart tool" title="Take apart a relay or stopped rover" aria-pressed="false">${icon('dismantle')}</button>
         </div>
       </section>
       <section class="selected-panel" aria-label="Selected object">
@@ -141,7 +140,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       <div><dt>Missions</dt><dd>Choose a location on the world map, then complete its main objective. Finishing pauses the mission: return to the world map or try the bonus. Each level has one main flag. Only after reaching it does the bonus star and its objective appear. Choose Try bonus to continue. Beat missions in map order to unlock the next one. Completed locations and earned stars are saved in this browser. Revisiting or restarting begins a fresh mission.</dd></div>
       <div><dt>Batteries</dt><dd>Charge powers movement and absorbs damage. Each rover needs a battery. Empty batteries work for building, but cannot power movement or actions. Full charge is ${BATTERY_CAPACITY}; moving costs ${MOVE_ENERGY} per tile, and each pickup or drop-off costs ${TRANSFER_ENERGY}. Using the last charge leaves an intact, powerless rover.</dd></div>
       <div><dt>Replace battery</dt><dd>Drop a battery with more charge within the rover’s 3×3 area. Stop the rover, then choose Replace battery. The old battery returns to the ground. Carried batteries keep their charge; rebuilding a rover does not refill its battery.</dd></div>
-      <div><dt>Take apart</dt><dd>Select a relay or stopped rover, then Take apart to recover all parts and cargo. Or choose Take apart in the blueprint tray, then click the object.</dd></div>
+      <div><dt>Take apart</dt><dd>Select a relay or stopped rover, then use its Take apart button to recover all parts and cargo.</dd></div>
       <div><dt>Stop and cancel</dt><dd>Stop ends a rover’s order after its current step. Esc cancels targeting; press it again to clear selection.</dd></div>
       <div><dt>Camera</dt><dd>Drag, WASD or arrows to pan. Scroll to zoom. F centers the selection; Home shows the whole island.</dd></div>
     </dl>
@@ -291,7 +290,7 @@ function updateHud(state: ViewState): void {
   el('rover-actions').classList.toggle('with-terrain', u?.kind === 'scoop');
   el<HTMLButtonElement>('mode-dig').disabled = !u || u.battery < TERRAIN_ENERGY || !!load(u.cargo);
   el<HTMLButtonElement>('mode-fill').disabled = !u || u.battery < TERRAIN_ENERGY || !u.cargo.soil;
-  for (const mode of ['move', 'pickup', 'drop', 'dig', 'fill', 'push', 'uproot', 'plant', 'dismantle']) el(`mode-${mode}`).setAttribute('aria-pressed', String(state.mode === mode));
+  for (const mode of ['move', 'pickup', 'drop', 'dig', 'fill', 'push', 'uproot', 'plant']) el(`mode-${mode}`).setAttribute('aria-pressed', String(state.mode === mode));
   for (const plan of plans) {
     const button = el<HTMLButtonElement>(`build-${plan}`), left = state.blueprints[plan] ?? 0;
     button.hidden = state.blueprints[plan] === undefined;
@@ -303,7 +302,7 @@ function updateHud(state: ViewState): void {
   }
   el('mode-readout').hidden = state.mode === 'move';
   el('mode-symbol').innerHTML = state.mode === 'build' ? blueprintIcon(state.blueprint) : icon(state.mode);
-  el('mode-name').textContent = ({ move:'Move', pickup:'Pick up', drop:'Drop off', dig:'Dig', fill:'Fill', push:'Push', uproot:'Uproot', plant:'Plant', build:blueprintNames[state.blueprint], dismantle:'Take apart' })[state.mode];
+  el('mode-name').textContent = ({ move:'Move', pickup:'Pick up', drop:'Drop off', dig:'Dig', fill:'Fill', push:'Push', uproot:'Uproot', plant:'Plant', build:blueprintNames[state.blueprint] })[state.mode];
   el('tile-info').hidden = !state.context;
   el('tile-info').textContent = state.context;
   el('mission-goal').textContent = state.bonus.unlocked ? state.bonus.reached ? 'Bonus star earned' : state.bonus.description : state.mission.goal;
@@ -491,7 +490,7 @@ renderWorldProgress();
 el('game').setAttribute('role','img');
 el('game').tabIndex = -1;
 el('game').setAttribute('aria-label','Island world. Choose a mission using the pictured markers.');
-for (const mode of ['move','pickup','drop','dig','fill','push','uproot','plant','dismantle'] as Mode[]) el(`mode-${mode}`).onclick = () => { scene.setMode(mode); focusMap(); };
+for (const mode of ['move','pickup','drop','dig','fill','push','uproot','plant'] as Mode[]) el(`mode-${mode}`).onclick = () => { scene.setMode(mode); focusMap(); };
 for (const plan of plans) el(`build-${plan}`).onclick = () => { scene.setMode('build',plan); focusMap(); };
 el('cancel-mode').onclick = () => { scene.setMode('move'); focusMap(); };
 el('replace-battery').onclick = () => { scene.replaceSelectedBattery(); focusMap(); };

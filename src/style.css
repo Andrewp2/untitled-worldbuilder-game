@@ -99,8 +99,6 @@ main { position:relative; }
 .plan:hover .plan-cost,.plan:focus-visible .plan-cost,.plan[aria-pressed="true"] .plan-cost { display:flex; }
 .resource-count { display:inline-flex; align-items:center; gap:2px; font-size:12px; }
 .resource-count b { font-weight:800; }
-.salvage { width:32px; margin-left:4px; }
-.salvage svg { width:26px; height:26px; }
 .camera-controls { position:absolute; right:25px; top:74px; display:flex; align-items:center; gap:6px; z-index:5; }
 .camera-controls button { width:30px; height:30px; display:grid; place-items:center; background:transparent; border:0; color:#9cbdd5; border-radius:50%; }
 .camera-controls button:hover { color:#ffdc59; background:#ffffff0c; }

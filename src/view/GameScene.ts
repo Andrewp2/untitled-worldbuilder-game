@@ -13,7 +13,7 @@ import { GROUND_MARK_DEPTH, STATUS_DEPTH, worldDepth } from './grounding';
 import { pickObject, pictureContains } from './picking';
 import type { SoundCue } from '../audio/score';
 
-export type Mode = 'move' | WorkAction | 'build' | 'dismantle';
+export type Mode = 'move' | WorkAction | 'build';
 export type ViewState = {
   mission: Pick<Mission, 'id' | 'name' | 'goal' | 'brief' | 'blueprints'> & { goals: Pick<Goal, 'id' | 'name' | 'cargo'>[] };
   complete: boolean;
@@ -187,11 +187,6 @@ export class GameScene extends Phaser.Scene {
       this.bridge.message(`${name} built.${this.blueprint !== 'relay' && usesBattery(this.blueprint) && this.simulation.unit(result.id!).battery === 0 ? ' Empty battery—replace it before moving.' : ''}`);
       this.puff(cell); this.syncObjects(); this.emitState(); return;
     }
-    if (this.mode === 'dismantle') {
-      const id = object?.id ?? this.simulation.relayAt(cell)?.id;
-      if (!id) { this.bridge.message('Choose a relay or stopped rover.', true); return; }
-      this.takeApart(id); return;
-    }
     if (this.mode === 'pickup' || this.mode === 'drop') {
       if (!this.selectedRover() || !this.selected) return;
       const action = this.mode;
@@ -245,7 +240,7 @@ export class GameScene extends Phaser.Scene {
   }
   setMode(mode: Mode, blueprint?: Blueprint): void {
     if (!this.ready) return;
-    if (mode !== 'move' && mode !== 'build' && mode !== 'dismantle' && (!this.selectedRover() || !supportsAction(this.selectedRover()!.kind, mode))) return;
+    if (mode !== 'move' && mode !== 'build' && (!this.selectedRover() || !supportsAction(this.selectedRover()!.kind, mode))) return;
     this.mode = mode;
     if (blueprint) this.blueprint = blueprint;
     if (mode === 'build' && !this.simulation.blueprints[this.blueprint]) { this.mode = 'move'; return; }
@@ -677,7 +672,7 @@ export class GameScene extends Phaser.Scene {
         this.routes.beginPath(); this.routes.moveTo(p.x - 6, p.y); this.routes.lineTo(p.x - 1, p.y + 5); this.routes.lineTo(p.x + 8, p.y - 6); this.routes.strokePath();
       }
     }
-    if (this.selectedRover() && this.selected && this.mode !== 'move' && this.mode !== 'build' && this.mode !== 'dismantle') {
+    if (this.selectedRover() && this.selected && this.mode !== 'move' && this.mode !== 'build') {
       const u = this.simulation.unit(this.selected);
       for (const target of neighbors(u.cell)) {
         if (!terrainAt(this.simulation.grid, target)) continue;
@@ -698,7 +693,6 @@ export class GameScene extends Phaser.Scene {
     if (this.hover && terrainAt(this.simulation.grid, this.hover)) {
       const p = this.point(this.hover);
       const legal = this.mode === 'build' ? this.simulation.buildPreview(this.blueprint, this.hover).ok
-        : this.mode === 'dismantle' ? !!this.simulation.relayAt(this.hover) || this.simulation.units.some(u => key(u.cell) === key(this.hover!) && !u.next && !u.goal)
         : (this.mode === 'pickup' || this.mode === 'drop') && this.selected ? this.simulation.cargoOrderPreview(this.selected, this.mode, this.hover).ok
         : (this.mode === 'dig' || this.mode === 'fill') && this.selected ? this.simulation.terrainOrderPreview(this.selected, this.mode, this.hover).ok
         : (this.mode === 'push' || this.mode === 'uproot' || this.mode === 'plant') && this.selected ? this.simulation.obstacleOrderPreview(this.selected, this.mode, this.hover).ok
