@@ -2,6 +2,8 @@ import { BATTERY_CAPACITY, materials, type Cost, type Material, type Supplies, t
 import { modelPortrait, partColors } from './toy-models';
 
 const icons: Record<string, string> = {
+  left: '<path d="m15 5-7 7 7 7"/>',
+  right: '<path d="m9 5 7 7-7 7"/>',
   map: '<path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3zM9 3v15M15 6v15"/>',
   lock: '<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4M12 14v3"/>',
   question: '<path d="M8 8a4 4 0 1 1 6 3.5c-1.5.8-2 1.5-2 3M12 20h.01"/>',

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-30T22:24:38.105417+00:00",
+  "generatedAt": "2026-10-01T05:00:02.166488+00:00",
   "title": "Design System: Untitled",
   "extensions": {
     "colorMeta": {
@@ -8,159 +8,337 @@
         "role": "neutral",
         "displayName": "Island Frame Blue",
         "tonalRamp": [
-          "oklch(15% 0.0902 256.84)",
-          "oklch(26.43% 0.0902 256.84)",
-          "oklch(37.86% 0.0902 256.84)",
-          "oklch(49.29% 0.0902 256.84)",
-          "oklch(60.71% 0.0902 256.84)",
-          "oklch(72.14% 0.0902 256.84)",
-          "oklch(83.57% 0.0902 256.84)",
-          "oklch(95% 0.0902 256.84)"
-        ],
-        "canonical": "#063361"
-      },
-      "field": {
-        "role": "neutral",
-        "displayName": "Island Blue",
-        "tonalRamp": [
-          "oklch(15% 0.0937 253.60)",
+          "oklch(15.00% 0.0937 253.60)",
           "oklch(26.43% 0.0937 253.60)",
           "oklch(37.86% 0.0937 253.60)",
           "oklch(49.29% 0.0937 253.60)",
           "oklch(60.71% 0.0937 253.60)",
           "oklch(72.14% 0.0937 253.60)",
           "oklch(83.57% 0.0937 253.60)",
-          "oklch(95% 0.0937 253.60)"
+          "oklch(95.00% 0.0937 253.60)"
+        ]
+      },
+      "field": {
+        "role": "neutral",
+        "displayName": "Island Blue",
+        "tonalRamp": [
+          "oklch(15.00% 0.0937 253.60)",
+          "oklch(26.43% 0.0937 253.60)",
+          "oklch(37.86% 0.0937 253.60)",
+          "oklch(49.29% 0.0937 253.60)",
+          "oklch(60.71% 0.0937 253.60)",
+          "oklch(72.14% 0.0937 253.60)",
+          "oklch(83.57% 0.0937 253.60)",
+          "oklch(95.00% 0.0937 253.60)"
         ]
       },
       "panel": {
         "role": "neutral",
         "displayName": "Menu and Detail Blue",
         "tonalRamp": [
-          "oklch(15% 0.0986 256.10)",
-          "oklch(26.43% 0.0986 256.10)",
-          "oklch(37.86% 0.0986 256.10)",
-          "oklch(49.29% 0.0986 256.10)",
-          "oklch(60.71% 0.0986 256.10)",
-          "oklch(72.14% 0.0986 256.10)",
-          "oklch(83.57% 0.0986 256.10)",
-          "oklch(95% 0.0986 256.10)"
-        ],
-        "canonical": "#123b61"
+          "oklch(15.00% 0.0804 250.01)",
+          "oklch(26.43% 0.0804 250.01)",
+          "oklch(37.86% 0.0804 250.01)",
+          "oklch(49.29% 0.0804 250.01)",
+          "oklch(60.71% 0.0804 250.01)",
+          "oklch(72.14% 0.0804 250.01)",
+          "oklch(83.57% 0.0804 250.01)",
+          "oklch(95.00% 0.0804 250.01)"
+        ]
+      },
+      "dock": {
+        "role": "neutral",
+        "displayName": "Translucent Toolbox Blue",
+        "tonalRamp": [
+          "oklch(15.00% 0.0800 251.16)",
+          "oklch(26.43% 0.0800 251.16)",
+          "oklch(37.86% 0.0800 251.16)",
+          "oklch(49.29% 0.0800 251.16)",
+          "oklch(60.71% 0.0800 251.16)",
+          "oklch(72.14% 0.0800 251.16)",
+          "oklch(83.57% 0.0800 251.16)",
+          "oklch(95.00% 0.0800 251.16)"
+        ]
+      },
+      "action-surface": {
+        "role": "neutral",
+        "displayName": "Active Command Surface",
+        "tonalRamp": [
+          "oklch(15.00% 0.0460 229.78)",
+          "oklch(26.43% 0.0460 229.78)",
+          "oklch(37.86% 0.0460 229.78)",
+          "oklch(49.29% 0.0460 229.78)",
+          "oklch(60.71% 0.0460 229.78)",
+          "oklch(72.14% 0.0460 229.78)",
+          "oklch(83.57% 0.0460 229.78)",
+          "oklch(95.00% 0.0460 229.78)"
+        ]
       },
       "ink": {
         "role": "neutral",
         "displayName": "Cloud White",
         "tonalRamp": [
-          "oklch(15% 0.0091 258.34)",
+          "oklch(15.00% 0.0091 258.34)",
           "oklch(26.43% 0.0091 258.34)",
           "oklch(37.86% 0.0091 258.34)",
           "oklch(49.29% 0.0091 258.34)",
           "oklch(60.71% 0.0091 258.34)",
           "oklch(72.14% 0.0091 258.34)",
           "oklch(83.57% 0.0091 258.34)",
-          "oklch(95% 0.0091 258.34)"
+          "oklch(95.00% 0.0091 258.34)"
         ]
       },
       "muted": {
         "role": "neutral",
         "displayName": "Pale Blue",
         "tonalRamp": [
-          "oklch(15% 0.0477 245.45)",
+          "oklch(15.00% 0.0477 245.45)",
           "oklch(26.43% 0.0477 245.45)",
           "oklch(37.86% 0.0477 245.45)",
           "oklch(49.29% 0.0477 245.45)",
           "oklch(60.71% 0.0477 245.45)",
           "oklch(72.14% 0.0477 245.45)",
           "oklch(83.57% 0.0477 245.45)",
-          "oklch(95% 0.0477 245.45)"
+          "oklch(95.00% 0.0477 245.45)"
         ]
       },
       "line": {
         "role": "neutral",
         "displayName": "Blue Line",
         "tonalRamp": [
-          "oklch(15% 0.0842 249.83)",
+          "oklch(15.00% 0.0842 249.83)",
           "oklch(26.43% 0.0842 249.83)",
           "oklch(37.86% 0.0842 249.83)",
           "oklch(49.29% 0.0842 249.83)",
           "oklch(60.71% 0.0842 249.83)",
           "oklch(72.14% 0.0842 249.83)",
           "oklch(83.57% 0.0842 249.83)",
-          "oklch(95% 0.0842 249.83)"
+          "oklch(95.00% 0.0842 249.83)"
         ]
       },
       "active": {
         "role": "primary",
         "displayName": "Active Yellow",
         "tonalRamp": [
-          "oklch(15% 0.1513 94.11)",
+          "oklch(15.00% 0.1513 94.11)",
           "oklch(26.43% 0.1513 94.11)",
           "oklch(37.86% 0.1513 94.11)",
           "oklch(49.29% 0.1513 94.11)",
           "oklch(60.71% 0.1513 94.11)",
           "oklch(72.14% 0.1513 94.11)",
           "oklch(83.57% 0.1513 94.11)",
-          "oklch(95% 0.1513 94.11)"
+          "oklch(95.00% 0.1513 94.11)"
         ]
       },
       "on-active": {
         "role": "neutral",
         "displayName": "Active Text Blue",
         "tonalRamp": [
-          "oklch(15% 0.0721 253.87)",
+          "oklch(15.00% 0.0721 253.87)",
           "oklch(26.43% 0.0721 253.87)",
           "oklch(37.86% 0.0721 253.87)",
           "oklch(49.29% 0.0721 253.87)",
           "oklch(60.71% 0.0721 253.87)",
           "oklch(72.14% 0.0721 253.87)",
           "oklch(83.57% 0.0721 253.87)",
-          "oklch(95% 0.0721 253.87)"
+          "oklch(95.00% 0.0721 253.87)"
         ]
       },
       "charge": {
         "role": "secondary",
         "displayName": "Charge Lime",
         "tonalRamp": [
-          "oklch(15% 0.1742 123.80)",
-          "oklch(26.43% 0.1742 123.80)",
-          "oklch(37.86% 0.1742 123.80)",
-          "oklch(49.29% 0.1742 123.80)",
-          "oklch(60.71% 0.1742 123.80)",
-          "oklch(72.14% 0.1742 123.80)",
-          "oklch(83.57% 0.1742 123.80)",
-          "oklch(95% 0.1742 123.80)"
-        ],
-        "canonical": "#bdec4b"
+          "oklch(15.00% 0.1900 124.39)",
+          "oklch(26.43% 0.1900 124.39)",
+          "oklch(37.86% 0.1900 124.39)",
+          "oklch(49.29% 0.1900 124.39)",
+          "oklch(60.71% 0.1900 124.39)",
+          "oklch(72.14% 0.1900 124.39)",
+          "oklch(83.57% 0.1900 124.39)",
+          "oklch(95.00% 0.1900 124.39)"
+        ]
       },
       "hover": {
         "role": "neutral",
         "displayName": "Light Hover Overlay",
-        "canonical": "#ffffff12"
+        "tonalRamp": [
+          "oklch(15.00% 0.0000 89.88)",
+          "oklch(26.43% 0.0000 89.88)",
+          "oklch(37.86% 0.0000 89.88)",
+          "oklch(49.29% 0.0000 89.88)",
+          "oklch(60.71% 0.0000 89.88)",
+          "oklch(72.14% 0.0000 89.88)",
+          "oklch(83.57% 0.0000 89.88)",
+          "oklch(95.00% 0.0000 89.88)"
+        ]
+      },
+      "hover-subtle": {
+        "role": "neutral",
+        "displayName": "Subtle Hover Overlay",
+        "tonalRamp": [
+          "oklch(15.00% 0.0000 89.88)",
+          "oklch(26.43% 0.0000 89.88)",
+          "oklch(37.86% 0.0000 89.88)",
+          "oklch(49.29% 0.0000 89.88)",
+          "oklch(60.71% 0.0000 89.88)",
+          "oklch(72.14% 0.0000 89.88)",
+          "oklch(83.57% 0.0000 89.88)",
+          "oklch(95.00% 0.0000 89.88)"
+        ]
+      },
+      "utility-ink": {
+        "role": "neutral",
+        "displayName": "Utility Pale Blue",
+        "tonalRamp": [
+          "oklch(15.00% 0.0252 236.84)",
+          "oklch(26.43% 0.0252 236.84)",
+          "oklch(37.86% 0.0252 236.84)",
+          "oklch(49.29% 0.0252 236.84)",
+          "oklch(60.71% 0.0252 236.84)",
+          "oklch(72.14% 0.0252 236.84)",
+          "oklch(83.57% 0.0252 236.84)",
+          "oklch(95.00% 0.0252 236.84)"
+        ]
+      },
+      "camera-ink": {
+        "role": "neutral",
+        "displayName": "Camera Pale Blue",
+        "tonalRamp": [
+          "oklch(15.00% 0.0495 239.84)",
+          "oklch(26.43% 0.0495 239.84)",
+          "oklch(37.86% 0.0495 239.84)",
+          "oklch(49.29% 0.0495 239.84)",
+          "oklch(60.71% 0.0495 239.84)",
+          "oklch(72.14% 0.0495 239.84)",
+          "oklch(83.57% 0.0495 239.84)",
+          "oklch(95.00% 0.0495 239.84)"
+        ]
+      },
+      "marker": {
+        "role": "primary",
+        "displayName": "Marker Yellow",
+        "tonalRamp": [
+          "oklch(15.00% 0.1555 93.71)",
+          "oklch(26.43% 0.1555 93.71)",
+          "oklch(37.86% 0.1555 93.71)",
+          "oklch(49.29% 0.1555 93.71)",
+          "oklch(60.71% 0.1555 93.71)",
+          "oklch(72.14% 0.1555 93.71)",
+          "oklch(83.57% 0.1555 93.71)",
+          "oklch(95.00% 0.1555 93.71)"
+        ]
+      },
+      "locked-marker": {
+        "role": "neutral",
+        "displayName": "Locked Marker Blue",
+        "tonalRamp": [
+          "oklch(15.00% 0.0585 235.00)",
+          "oklch(26.43% 0.0585 235.00)",
+          "oklch(37.86% 0.0585 235.00)",
+          "oklch(49.29% 0.0585 235.00)",
+          "oklch(60.71% 0.0585 235.00)",
+          "oklch(72.14% 0.0585 235.00)",
+          "oklch(83.57% 0.0585 235.00)",
+          "oklch(95.00% 0.0585 235.00)"
+        ]
+      },
+      "goal-complete": {
+        "role": "secondary",
+        "displayName": "Completed Goal Lime",
+        "tonalRamp": [
+          "oklch(15.00% 0.1656 122.02)",
+          "oklch(26.43% 0.1656 122.02)",
+          "oklch(37.86% 0.1656 122.02)",
+          "oklch(49.29% 0.1656 122.02)",
+          "oklch(60.71% 0.1656 122.02)",
+          "oklch(72.14% 0.1656 122.02)",
+          "oklch(83.57% 0.1656 122.02)",
+          "oklch(95.00% 0.1656 122.02)"
+        ]
+      },
+      "charge-track": {
+        "role": "neutral",
+        "displayName": "Charge Track Navy",
+        "tonalRamp": [
+          "oklch(15.00% 0.0588 252.08)",
+          "oklch(26.43% 0.0588 252.08)",
+          "oklch(37.86% 0.0588 252.08)",
+          "oklch(49.29% 0.0588 252.08)",
+          "oklch(60.71% 0.0588 252.08)",
+          "oklch(72.14% 0.0588 252.08)",
+          "oklch(83.57% 0.0588 252.08)",
+          "oklch(95.00% 0.0588 252.08)"
+        ]
+      },
+      "secondary-line": {
+        "role": "neutral",
+        "displayName": "Secondary Action Line",
+        "tonalRamp": [
+          "oklch(15.00% 0.0894 250.21)",
+          "oklch(26.43% 0.0894 250.21)",
+          "oklch(37.86% 0.0894 250.21)",
+          "oklch(49.29% 0.0894 250.21)",
+          "oklch(60.71% 0.0894 250.21)",
+          "oklch(72.14% 0.0894 250.21)",
+          "oklch(83.57% 0.0894 250.21)",
+          "oklch(95.00% 0.0894 250.21)"
+        ]
       },
       "canvas-label": {
         "role": "neutral",
-        "displayName": "Canvas White"
-      },
-      "dock": {
-        "displayName": "Translucent Toolbox Blue",
-        "canonical": "#10375ded",
-        "role": "neutral"
-      },
-      "action-surface": {
-        "displayName": "Active Command Surface",
-        "canonical": "#44657540",
-        "role": "neutral"
+        "displayName": "Canvas White",
+        "tonalRamp": [
+          "oklch(15.00% 0.0000 89.88)",
+          "oklch(26.43% 0.0000 89.88)",
+          "oklch(37.86% 0.0000 89.88)",
+          "oklch(49.29% 0.0000 89.88)",
+          "oklch(60.71% 0.0000 89.88)",
+          "oklch(72.14% 0.0000 89.88)",
+          "oklch(83.57% 0.0000 89.88)",
+          "oklch(95.00% 0.0000 89.88)"
+        ]
       },
       "location-label": {
+        "role": "neutral",
         "displayName": "Hover Location Label",
-        "canonical": "#eef5cbdc",
-        "role": "neutral"
+        "tonalRamp": [
+          "oklch(15.00% 0.0553 115.14)",
+          "oklch(26.43% 0.0553 115.14)",
+          "oklch(37.86% 0.0553 115.14)",
+          "oklch(49.29% 0.0553 115.14)",
+          "oklch(60.71% 0.0553 115.14)",
+          "oklch(72.14% 0.0553 115.14)",
+          "oklch(83.57% 0.0553 115.14)",
+          "oklch(95.00% 0.0553 115.14)"
+        ]
       },
       "location-ink": {
+        "role": "neutral",
         "displayName": "Location Name Ink",
-        "canonical": "#133956",
-        "role": "neutral"
+        "tonalRamp": [
+          "oklch(15.00% 0.0667 244.97)",
+          "oklch(26.43% 0.0667 244.97)",
+          "oklch(37.86% 0.0667 244.97)",
+          "oklch(49.29% 0.0667 244.97)",
+          "oklch(60.71% 0.0667 244.97)",
+          "oklch(72.14% 0.0667 244.97)",
+          "oklch(83.57% 0.0667 244.97)",
+          "oklch(95.00% 0.0667 244.97)"
+        ]
+      },
+      "map-contact-shadow": {
+        "role": "neutral",
+        "displayName": "Map Contact Shadow",
+        "tonalRamp": [
+          "oklch(15.00% 0.0659 149.49)",
+          "oklch(26.43% 0.0659 149.49)",
+          "oklch(37.86% 0.0659 149.49)",
+          "oklch(49.29% 0.0659 149.49)",
+          "oklch(60.71% 0.0659 149.49)",
+          "oklch(72.14% 0.0659 149.49)",
+          "oklch(83.57% 0.0659 149.49)",
+          "oklch(95.00% 0.0659 149.49)"
+        ]
       }
     },
     "typographyMeta": {
@@ -178,11 +356,19 @@
       },
       "label": {
         "displayName": "Action Label",
-        "purpose": "Contextual labels; pictorial commands retain accessible names and hover descriptions."
+        "purpose": "11px progress and secondary hints; commands keep accessible names and contextual hover descriptions."
       },
       "canvas-count": {
         "displayName": "Canvas Resource Count",
         "purpose": "17 world-pixel resource counts, rasterized at resolution 2 and scaled by the camera."
+      },
+      "completion": {
+        "displayName": "Completion Title",
+        "purpose": "24px heavy native main and bonus dialog titles."
+      },
+      "location": {
+        "displayName": "Location Hover Label",
+        "purpose": "13px heavy labels revealed on native mission pin hover/focus."
       }
     },
     "shadows": [
@@ -264,81 +450,96 @@
         "purpose": "Immediate construction, dismantling and destruction share a puff that reveals underlying parts; its elapsed time freezes on pause. Native construction is visually captured; combat and preference variants have source evidence."
       }
     ],
-    "breakpoints": []
+    "breakpoints": [
+      {
+        "name": "narrow-camera-fallback",
+        "value": "700px",
+        "purpose": "Source-only initial-camera fallback below this width; desktop full-board fit remains at or above it. This is not a mobile reflow rule."
+      }
+    ]
   },
   "components": [
     {
-      "name": "Active Move Action",
+      "name": "Game Menu Control",
       "kind": "button",
-      "refersTo": "action-active",
-      "description": "Historical preview from the previous controls. Current command buttons are 53×57px pictorial controls with transparent fill, 9px corners, muted active surface and a yellow inset mark.",
-      "html": "<button class=\"ds-action-active\" aria-pressed=\"true\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m5 3 14 9-7 2-3 7z\"/></svg><span>Move</span></button>",
-      "css": ".ds-action-active {font-family:'Nunito Sans Variable',sans-serif;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;min-height:56px;min-width:58px;padding:7px 2px;border:1px solid #5481ad;border-radius:7px;background:transparent;color:var(--ink,#f5f9ff);font-size:11px;font-weight:750;cursor:pointer;transition:background .15s,border-color .15s;background:#ffdc59;color:#173558;border-color:#ffdc59;} .ds-action-active svg {width:20px;height:20px;} .ds-action-active:hover {background:#ffdc59;} .ds-action-active:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} .ds-action-active:active {background:#ffdc59;} .ds-action-active:disabled {opacity:.42;cursor:default;} @media(prefers-reduced-motion:reduce){.ds-action-active{transition:none;}}"
+      "description": "Current circular 38px utility button; hover and focus identify the available action.",
+      "html": "<button class=\"ds-button ds-header\" aria-label=\"Game menu\" title=\"Game menu\" aria-expanded=\"false\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 7h16M4 17h16\"/><circle cx=\"9\" cy=\"7\" r=\"3\" fill=\"currentColor\"/><circle cx=\"15\" cy=\"17\" r=\"3\" fill=\"currentColor\"/></svg></button>",
+      "css": ".ds-button {font-family:'Nunito Sans Variable',sans-serif;cursor:pointer;transition:background .15s,color .15s;} .ds-button:disabled {opacity:.3;cursor:default;} .ds-button:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} @media(prefers-reduced-motion:reduce){.ds-button{transition:none;}} .ds-header {display:grid;place-items:center;padding:5px;border:0;border-radius:50%;width:38px;height:38px;background:transparent;color:#d9ebf7;} .ds-header svg {width:23px;height:23px;flex-shrink:0;} .ds-header:hover:not(:disabled) {background:#ffffff12;color:#ffdc59;} .ds-header[aria-pressed=\"true\"] {color:#ffdc59;} ",
+      "refersTo": "icon-control"
     },
     {
-      "name": "Secondary Cargo Action",
+      "name": "Selected Move Action",
       "kind": "button",
-      "description": "Historical preview from the previous controls. Current cargo-capable rovers retain travelling pickup/drop. Scoop rejects cargo transfers and only offers Move/Dig/Fill.",
-      "html": "<button class=\"ds-action-secondary\" aria-pressed=\"false\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 16V3m-5 5 5-5 5 5M4 14v7h16v-7\"/></svg><span>Pick up</span></button>",
-      "css": ".ds-action-secondary {font-family:'Nunito Sans Variable',sans-serif;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;min-height:56px;min-width:58px;padding:7px 2px;border:1px solid #5481ad;border-radius:7px;background:transparent;color:var(--ink,#f5f9ff);font-size:11px;font-weight:750;cursor:pointer;transition:background .15s,border-color .15s;} .ds-action-secondary svg {width:20px;height:20px;} .ds-action-secondary:hover:not(:disabled) {background:#275b94;} .ds-action-secondary:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} .ds-action-secondary[aria-pressed=\"true\"] {background:#ffdc59;color:#173558;border-color:#ffdc59;} .ds-action-secondary:disabled {opacity:.42;cursor:default;} @media(prefers-reduced-motion:reduce){.ds-action-secondary{transition:none;}}"
+      "description": "The current pictured action surface has a yellow inset state line; its text remains accessible but visually hidden.",
+      "html": "<button class=\"ds-button ds-action\" aria-label=\"Move\" title=\"Move\" aria-pressed=\"true\"><svg class=\"ds-pointer\" viewBox=\"0 0 32 32\" aria-hidden=\"true\"><path d=\"m8 3 19 16-10 2-5 9z\" fill=\"#ffe36a\" stroke=\"#173558\" stroke-width=\"2\" stroke-linejoin=\"round\"/></svg><span>Move</span></button>",
+      "css": ".ds-button {font-family:'Nunito Sans Variable',sans-serif;cursor:pointer;transition:background .15s,color .15s;} .ds-button:disabled {opacity:.3;cursor:default;} .ds-button:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} @media(prefers-reduced-motion:reduce){.ds-button{transition:none;}} .ds-action {position:relative;display:grid;place-items:center;width:53px;height:57px;border:0;border-radius:9px;background:transparent;color:#f5f9ff;} .ds-action:hover:not(:disabled){background:#ffffff0c;} .ds-action[aria-pressed=\"true\"] {background:#44657540;box-shadow:inset 0 -3px #ffdc59;} .ds-pointer {width:31px;height:37px;} .ds-action span {position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}",
+      "refersTo": "action-active"
     },
     {
-      "name": "Scoop Terrain Actions",
-      "kind": "custom",
-      "refersTo": "action-active",
-      "description": "Historical preview from the previous controls. Current Scoop command strip offers Move/Dig/Fill; bucket/charge disable work, Space chooses Dig empty or Fill loaded, and pickup/drop are hidden and rejected.",
-      "html": "<div class=\"ds-terrain-actions\" role=\"group\" aria-label=\"Scoop terrain actions\"><button title=\"Dig land to collect dirt\" aria-pressed=\"true\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m16 3-7 10M13 2l6 4M8 12l6 4-3 4c-2 3-8 0-7-3zM2 22h20\"/></svg><span>Dig</span></button><button title=\"Fill water with dirt\" aria-pressed=\"false\" disabled><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m7 3 11 5-5 7-9-4zM13 16v4m-4-3v3m8-4v4M2 22h20\"/></svg><span>Fill</span></button></div>",
-      "css": ".ds-terrain-actions {display:grid;grid-template-columns:repeat(2,1fr);gap:5px;margin-top:8px;} .ds-terrain-actions button {font-family:'Nunito Sans Variable',sans-serif;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;min-height:56px;padding:7px 2px;border:1px solid #5481ad;border-radius:7px;background:transparent;color:var(--ink,#f5f9ff);font-size:11px;font-weight:750;cursor:pointer;transition:background .15s,border-color .15s;} .ds-terrain-actions svg {width:20px;height:20px;} .ds-terrain-actions button:hover:not(:disabled) {background:#275b94;} .ds-terrain-actions button[aria-pressed=\"true\"],.ds-terrain-actions button[aria-pressed=\"true\"]:hover {background:#ffdc59;color:#173558;border-color:#ffdc59;} .ds-terrain-actions button:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} .ds-terrain-actions button:disabled {opacity:.42;cursor:default;} @media(max-width:700px){.ds-terrain-actions{margin:0;}.ds-terrain-actions button{min-height:40px;flex-direction:row;font-size:10px;gap:4px;}} @media(prefers-reduced-motion:reduce){.ds-terrain-actions button{transition:none;}}"
-    },
-    {
-      "name": "Focus Icon Control",
+      "name": "Overview Camera Control",
       "kind": "button",
-      "refersTo": "icon-control",
-      "description": "Historical preview from the previous controls. Current camera controls are circular 30px symbols; scroll zoom remains live while plus/minus buttons are hidden.",
-      "html": "<button class=\"ds-icon-control\" aria-label=\"Focus\" title=\"Center selection (F)\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"5\"/><path d=\"M12 2v3m0 14v3M2 12h3m14 0h3\"/></svg></button>",
-      "css": ".ds-icon-control {font-family:'Nunito Sans Variable',sans-serif;display:flex;align-items:center;justify-content:center;width:34px;height:34px;padding:6px;border:1px solid #4876a5;border-radius:6px;background:transparent;color:var(--ink,#f5f9ff);cursor:pointer;transition:background .15s,border-color .15s;} .ds-icon-control svg {width:20px;height:20px;} .ds-icon-control:hover:not(:disabled) {background:#27568c;} .ds-icon-control:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} .ds-icon-control:disabled {opacity:.42;cursor:default;} @media(prefers-reduced-motion:reduce){.ds-icon-control{transition:none;}}"
+      "description": "Current 30px circular camera symbol. Scroll zoom remains available; plus/minus controls are hidden.",
+      "html": "<button class=\"ds-button ds-camera\" aria-label=\"Overview\" title=\"Overview (Home)\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 3H3v6m12-6h6v6M3 15v6h6m6 0h6v-6\"/></svg></button>",
+      "css": ".ds-button {font-family:'Nunito Sans Variable',sans-serif;cursor:pointer;transition:background .15s,color .15s;} .ds-button:disabled {opacity:.3;cursor:default;} .ds-button:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} @media(prefers-reduced-motion:reduce){.ds-button{transition:none;}} .ds-camera {width:30px;height:30px;display:grid;place-items:center;background:transparent;border:0;color:#9cbdd5;border-radius:50%;} .ds-camera svg {width:19px;height:19px;} .ds-camera:hover {color:#ffdc59;background:#ffffff0c;}"
     },
     {
-      "name": "Game Navigation",
+      "name": "World Navigation",
       "kind": "nav",
-      "description": "Historical preview from the previous controls. Current small desktop menu contains music/effects/restart/help; world-map and pause controls remain outside it.",
-      "html": "<nav class=\"ds-nav\" aria-label=\"Game controls\"><button aria-label=\"World map\" title=\"World map\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3zM9 3v15M15 6v15\"/></svg></button><button aria-label=\"Pause\" title=\"Pause\" aria-pressed=\"true\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M8 5v14M16 5v14\"/></svg></button><button aria-label=\"How to play\" title=\"How to play\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M9.5 9a2.5 2.5 0 1 1 4 2c-1 .5-1.5 1-1.5 2M12 17h.01\"/></svg></button></nav>",
-      "css": ".ds-nav {display:flex;gap:5px;} .ds-nav button {font-family:'Nunito Sans Variable',sans-serif;display:grid;place-items:center;width:40px;height:40px;padding:0;border:0;border-radius:7px;background:transparent;color:#eaf6ff;cursor:pointer;transition:background .15s;} .ds-nav svg {width:20px;height:20px;} .ds-nav button:hover {background:#235389;} .ds-nav button[aria-pressed=\"true\"] {background:#ffdc59;color:#18385d;} .ds-nav button:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} @media(prefers-reduced-motion:reduce){.ds-nav button{transition:none;}}"
+      "description": "Compact pictured previous/next world controls and the current world count; browsing future maps does not unlock missions.",
+      "html": "<nav class=\"ds-world-nav\" aria-label=\"Worlds\"><button class=\"ds-button ds-header\" aria-label=\"Previous world\" title=\"Previous world\" disabled><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m15 5-7 7 7 7\"/></svg></button><button class=\"ds-button ds-header\" aria-label=\"Next world\" title=\"Next world\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m9 5 7 7-7 7\"/></svg></button><span class=\"ds-world-progress\" aria-label=\"1 of 12 missions completed in Meadow Isles\">1 / 12</span></nav>",
+      "css": ".ds-button {font-family:'Nunito Sans Variable',sans-serif;cursor:pointer;transition:background .15s,color .15s;} .ds-button:disabled {opacity:.3;cursor:default;} .ds-button:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} @media(prefers-reduced-motion:reduce){.ds-button{transition:none;}} .ds-header {display:grid;place-items:center;padding:5px;border:0;border-radius:50%;width:38px;height:38px;background:transparent;color:#d9ebf7;} .ds-header svg {width:23px;height:23px;flex-shrink:0;} .ds-header:hover:not(:disabled) {background:#ffffff12;color:#ffdc59;} .ds-header[aria-pressed=\"true\"] {color:#ffdc59;} .ds-world-nav {font-family:'Nunito Sans Variable',sans-serif;display:flex;align-items:center;gap:3px;margin-top:4px;} .ds-world-progress {margin-left:9px;font-size:12px;color:var(--muted,#b8d5ef);font-variant-numeric:tabular-nums;}"
     },
     {
       "name": "Available Mission Pin",
       "kind": "custom",
-      "refersTo": "location-name",
-      "description": "Historical preview from the previous controls. Current yellow question mark has a 42×48px marker; its pale-green name label appears on hover/focus. Current map order numbers, dark stationary locks and muted future paths show sequential access.",
-      "html": "<button class=\"ds-location\" aria-label=\"Hollow Reach, available\"><span class=\"ds-marker\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 8a4 4 0 1 1 6 3.5c-1.5.8-2 1.5-2 3M12 20h.01\"/></svg></span><span class=\"ds-name\">Hollow Reach</span></button>",
-      "css": ".ds-location {font-family:'Nunito Sans Variable',sans-serif;display:flex;flex-direction:column;align-items:center;gap:13px;width:max-content;padding:0;border:0;border-radius:6px;background:transparent;cursor:pointer;} .ds-marker {position:relative;display:grid;place-items:center;width:56px;height:56px;border:2px solid #ffe99b;border-radius:50%;background:#ffcf41;color:#193960;box-shadow:0 5px 12px #021a3659;transition:transform .15s;} .ds-marker::after {content:\"\";position:absolute;left:20px;bottom:-9px;border-top:9px solid #ffe99b;border-left:6px solid transparent;border-right:6px solid transparent;} .ds-marker svg {width:30px;height:30px;} .ds-name {padding:6px 12px;border:1px solid #346296;border-radius:5px;background:var(--paper,#163e71);color:var(--ink,#f5f9ff);font-size:15px;font-weight:800;white-space:nowrap;box-shadow:0 3px 8px #021a363d;} .ds-location:hover .ds-marker {border-color:#fff7d5;} .ds-location:hover .ds-name {background:#235a92;} .ds-location:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} .ds-location:active .ds-marker {transform:translateY(0);} @media(prefers-reduced-motion:reduce){.ds-marker{transition:none;}}"
+      "description": "Current available question mark, fixed count and hover/focus name; twelve pins occupy each authored landscape.",
+      "html": "<button class=\"ds-button ds-location ds-available\" aria-label=\"Parts and Paths\" title=\"Parts and Paths\"><span class=\"ds-marker\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 8a4 4 0 1 1 6 3.5c-1.5.8-2 1.5-2 3M12 20h.01\"/></svg></span><span class=\"ds-order\" aria-hidden=\"true\">2</span><span class=\"ds-name\">Parts and Paths</span></button>",
+      "css": ".ds-button {font-family:'Nunito Sans Variable',sans-serif;cursor:pointer;transition:background .15s,color .15s;} .ds-button:disabled {opacity:.3;cursor:default;} .ds-button:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} @media(prefers-reduced-motion:reduce){.ds-button{transition:none;}} .ds-location {position:relative;display:flex;flex-direction:column;align-items:center;padding:0;border:0;background:transparent;color:#ffda51;width:max-content;} .ds-marker {position:relative;display:grid;place-items:center;width:42px;height:48px;} .ds-marker>svg {width:37px;height:42px;stroke-width:3.5;filter:drop-shadow(0 3px 2px #25410f60);} .ds-marker>.ds-map-flag {width:46px;height:46px;} .ds-name {font-size:13px;font-weight:850;white-space:nowrap;padding:3px 7px;color:#133956;background:#eef5cbdc;border-radius:4px;opacity:0;} .ds-location:hover .ds-name,.ds-location:focus-visible .ds-name {opacity:1;} .ds-location::before {content:\"\";position:absolute;top:47px;left:50%;width:26px;height:8px;border-radius:50%;background:#12381c30;transform:translateX(-50%);} .ds-order {position:absolute;top:34px;left:calc(50% - 19px);min-width:15px;padding:1px 3px;border-radius:4px;background:#123b61;color:#ffdc59;font-size:10px;font-weight:850;font-variant-numeric:tabular-nums;} .ds-available .ds-marker {animation:ds-marker-bob 3.6s ease-in-out infinite;} .ds-locked .ds-marker {color:#234b61;opacity:.85;} .ds-flag-cloth {transform-origin:10px 16px;animation:ds-flag-wave 2.8s ease-in-out infinite;} @keyframes ds-marker-bob {0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}} @keyframes ds-flag-wave {0%,100%{transform:skewY(-3deg) scaleX(.97);}50%{transform:skewY(4deg) scaleX(1.02);}} @media(prefers-reduced-motion:reduce){.ds-marker,.ds-flag-cloth{animation:none;}} ",
+      "refersTo": "location-name"
     },
     {
-      "name": "Completed Mission Pin",
+      "name": "Locked Mission Pin",
       "kind": "custom",
-      "refersTo": "location-name",
-      "description": "Historical preview from the previous controls. Current completion uses a waving flag with an optional bonus star; no circular green field or freighter.",
-      "html": "<button class=\"ds-location ds-complete\" aria-label=\"Bramble Crossing, complete\"><span class=\"ds-marker\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 22V3m0 0 14 3-14 5\"/></svg></span><span class=\"ds-name\">Bramble Crossing</span></button>",
-      "css": ".ds-location {font-family:'Nunito Sans Variable',sans-serif;display:flex;flex-direction:column;align-items:center;gap:13px;width:max-content;padding:0;border:0;border-radius:6px;background:transparent;cursor:pointer;} .ds-marker {position:relative;display:grid;place-items:center;width:56px;height:56px;border:2px solid #ffe99b;border-radius:50%;background:#ffcf41;color:#193960;box-shadow:0 5px 12px #021a3659;transition:transform .15s;} .ds-marker::after {content:\"\";position:absolute;left:20px;bottom:-9px;border-top:9px solid #ffe99b;border-left:6px solid transparent;border-right:6px solid transparent;} .ds-marker svg {width:30px;height:30px;} .ds-name {padding:6px 12px;border:1px solid #346296;border-radius:5px;background:var(--paper,#163e71);color:var(--ink,#f5f9ff);font-size:15px;font-weight:800;white-space:nowrap;box-shadow:0 3px 8px #021a363d;} .ds-location:hover .ds-marker {border-color:#fff7d5;} .ds-location:hover .ds-name {background:#235a92;} .ds-location:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} .ds-location:active .ds-marker {transform:translateY(0);} @media(prefers-reduced-motion:reduce){.ds-marker{transition:none;}} .ds-complete .ds-marker {background:#316412;border-color:#c9f255;color:#f5ffd8;} .ds-complete .ds-marker::after {border-top-color:#c9f255;}"
+      "description": "Current dark stationary lock. The native button is disabled and its title names the preceding required main.",
+      "html": "<button class=\"ds-button ds-location ds-locked\" aria-label=\"Rough Ridge\" title=\"Rough Ridge · Finish Meadow Siege first\" disabled><span class=\"ds-marker\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"5\" y=\"10\" width=\"14\" height=\"11\" rx=\"2\"/><path d=\"M8 10V6a4 4 0 0 1 8 0v4M12 14v3\"/></svg></span><span class=\"ds-order\" aria-hidden=\"true\">13</span><span class=\"ds-name\">Rough Ridge</span></button>",
+      "css": ".ds-button {font-family:'Nunito Sans Variable',sans-serif;cursor:pointer;transition:background .15s,color .15s;} .ds-button:disabled {opacity:.3;cursor:default;} .ds-button:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} @media(prefers-reduced-motion:reduce){.ds-button{transition:none;}} .ds-location {position:relative;display:flex;flex-direction:column;align-items:center;padding:0;border:0;background:transparent;color:#ffda51;width:max-content;} .ds-marker {position:relative;display:grid;place-items:center;width:42px;height:48px;} .ds-marker>svg {width:37px;height:42px;stroke-width:3.5;filter:drop-shadow(0 3px 2px #25410f60);} .ds-marker>.ds-map-flag {width:46px;height:46px;} .ds-name {font-size:13px;font-weight:850;white-space:nowrap;padding:3px 7px;color:#133956;background:#eef5cbdc;border-radius:4px;opacity:0;} .ds-location:hover .ds-name,.ds-location:focus-visible .ds-name {opacity:1;} .ds-location::before {content:\"\";position:absolute;top:47px;left:50%;width:26px;height:8px;border-radius:50%;background:#12381c30;transform:translateX(-50%);} .ds-order {position:absolute;top:34px;left:calc(50% - 19px);min-width:15px;padding:1px 3px;border-radius:4px;background:#123b61;color:#ffdc59;font-size:10px;font-weight:850;font-variant-numeric:tabular-nums;} .ds-available .ds-marker {animation:ds-marker-bob 3.6s ease-in-out infinite;} .ds-locked .ds-marker {color:#234b61;opacity:.85;} .ds-flag-cloth {transform-origin:10px 16px;animation:ds-flag-wave 2.8s ease-in-out infinite;} @keyframes ds-marker-bob {0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}} @keyframes ds-flag-wave {0%,100%{transform:skewY(-3deg) scaleX(.97);}50%{transform:skewY(4deg) scaleX(1.02);}} @media(prefers-reduced-motion:reduce){.ds-marker,.ds-flag-cloth{animation:none;}} ",
+      "refersTo": "location-name"
     },
     {
-      "name": "Mission Completion Dialog",
+      "name": "Completed Bonus Pin",
+      "kind": "custom",
+      "description": "Current waving yellow flag with saved bonus star; one matching earned resident is supplied by the world scene.",
+      "html": "<button class=\"ds-button ds-location ds-complete\" aria-label=\"Hollow Reach\" title=\"Hollow Reach\"><span class=\"ds-marker\"><svg class=\"ds-map-flag\" viewBox=\"0 0 40 40\" fill=\"none\" aria-hidden=\"true\"><path d=\"M9 36V5\" stroke=\"#f5ffd8\" stroke-width=\"3\" stroke-linecap=\"round\"/><g class=\"ds-flag-cloth\"><path d=\"M10 7c8-4 13 5 22 1v18c-9 4-14-5-22-1z\" fill=\"#ffda51\"/><path d=\"m21 10 2 4 4.4.7-3.2 3.1.8 4.4-4-2.1-4 2.1.8-4.4-3.2-3.1 4.4-.7z\" fill=\"#193960\"/></g></svg></span><span class=\"ds-order\" aria-hidden=\"true\">1</span><span class=\"ds-name\">Hollow Reach</span></button>",
+      "css": ".ds-button {font-family:'Nunito Sans Variable',sans-serif;cursor:pointer;transition:background .15s,color .15s;} .ds-button:disabled {opacity:.3;cursor:default;} .ds-button:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} @media(prefers-reduced-motion:reduce){.ds-button{transition:none;}} .ds-location {position:relative;display:flex;flex-direction:column;align-items:center;padding:0;border:0;background:transparent;color:#ffda51;width:max-content;} .ds-marker {position:relative;display:grid;place-items:center;width:42px;height:48px;} .ds-marker>svg {width:37px;height:42px;stroke-width:3.5;filter:drop-shadow(0 3px 2px #25410f60);} .ds-marker>.ds-map-flag {width:46px;height:46px;} .ds-name {font-size:13px;font-weight:850;white-space:nowrap;padding:3px 7px;color:#133956;background:#eef5cbdc;border-radius:4px;opacity:0;} .ds-location:hover .ds-name,.ds-location:focus-visible .ds-name {opacity:1;} .ds-location::before {content:\"\";position:absolute;top:47px;left:50%;width:26px;height:8px;border-radius:50%;background:#12381c30;transform:translateX(-50%);} .ds-order {position:absolute;top:34px;left:calc(50% - 19px);min-width:15px;padding:1px 3px;border-radius:4px;background:#123b61;color:#ffdc59;font-size:10px;font-weight:850;font-variant-numeric:tabular-nums;} .ds-available .ds-marker {animation:ds-marker-bob 3.6s ease-in-out infinite;} .ds-locked .ds-marker {color:#234b61;opacity:.85;} .ds-flag-cloth {transform-origin:10px 16px;animation:ds-flag-wave 2.8s ease-in-out infinite;} @keyframes ds-marker-bob {0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}} @keyframes ds-flag-wave {0%,100%{transform:skewY(-3deg) scaleX(.97);}50%{transform:skewY(4deg) scaleX(1.02);}} @media(prefers-reduced-motion:reduce){.ds-marker,.ds-flag-cloth{animation:none;}} ",
+      "refersTo": "location-name"
+    },
+    {
+      "name": "Mission complete Dialog",
       "kind": "card",
-      "description": "Historical preview from the previous controls. Current dialog offers World map/Try bonus after the current main reveals its bonus, panel blue, 24px title, and a yellow primary action. Current bonus completion uses the same frozen star reward before Bonus complete with a starred flag, Bonus star earned and only World map; Escape returns to the map and the final run cannot resume. Each replay gets this ending even with its star already saved, without a duplicate award.",
-      "html": "<section class=\"ds-dialog\" aria-label=\"Mission complete\"><span class=\"ds-completion-flag\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 22V3m0 0 14 3-14 5\"/></svg></span><h2>Mission complete</h2><p>Hollow Reach</p><button class=\"ds-completion-primary\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3zM9 3v15M15 6v15\"/></svg>World map</button><button class=\"ds-completion-secondary\">Keep exploring</button></section>",
-      "css": ".ds-dialog {font-family:'Nunito Sans Variable',sans-serif;width:min(360px,calc(100% - 40px));padding:28px;border:0;border-radius:14px;background:var(--paper,#163e71);color:var(--ink,#f5f9ff);text-align:center;box-shadow:0 12px 40px #001e4566;} .ds-completion-flag {display:grid;place-items:center;margin:0 auto 18px;width:64px;height:64px;border-radius:50%;background:#1e5289;color:#ffdc59;} .ds-completion-flag svg {width:36px;height:36px;} .ds-dialog h2 {margin:0;font-size:25px;font-weight:850;letter-spacing:-.03em;} .ds-dialog p {margin:7px 0 0;color:var(--muted,#b8d5ef);font-size:14px;} .ds-dialog button {font-family:'Nunito Sans Variable',sans-serif;display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:44px;border-radius:7px;font-size:14px;font-weight:800;cursor:pointer;transition:background .15s,border-color .15s;} .ds-dialog button svg {width:20px;height:20px;} .ds-completion-primary {margin-top:26px;border:1px solid #ffdc59;background:#ffdc59;color:#173558;} .ds-completion-primary:hover {background:#ffe785;} .ds-completion-secondary {margin-top:9px;border:1px solid #4876a5;background:transparent;color:var(--ink,#f5f9ff);} .ds-completion-secondary:hover {background:#27568c;} .ds-dialog button:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} @media(prefers-reduced-motion:reduce){.ds-dialog button{transition:none;}}"
+      "description": "Current borderless modal. World map returns to the landscape; Try bonus reveals the current visit’s hidden bonus.",
+      "html": "<section class=\"ds-dialog\" role=\"dialog\" aria-label=\"Mission complete\"><div class=\"ds-completion-flag\"><svg class=\"ds-map-flag\" viewBox=\"0 0 40 40\" fill=\"none\" aria-hidden=\"true\"><path d=\"M9 36V5\" stroke=\"#f5ffd8\" stroke-width=\"3\" stroke-linecap=\"round\"/><g class=\"ds-flag-cloth\"><path d=\"M10 7c8-4 13 5 22 1v18c-9 4-14-5-22-1z\" fill=\"#ffda51\"/></g></svg></div><h2>Mission complete</h2><p>Parts and Paths</p><p class=\"ds-bonus\">Bonus objective unlocked</p><button class=\"ds-button ds-primary\">World map</button><button class=\"ds-button ds-secondary\">Try bonus</button></section>",
+      "css": ".ds-button {font-family:'Nunito Sans Variable',sans-serif;cursor:pointer;transition:background .15s,color .15s;} .ds-button:disabled {opacity:.3;cursor:default;} .ds-button:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} @media(prefers-reduced-motion:reduce){.ds-button{transition:none;}} .ds-dialog {font-family:'Nunito Sans Variable',sans-serif;width:360px;margin:auto;padding:28px;border:0;border-radius:14px;background:var(--paper,#123b61);color:var(--ink,#f5f9ff);text-align:center;box-shadow:0 12px 40px #001e4566;} .ds-completion-flag {display:grid;place-items:center;margin:0 auto 16px;width:58px;height:58px;color:#ffdc59;} .ds-completion-flag svg {width:38px;height:38px;} .ds-dialog h2 {margin:0;font-size:24px;font-weight:850;} .ds-dialog p {margin:7px 0 0;color:var(--muted,#b8d5ef);font-size:14px;} .ds-dialog .ds-bonus {margin-top:10px;color:#ffdc59;font-size:13px;} .ds-dialog button {display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;border-radius:7px;font-size:14px;font-weight:800;} .ds-primary {margin-top:24px;border:0;background:#ffdc59;color:#173558;} .ds-secondary {margin-top:9px;border:1px solid #4876a5;background:transparent;color:#f5f9ff;} .ds-flag-cloth {transform-origin:10px 16px;animation:ds-flag-wave 2.8s ease-in-out infinite;} @keyframes ds-flag-wave {0%,100%{transform:skewY(-3deg) scaleX(.97);}50%{transform:skewY(4deg) scaleX(1.02);}} @media(prefers-reduced-motion:reduce){.ds-flag-cloth{animation:none;}} ",
+      "refersTo": "completion-dialog"
+    },
+    {
+      "name": "Bonus complete Dialog",
+      "kind": "card",
+      "description": "Current borderless modal. Only World map is offered; the finished bonus visit cannot resume.",
+      "html": "<section class=\"ds-dialog\" role=\"dialog\" aria-label=\"Bonus complete\"><div class=\"ds-completion-flag\"><svg class=\"ds-map-flag\" viewBox=\"0 0 40 40\" fill=\"none\" aria-hidden=\"true\"><path d=\"M9 36V5\" stroke=\"#f5ffd8\" stroke-width=\"3\" stroke-linecap=\"round\"/><g class=\"ds-flag-cloth\"><path d=\"M10 7c8-4 13 5 22 1v18c-9 4-14-5-22-1z\" fill=\"#ffda51\"/><path d=\"m21 10 2 4 4.4.7-3.2 3.1.8 4.4-4-2.1-4 2.1.8-4.4-3.2-3.1 4.4-.7z\" fill=\"#193960\"/></g></svg></div><h2>Bonus complete</h2><p>Parts and Paths</p><p class=\"ds-bonus\">Bonus star earned</p><button class=\"ds-button ds-primary\">World map</button></section>",
+      "css": ".ds-button {font-family:'Nunito Sans Variable',sans-serif;cursor:pointer;transition:background .15s,color .15s;} .ds-button:disabled {opacity:.3;cursor:default;} .ds-button:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} @media(prefers-reduced-motion:reduce){.ds-button{transition:none;}} .ds-dialog {font-family:'Nunito Sans Variable',sans-serif;width:360px;margin:auto;padding:28px;border:0;border-radius:14px;background:var(--paper,#123b61);color:var(--ink,#f5f9ff);text-align:center;box-shadow:0 12px 40px #001e4566;} .ds-completion-flag {display:grid;place-items:center;margin:0 auto 16px;width:58px;height:58px;color:#ffdc59;} .ds-completion-flag svg {width:38px;height:38px;} .ds-dialog h2 {margin:0;font-size:24px;font-weight:850;} .ds-dialog p {margin:7px 0 0;color:var(--muted,#b8d5ef);font-size:14px;} .ds-dialog .ds-bonus {margin-top:10px;color:#ffdc59;font-size:13px;} .ds-dialog button {display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;border-radius:7px;font-size:14px;font-weight:800;} .ds-primary {margin-top:24px;border:0;background:#ffdc59;color:#173558;} .ds-secondary {margin-top:9px;border:1px solid #4876a5;background:transparent;color:#f5f9ff;} .ds-flag-cloth {transform-origin:10px 16px;animation:ds-flag-wave 2.8s ease-in-out infinite;} @keyframes ds-flag-wave {0%,100%{transform:skewY(-3deg) scaleX(.97);}50%{transform:skewY(4deg) scaleX(1.02);}} @media(prefers-reduced-motion:reduce){.ds-flag-cloth{animation:none;}} ",
+      "refersTo": "completion-dialog"
     },
     {
       "name": "Reset Progress Hold Control",
       "kind": "button",
-      "description": "Current Game menu control beneath its icon row. A continuous three-second primary pointer, Space, or Enter hold confirms once; interrupted holds cancel. The static preview shows idle styling; ds-holding represents the source active-meter state.",
-      "html": "<div class=\"ds-reset-menu\"><button class=\"ds-reset-progress\" aria-label=\"Reset progress\" aria-describedby=\"ds-reset-progress-hint\" title=\"Hold for 3 seconds to clear completed missions and bonus stars\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 9a8 8 0 1 1 0 7M4 4v5h5\"/></svg><span>Reset progress<small id=\"ds-reset-progress-hint\" class=\"ds-hold-hint\">Hold 3s</small></span><i class=\"ds-hold-meter\" aria-hidden=\"true\"></i></button></div>",
-      "css": ".ds-reset-menu {display:flex;flex-direction:column;gap:8px;padding:8px;background:var(--paper,#123b61);border-radius:9px;box-shadow:0 6px 18px #001e4550;} .ds-reset-progress {font-family:'Nunito Sans Variable',sans-serif;position:relative;display:flex;align-items:center;gap:9px;min-height:48px;padding:8px 10px;border:0;border-radius:8px;overflow:hidden;background:#ffffff0c;color:#ffdc59;text-align:left;font-size:12px;font-weight:800;user-select:none;touch-action:none;cursor:pointer;transition:background .15s,color .15s;} .ds-reset-progress svg {width:23px;height:23px;flex-shrink:0;} .ds-reset-progress:hover,.ds-reset-progress.ds-holding {background:#ffffff12;} .ds-reset-progress:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} .ds-hold-hint {display:block;margin-top:2px;color:var(--muted,#b8d5ef);font-size:11px;font-weight:500;} .ds-hold-meter {position:absolute;left:0;right:0;bottom:0;height:3px;background:#ffdc59;transform:scaleX(0);transform-origin:left;} .ds-holding .ds-hold-meter {transform:scaleX(1);transition:transform var(--hold-duration,3000ms) linear;} @media(prefers-reduced-motion:reduce){.ds-reset-progress{transition:none;}}"
+      "description": "Continuous three-second primary pointer, Space or Enter hold confirms; interrupted holds cancel. The snippet depicts its native idle state.",
+      "html": "<button class=\"ds-button ds-reset\" aria-label=\"Reset progress\" aria-describedby=\"ds-reset-hint\" title=\"Hold for 3 seconds to clear completed missions and bonus stars\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 9a8 8 0 1 1 0 7M4 4v5h5\"/></svg><span>Reset progress<small id=\"ds-reset-hint\" class=\"ds-hold-hint\">Hold 3s</small></span><i class=\"ds-hold-meter\" aria-hidden=\"true\"></i></button>",
+      "css": ".ds-button {font-family:'Nunito Sans Variable',sans-serif;cursor:pointer;transition:background .15s,color .15s;} .ds-button:disabled {opacity:.3;cursor:default;} .ds-button:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} @media(prefers-reduced-motion:reduce){.ds-button{transition:none;}} .ds-reset {position:relative;display:flex;align-items:center;gap:9px;min-height:48px;padding:8px 10px;border:0;border-radius:8px;overflow:hidden;background:#ffffff0c;color:#ffdc59;text-align:left;font-size:12px;font-weight:800;user-select:none;touch-action:none;} .ds-reset svg {width:23px;height:23px;flex-shrink:0;} .ds-reset:hover,.ds-reset.ds-holding {background:#ffffff12;} .ds-hold-hint {display:block;margin-top:2px;color:var(--muted,#b8d5ef);font-size:11px;font-weight:500;} .ds-hold-meter {position:absolute;left:0;right:0;bottom:0;height:3px;background:#ffdc59;transform:scaleX(0);transform-origin:left;} .ds-holding .ds-hold-meter {transform:scaleX(1);transition:transform 3000ms linear;} "
     }
   ],
   "narrative": {
     "northStar": "Toy world",
-    "overview": "The implemented visual world uses original fitted toy machines, saturated molded-plastic colors, broad highlights, readable eyes, rounded leaf trees, and chunky stones. Bright cyan water and sunny sand sit beside spring-green grass on thick raised earthy faces, framed by deep navy and cool blue controls. Each machine has a clear role: a narrow lime Scout, a broad orange Hauler with an empty bed, a thick cobalt Warden, a compact yellow Scoop with turquoise arms and hubs, and a red six-legged Bristleback.\n\nThe [approved study](.impeccable/mocks/toy-world-study.png) and [approval record](.impeccable/mocks/toy-world-study.json) remain historical silhouette/material references. The [September 30 feedback contract](.impeccable/user-feedback-brief.md) supersedes illustrated rovers/rocks, textured terrain, the sidebar/mobile layout, Scoop cargo, and premature freighter scenery. Harbor Run now supplies playable one-tile boats, with boat residents earned only on its completion. Quiet broad terrain planes are a reversible trial, not a final user-approved style. The [campaign-rules contract](.impeccable/campaign-rules-brief.md) refines ordered map access, finite stock, a short objective, jointed bot legs and smoke without replacing this art world. The authored missions and desktop controls govern composition; attributed reference research and gameplay proposals below remain intact.",
+    "overview": "The implemented visual world uses original fitted toy machines, saturated molded-plastic colors, broad highlights, readable eyes, rounded leaf trees, and chunky stones. Bright cyan water and sunny sand sit beside spring-green grass on thick raised earthy faces, framed by deep navy and cool blue controls. Each machine has a clear role: a narrow lime Scout, a broad orange Hauler with an empty bed, a thick cobalt Warden, a compact yellow Scoop with turquoise arms and hubs, and a red six-legged Bristleback.\n\nThe [approved study](.impeccable/mocks/toy-world-study.png) and [approval record](.impeccable/mocks/toy-world-study.json) remain historical silhouette/material references. The [September 30 feedback contract](.impeccable/user-feedback-brief.md) supersedes illustrated rovers/rocks, textured terrain, the sidebar/mobile layout, Scoop cargo, and premature freighter scenery. Playable one-tile boats now belong to authored Open Sea missions; boat residents are earned only by completed boat-bearing levels there. Quiet broad terrain planes are a reversible trial, not a final user-approved style. The [campaign-rules contract](.impeccable/campaign-rules-brief.md) and [campaign expansion contract](.impeccable/campaign-expansion-brief.md) extend finite stock, ordered access, pictured goals and three landscapes while preserving this world. Authored mission geometry and sparse desktop controls govern composition; the study is an identity reference rather than a map composition comp. Attributed reference research and the historical gameplay discussion below remain intact.",
     "keyCharacteristics": [
       "Original glossy toy bodies with distinct role silhouettes and four direction views.",
       "Quiet terrain planes on raised coast geometry against a deep blue field.",
@@ -349,23 +550,23 @@
     "rules": [
       {
         "name": "The Yellow State Rule",
-        "body": "Use yellow to identify the current command, selection, or primary completion action; keep charge and completed-location cues green.",
+        "body": "Use yellow to identify the current command, selection, mission markers or primary completion action; use green for charge and completed-goal status.",
         "section": "colors"
       },
       {
         "name": "The Short Label Rule",
-        "body": "Keep the normal view to names, short goals, action labels, pictures, and counts. Put unit details and instructions behind their native disclosure controls; show one short objective without a mission information panel.",
+        "body": "Keep the normal view to names, short goals, action labels, pictures, and counts. Put unit details and instructions behind their native disclosure controls; show one short objective with pictured shipment requirements, and keep mission-specific hints inside How to play.",
         "section": "typography"
       },
       {
         "name": "The Ground Contact Rule",
-        "body": "Authored models share the 30-degree camera and origin (192,280); retained cutouts use calibrated origins. Cargo uses camera-derived bed/bucket anchors and sorts inside its carrier. Ground shadows remain below upright objects; water lies 10px below solid land banks and thin 4px bridge decks with support posts. Water and ripples continue beneath the decks.",
-        "section": "elevation & depth"
+        "body": "Align cutouts to their physical footprint centers in `src/view/grounding.ts`, rather than the lowest alpha edge. Soft contact shadows share a ground layer beneath all upright objects. World objects sort by footprint position; cargo sorts inside its carrier. Idle bodies, facing changes, and flag masts preserve contact with the tile. A moving body may lift briefly during a step, while its footprint, sorting origin, and shadow stay on the terrain. Tile markings stay below bodies; charge bars and status remain above them.",
+        "section": "elevation"
       }
     ],
     "dos": [
       "**Do** reuse the same toy pictures across the board, blueprints, recipes, resources, and cargo.",
-      "**Do** use the calibrated physical footprint centers, raised land faces, and a shared ground-shadow layer.",
+      "**Do** use calibrated footprint centers, raised land faces, and the shared ground-shadow layer.",
       "**Do** keep authored levels and camera controls authoritative over the study's illustrative arrangement.",
       "**Do** keep command, charge, selection, and hazard states readable above bright terrain.",
       "**Do** freeze presentation motion on pause or reduced motion while preserving independent orders and existing rules."

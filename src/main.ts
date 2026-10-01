@@ -5,16 +5,17 @@ import { GameScene, type Mode, type ViewState } from './view/GameScene';
 import { icon, mapFlag, blueprintIcon, resourceIcon, cargoSlots, costIcons, actionArt, treeCargoIcon } from './view/hud-art';
 import { ATTACK_ENERGY, BATTERY_CAPACITY, MOVE_ENERGY, TRANSFER_ENERGY, TERRAIN_ENERGY, blueprintNames, supportsCargo, supportsAction, isMobile, usesBattery, unitKinds, describeCost, describeSupplies, load, recipes, type Blueprint } from './core/catalog';
 import { GameAudio, type AudioState } from './audio/GameAudio';
-import { missions } from './levels/missions';
+import { missions, type WorldId } from './levels/missions';
 import { Campaign, PROGRESS_KEY, type ProgressStorage } from './core/campaign';
 import { WorldMapScene } from './view/WorldMapScene';
-import { worldLocations } from './levels/world-map';
+import { worlds } from './levels/world-map';
 import { TOY_BACKGROUND } from './view/toy-art';
 import { attachHoldToConfirm } from './view/hold-to-confirm';
 
 let progressStorage: ProgressStorage | undefined;
 try { progressStorage = window.localStorage; } catch { /* A blocked store does not prevent play. */ }
 const campaign = new Campaign(missions.map(mission => mission.id), progressStorage);
+let selectedWorld: WorldId = missions.find(mission => !campaign.completed.has(mission.id))?.world ?? 'open-sea';
 document.body.dataset.screen = 'world';
 
 const plans: Blueprint[] = [...unitKinds, 'relay'];
@@ -40,9 +41,14 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <section id="world-screen" aria-label="World map">
     <div id="world-game-host" class="world-stage">
       <div id="game" tabindex="0" role="application" aria-label="Island map. Click a unit then a destination. Space chooses its cargo or work action. Escape cancels targeting. Numbers 1–9 select units. F centers the selection."><p class="loading">Preparing the island…</p></div>
-      <div class="world-heading"><h1>World map</h1><p>Choose a mission</p></div>
-      <p id="world-progress" class="world-progress" aria-live="polite"></p>
-      <nav class="mission-locations" aria-label="Missions" hidden>${worldLocations.map(location => {
+      <div class="world-heading"><h1 id="world-name">Meadow Isles</h1>
+        <nav class="world-navigation" aria-label="Worlds">
+          <button id="previous-world" class="header-button" aria-label="Previous world" title="Previous world">${icon('left')}</button>
+          <button id="next-world" class="header-button" aria-label="Next world" title="Next world">${icon('right')}</button>
+          <span id="world-progress" class="world-progress" aria-live="polite"></span>
+        </nav>
+      </div>
+      <nav class="mission-locations" aria-label="Missions" hidden>${worlds.flatMap(world => world.locations).map(location => {
         const mission = missions.find(mission => mission.id === location.id)!;
         return `<button id="location-${mission.id}" class="mission-location" data-mission="${mission.id}" aria-label="Play ${mission.name}"><span class="location-marker">${icon('question')}</span><span class="location-order" aria-hidden="true">${missions.indexOf(mission) + 1}</span><span class="location-name">${mission.name}</span></button>`;
       }).join('')}</nav>
@@ -109,6 +115,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   </dialog>
   <section id="help-panel" class="help-panel" aria-label="Controls" hidden>
     <div class="help-heading"><h2>How to play</h2><button id="help-close" aria-label="Close controls">${icon('close')}</button></div>
+    <p id="mission-brief" hidden></p>
     <div class="resource-key"><span>${resourceIcon('red')}Red</span><span>${resourceIcon('blue')}Blue</span><span>${resourceIcon('yellow')}Yellow</span><span>${resourceIcon('green')}Green</span><span>${resourceIcon('battery')}Battery</span><span>${resourceIcon('soil')}Dirt</span></div>
     <dl>
       <div><dt>Audio</dt><dd>Music and sound effects start off. Use the note and speaker buttons in Game menu to enable them for this tab.</dd></div>
@@ -171,9 +178,22 @@ let lastState = '', missionSignature = '';
 let pausedBeforeCompletion = false;
 let changingScreen = false;
 function renderWorldProgress(): void {
-  el('world-progress').textContent = `${campaign.completed.size} / ${missions.length} complete`;
+  const world = worlds.find(world => world.id === selectedWorld)!;
+  el('world-name').textContent = world.name;
+  if (campaign.screen === 'world') document.title = `${world.name} · Untitled`;
+  el('world-progress').textContent = `${world.locations.filter(pin => campaign.completed.has(pin.id)).length} / 12`;
+  el('world-progress').setAttribute('aria-label', `${world.locations.filter(pin => campaign.completed.has(pin.id)).length} of 12 missions completed in ${world.name}`);
+  const index = worlds.indexOf(world);
+  el<HTMLButtonElement>('previous-world').disabled = index === 0;
+  el<HTMLButtonElement>('next-world').disabled = index === worlds.length - 1;
+  for (const [direction, target] of [['previous', worlds[index - 1]], ['next', worlds[index + 1]]] as const) {
+    const button = el(`${direction}-world`);
+    button.title = target?.name ?? `${direction === 'previous' ? 'First' : 'Last'} world`;
+    button.setAttribute('aria-label', target ? `Show ${target.name}` : `${direction === 'previous' ? 'First' : 'Last'} world`);
+  }
   for (const mission of missions) {
     const button = el<HTMLButtonElement>(`location-${mission.id}`), done = campaign.completed.has(mission.id);
+    button.hidden = mission.world !== selectedWorld;
     const unlocked = campaign.isUnlocked(mission.id), bonus = campaign.bonuses.has(mission.id);
     const picture = !unlocked ? 'lock' : done ? `flag-${bonus}` : 'question';
     button.classList.toggle('locked', !unlocked);
@@ -187,7 +207,7 @@ function renderWorldProgress(): void {
     const prerequisite = missions.slice(0, missions.indexOf(mission)).find(previous => !campaign.completed.has(previous.id));
     button.title = !unlocked ? `${mission.name} · Finish ${prerequisite!.name} first` : done ? `${mission.name} · Completed${bonus ? ' · Bonus star earned' : ''} · Play again` : `${mission.name} · ${mission.goal}`;
   }
-  worldScene.setProgress(campaign.completed);
+  worldScene.setWorld(selectedWorld); worldScene.setProgress(campaign.completed);
 }
 function updateHud(state: ViewState): void {
   if (changingScreen || campaign.screen === 'world' || campaign.currentMission !== state.mission.id) return;
@@ -200,7 +220,8 @@ function updateHud(state: ViewState): void {
     document.title = `${state.mission.name} · Untitled`;
     el('mission-name').textContent = state.mission.name;
     el('mission-goal').textContent = state.mission.goal;
-    el('objective-progress').innerHTML = state.mission.goals.map(goal => `<span id="goal-${goal.id}" class="goal-marker" role="img" aria-label="${goal.name}: not reached" title="${goal.name}">${icon('flag')}</span>`).join('') + `<span id="bonus-marker" class="goal-marker bonus-marker" role="img">${icon('star')}</span><span id="progress"></span>`;
+    el('mission-brief').textContent = state.mission.brief;
+    el('objective-progress').innerHTML = state.mission.goals.map(goal => `<span id="goal-${goal.id}" class="goal-marker" role="img" aria-label="${goal.name}: not reached" title="${goal.name}">${icon('flag')}</span>${goal.delivery ? `<span class="goal-shipment" role="img" aria-label="Deliver ${describeCost({ ...goal.delivery, battery: goal.delivery.chargedBatteries })}${goal.delivery.chargedBatteries ? ' with charge remaining' : ''}">${costIcons({ ...goal.delivery, battery: goal.delivery.chargedBatteries })}</span>` : ''}`).join('') + `<span id="bonus-marker" class="goal-marker bonus-marker" role="img">${icon('star')}</span><span id="progress"></span>`;
     for (const plan of plans) el(`build-${plan}`).hidden = state.mission.blueprints[plan] === undefined;
   }
   const u = state.units.find(u => u.id === state.selected), relay = state.selectedRelay;
@@ -269,6 +290,7 @@ function updateHud(state: ViewState): void {
   el('tile-info').hidden = !state.context;
   el('tile-info').textContent = state.context;
   el('mission-goal').textContent = state.bonus.unlocked ? state.bonus.reached ? 'Bonus star earned' : state.bonus.description : state.mission.goal;
+  document.querySelectorAll<HTMLElement>('.goal-shipment').forEach(shipment => { shipment.hidden = state.complete; });
   el('bonus-marker').hidden = !state.bonus.unlocked;
   el('bonus-marker').classList.toggle('complete', state.bonus.reached);
   el('bonus-marker').title = `${state.bonus.name}: ${state.bonus.reached ? 'bonus star earned' : state.bonus.description}`;
@@ -329,6 +351,7 @@ const worldScene = new WorldMapScene(points => {
   }
   document.querySelector('.loading')?.remove();
 });
+worldScene.setWorld(selectedWorld);
 const game = new Phaser.Game({
   type: Phaser.AUTO, parent:'game', backgroundColor:TOY_BACKGROUND, antialias:true,
   scale:{mode:Phaser.Scale.RESIZE, width:'100%', height:'100%', autoCenter:Phaser.Scale.CENTER_BOTH},
@@ -357,6 +380,7 @@ function closeMissionPanels(): void {
 function showScreen(screen: 'world' | 'mission'): void {
   document.body.dataset.screen = screen;
   el('world-screen').hidden = screen !== 'world'; el('mission-screen').hidden = screen !== 'mission';
+  el('mission-brief').hidden = screen !== 'mission';
   for (const id of ['world-map', 'pause', 'restart']) el(id).hidden = screen === 'world';
   el(`${screen === 'world' ? 'world' : 'mission'}-game-host`).prepend(el('game'));
   el('game').setAttribute('role', screen === 'world' ? 'img' : 'application');
@@ -385,9 +409,17 @@ function returnToWorld(): void {
   if (game.scene.isPaused('island')) game.scene.resume('island');
   game.scene.sleep('island'); showScreen('world'); game.scene.run('world'); worldScene.fit();
   audio.setSceneState(false, 0); renderWorldProgress();
-  document.title = 'World map · Untitled';
-  el(`location-${lastMission ?? missions[0].id}`).focus({preventScroll:true});
+  document.title = `${worlds.find(world => world.id === selectedWorld)!.name} · Untitled`;
+  el(`location-${lastMission ?? worlds.find(world => world.id === selectedWorld)!.locations[0].id}`).focus({preventScroll:true});
 }
+function changeWorld(offset: number): void {
+  const next = worlds[worlds.findIndex(world => world.id === selectedWorld) + offset];
+  if (!next || campaign.screen !== 'world') return;
+  selectedWorld = next.id; renderWorldProgress();
+  document.title = `${next.name} · Untitled`;
+}
+el('previous-world').onclick = () => changeWorld(-1);
+el('next-world').onclick = () => changeWorld(1);
 function keepExploring(): void {
   if (!campaign.keepExploring()) return;
   el<HTMLDialogElement>('completion-dialog').close();
@@ -420,7 +452,7 @@ el('restart').onclick = () => { if (campaign.currentMission) startMission(campai
 el('music-toggle').onclick = () => audio.setMusic(!audio.state.musicEnabled);
 el('sound-toggle').onclick = () => audio.setEffects(!audio.state.effectsEnabled);
 const progressReset = attachHoldToConfirm(el<HTMLButtonElement>('reset-progress'), () => {
-  campaign.reset(); returnToWorld();
+  campaign.reset(); selectedWorld = 'meadow-isles'; returnToWorld();
 });
 el('zoom-in').onclick = () => scene.zoomBy(1.2);
 el('zoom-out').onclick = () => scene.zoomBy(1/1.2);

@@ -14,6 +14,14 @@ colors:
   on-active: "#173558"
   charge: "#bdec4b"
   hover: "#ffffff12"
+  hover-subtle: "#ffffff0c"
+  utility-ink: "#d9ebf7"
+  camera-ink: "#9cbdd5"
+  marker: "#ffda51"
+  locked-marker: "#234b61"
+  goal-complete: "#c9ec65"
+  charge-track: "#061f39"
+  secondary-line: "#4876a5"
   canvas-label: "#ffffff"
   location-label: "#eef5cbdc"
   location-ink: "#133956"
@@ -24,6 +32,10 @@ typography:
     fontSize: "20px"
     fontWeight: 850
     letterSpacing: "-.025em"
+  completion:
+    fontFamily: "Nunito Sans Variable, sans-serif"
+    fontSize: "24px"
+    fontWeight: 850
   title:
     fontFamily: "Nunito Sans Variable, sans-serif"
     fontSize: "13px"
@@ -35,18 +47,28 @@ typography:
   label:
     fontFamily: "Nunito Sans Variable, sans-serif"
     fontSize: "11px"
+  location:
+    fontFamily: "Nunito Sans Variable, sans-serif"
+    fontSize: "13px"
+    fontWeight: 850
   canvas-count:
     fontFamily: "Nunito Sans Variable, sans-serif"
     fontSize: "17px"
 rounded:
+  charge: "2px"
   small: "4px"
   icon: "50%"
+  popover: "7px"
+  panel: "8px"
   control: "9px"
-  tray: "14px"
+  plan: "10px"
+  help: "12px"
+  dialog: "14px"
   dock: "20px"
 spacing:
   compact: "4px"
   control: "5px"
+  group: "8px"
   inset: "16px"
   edge: "24px"
 components:
@@ -58,7 +80,7 @@ components:
     height: "57px"
   icon-control:
     backgroundColor: "transparent"
-    textColor: "{colors.ink}"
+    textColor: "{colors.utility-ink}"
     rounded: "{rounded.icon}"
     size: "38px"
     padding: "5px"
@@ -70,16 +92,31 @@ components:
     backgroundColor: "{colors.location-label}"
     textColor: "{colors.location-ink}"
     rounded: "{rounded.small}"
+    typography: "{typography.location}"
     padding: "3px 7px"
+  completion-dialog:
+    backgroundColor: "{colors.panel}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.dialog}"
+    padding: "28px"
+    width: "360px"
+  completion-primary:
+    backgroundColor: "{colors.active}"
+    textColor: "{colors.on-active}"
+    rounded: "{rounded.popover}"
+  completion-secondary:
+    backgroundColor: "transparent"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.popover}"
 ---
 
-# Untitled Worldbuilder Game
+# Design System: Untitled
 
 Initial design draft · September 28, 2026 · Current visual system refreshed September 30, 2026
 
-**Implementation checkpoint:** Eight handcrafted missions are playable in TypeScript and Phaser, selected from a separate world map. The first three cover Shore arrival then Ridge delivery, Bramble hostile clearance, and Scoop's crossing. Rough Ridge, Woodland Workshop, Tidepool Trail, Harbor Run, and Ancient Valley add the rest of the released roster: 20 original buildable counterparts and six hostile roles, alongside Hauler, Bristleback, and Signal relay. Complete terrain profiles, distant obstacle work, shore cargo, automatic family support, static structure integrity, and enemy salvage are playable. Only Hollow starts unlocked; each later mission requires every preceding main, while bonuses never gate access. Each visit has one main then one hidden bonus, and fresh terrain, units, materials and finite blueprint stock; saved awards persist when storage is available. Both audio channels start off on every load with separate current-session opt-in. See [README.md](README.md), [prototype notes](docs/PROTOTYPE.md), and [roster guide](docs/ROSTER.md) for provisional authored rules; balance remains provisional.
+**Implementation checkpoint:** 36 distinct handcrafted missions are playable in TypeScript and Phaser across Meadow Isles, Sunstone Range and Open Sea, with twelve missions per world. Three authored landscapes have twelve numbered pins each, compact pictured world controls, per-world counts and one earned resident per completed mission. Future maps are browseable while mission access requires every preceding main, including both world boundaries. The campaign builds from individual tools to combined engineering, transport, power and real-time automatic combat. The roster retains 20 original buildable counterparts and six hostile roles, alongside Hauler, Bristleback and Signal relay. Each visit has one main then one hidden optional bonus, fresh terrain, units, supplies and finite blueprint stock; saved awards persist when storage is available. Normal play uses one short objective and pictured shipment requirements, with mission hints inside How to play. Desktop cameras initially fit the actual board, including larger final boards at widths of at least 700px. Both audio channels start off on every load with separate current-session opt-in. See [the canonical registry](src/levels/missions.ts), [campaign guide](docs/CAMPAIGN.md), [prototype notes](docs/PROTOTYPE.md) and [roster guide](docs/ROSTER.md); balance remains provisional. GitHub Pages deploys the campaign from `main` through the tested build workflow.
 
-**Draft status:** The overall direction is established. The original has now been played through the tutorial and Mission 2 using a browser Shockwave emulator. Selection, movement, cargo actions, building, dismantling, and movement after switching models have been observed directly. The user's recollection supplies the working combat model: automatic attacks between adjacent opponents, with enemies wandering until nearby units trigger pursuit. Exact combat rules and later missions still need firsthand study. See the [play notes](docs/references/play-notes-2026-09-28.md).
+**Reference research status:** The overall direction is established. The original has now been played through the tutorial and Mission 2 using a browser Shockwave emulator. Selection, movement, cargo actions, building, dismantling, and movement after switching models have been observed directly. The user's recollection supplies the working combat model: automatic attacks between adjacent opponents, with enemies wandering until nearby units trigger pursuit. Exact combat rules and later missions still need firsthand study. See the [play notes](docs/references/play-notes-2026-09-28.md).
 
 ## Overview
 
@@ -87,7 +124,7 @@ Initial design draft · September 28, 2026 · Current visual system refreshed Se
 
 The implemented visual world uses original fitted toy machines, saturated molded-plastic colors, broad highlights, readable eyes, rounded leaf trees, and chunky stones. Bright cyan water and sunny sand sit beside spring-green grass on thick raised earthy faces, framed by deep navy and cool blue controls. Each machine has a clear role: a narrow lime Scout, a broad orange Hauler with an empty bed, a thick cobalt Warden, a compact yellow Scoop with turquoise arms and hubs, and a red six-legged Bristleback.
 
-The [approved study](.impeccable/mocks/toy-world-study.png) and [approval record](.impeccable/mocks/toy-world-study.json) remain historical silhouette/material references. The [September 30 feedback contract](.impeccable/user-feedback-brief.md) supersedes illustrated rovers/rocks, textured terrain, the sidebar/mobile layout, Scoop cargo, and premature freighter scenery. Harbor Run now supplies playable one-tile boats, with boat residents earned only on its completion. Quiet broad terrain planes are a reversible trial, not a final user-approved style. The [campaign-rules contract](.impeccable/campaign-rules-brief.md) refines ordered map access, finite stock, a short objective, jointed bot legs and smoke without replacing this art world. The authored missions and desktop controls govern composition; attributed reference research and gameplay proposals below remain intact.
+The [approved study](.impeccable/mocks/toy-world-study.png) and [approval record](.impeccable/mocks/toy-world-study.json) remain historical silhouette/material references. The [September 30 feedback contract](.impeccable/user-feedback-brief.md) supersedes illustrated rovers/rocks, textured terrain, the sidebar/mobile layout, Scoop cargo, and premature freighter scenery. Playable one-tile boats now belong to authored Open Sea missions; boat residents are earned only by completed boat-bearing levels there. Quiet broad terrain planes are a reversible trial, not a final user-approved style. The [campaign-rules contract](.impeccable/campaign-rules-brief.md) and [campaign expansion contract](.impeccable/campaign-expansion-brief.md) extend finite stock, ordered access, pictured goals and three landscapes while preserving this world. Authored mission geometry and sparse desktop controls govern composition; the study is an identity reference rather than a map composition comp. Attributed reference research and the historical gameplay discussion below remain intact.
 
 **Key Characteristics:**
 
@@ -109,7 +146,13 @@ The [initial charm review](.impeccable/review/charm/finish-review.md) cleared vi
 
 **Historical roster extension checkpoint · September 30, 2026:** The 194-test full suite passed before final small fixes; 107 focused tests and the production build then passed after them. The build passed again after the sole Build-help copy fix. Native 1280×720 and 899×900 captures were inspected and independently reviewed, with native tree work, shore cargo, Marina recharge, and Sentry construction. Public simulation commands completed all five new main objectives and bonuses, including Ancient combat/support/salvage; native play did not complete every mission. The [finish review](.impeccable/review/roster/finish-review.md) requested one help correction and the [scoped verdict](.impeccable/review/roster/finish-verdict.md) returned **ship** after it. [Evidence](.impeccable/review/roster/evidence.md) does not certify whole-game balance, exact original stats, audible audio, performance, or mobile behavior; the single detector output was truncated, with no clean-count claim. No new raster asset or visual-world replacement was introduced.
 
-**Current campaign-rules checkpoint · September 30, 2026:** the [finish review](.impeccable/review/campaign-rules/finish-review.md) returned **ship** with no material fixes. [Evidence](.impeccable/review/campaign-rules/evidence.md) records 219 passing tests in 19 files and a passing build, isolated native 1280×720 Hollow main/bonus progression, finite relay stock after dismantling, construction smoke and the next unlocked map state. The four-heading bot study establishes model presentation; later mission solves use public simulation commands. Native specialist completion, combat smoke capture, preference-emulated reduced motion, balance, performance and audible audio remain unclaimed. No raster/provenance asset changed.
+**Historical campaign-rules checkpoint · September 30, 2026:** the [finish review](.impeccable/review/campaign-rules/finish-review.md) returned **ship** with no material fixes. [Evidence](.impeccable/review/campaign-rules/evidence.md) records 219 passing tests in 19 files and a passing build, isolated native 1280×720 Hollow main/bonus progression, finite relay stock after dismantling, construction smoke and the next unlocked map state. The four-heading bot study establishes model presentation; later mission solves use public simulation commands. Native specialist completion, combat smoke capture, preference-emulated reduced motion, balance, performance and audible audio remain unclaimed. No raster/provenance asset changed.
+
+**Current campaign expansion checkpoint · September 30, 2026:** [Evidence](.impeccable/review/campaign-expansion/evidence.md) records 259 passing tests in 24 files and public-command main/bonus solutions for all 36 canonical missions, with no direct solution mutation of charge, health, terrain or objective state. Tests cover unique boards, exact order, both world gates, saved/reset awards, known older awards, fresh stock, map paths and resident terrain. The Pages-base production build passed after the desktop initial-fit correction.
+
+Native captures were inspected at the actual 885×901 desktop viewport. Populated maps and later replays use synthetic saved awards on isolated ephemeral origin 5190; the fixture is absent from production. Actual Parts and Paths play transported the kit, built one Scout with stock reduced to zero, completed its main, resumed through Try bonus, delivered the blue shipment and opened the final bonus popup. Ordinary origin 5189 used a pre-existing Hollow main/star award and showed Parts available, ten later Meadow levels locked and all twelve Sunstone levels disabled. A fresh Three Tides initial capture without Overview shows the complete board; the reviewer reopened it and closed the camera gap. No all-36 native completion, additional 1280 capture, mobile behavior, audio listening, performance benchmark, exact-original-stat fidelity or calibrated balance is claimed.
+
+The [five-section finish review](.impeccable/review/campaign-expansion/finish-review.md) returns **fix** solely for stale current-scope documentation and the required final recording pass, with no extension UI repair remaining. This recording updates the actual tokens and sidecar previews. The [scoped finish verdict](.impeccable/review/campaign-expansion/finish-verdict.md) marks the documentation correction resolved and ready to ship, without whole-surface approval. The single detector pass records 33 advisory palette/radius/type documentation mismatches, not a mechanical UI defect or clean-zero audit. No raster or provenance asset changed; the 34-PNG manifest remains intact. Current deployment status is available in [GitHub Actions](https://github.com/Andrewp2/untitled-worldbuilder-game/actions/workflows/deploy-pages.yml).
 
 ## Colors
 
@@ -132,19 +175,21 @@ The UI palette places white and pale blue information on deep navy and cool blue
 - **Control Blue** (`panel`) and **Hover Blue** (`hover`): menu/details, hover labels, and interactive surface states; the translucent dock has its own token.
 - **Cloud White** (`ink`), **Pale Blue** (`muted`), and **Blue Line** (`line`): primary text, secondary details, and structural dividers.
 
-**The Yellow State Rule.** Use yellow to identify the current command, selection, or primary completion action; keep charge and completed-location cues green.
+**The Yellow State Rule.** Use yellow to identify the current command, selection, mission markers or primary completion action; use green for charge and completed-goal status.
 
 ## Typography
 
-Locally bundled **Nunito Sans Variable** supplies native controls and resource counts. Mission/world headings use (20px); selected names use (13px); details use (12px) with (1.5) line height. Pictorial actions retain accessible names and hover labels; costs, map names, and pile counts appear contextually. Empty cargo slots stay hidden.
+Locally bundled **Nunito Sans Variable** supplies native controls and resource counts. Mission/world headings use (20px); completion titles use (24px); selected names and hover-only location labels use (13px); details use (12px) with (1.5) line height. Pictorial actions retain accessible names and hover labels; costs, map names, and pile counts appear contextually. Empty cargo slots stay hidden.
 
-**The Short Label Rule.** Keep the normal view to names, short goals, action labels, pictures, and counts. Put unit details and instructions behind their native disclosure controls; show one short objective without a mission information panel.
+**The Short Label Rule.** Keep the normal view to names, short goals, action labels, pictures, and counts. Put unit details and instructions behind their native disclosure controls; show one short objective with pictured shipment requirements, and keep mission-specific hints inside How to play.
 
 Canvas labels and resource counts use pure white at 16px and 17px in world coordinates, rasterized at resolution 2; the camera scales them with the board. These are distinct from native control sizes.
 
 ## Layout
 
 The desktop board occupies the viewport. Small mission status sits at the upper left; the menu and camera controls sit at the upper right. A compact bottom toolbox (82px minimum height, 20px corners) holds always-visible pictured blueprints, selected name/charge and legal pictorial actions. Plans wrap with (8px) gaps and (4px) padding inside a bounded build region (520px maximum width); finite remaining counts stay visible, costs appear on hover/focus/selection, and exhausted blueprints are disabled. Units are selected on the board or with 1–9. Successful builds spend one blueprint; failure spends none, and dismantling/death never refunds stock. Music, effects, restart, and help live in the menu.
+
+Three world landscapes share a compact upper-left heading, pictured previous/next controls and a per-world count. Meadow uses grassy banks and crossings, Sunstone uses sandy banks, rough patches and swamp, and Open Sea uses separated islands and water passages. Each landscape has twelve numbered native pins. Map and mission cameras derive their fit from actual grid dimensions; desktop visits initially show the whole board at widths of at least 700px.
 
 Desktop is the requested device scope. The previous mobile reflow was removed by user preference. Refresh parent bounds before scale refresh when moving the shared canvas between hosts, so cameras and native pins use the same dimensions.
 
@@ -202,13 +247,13 @@ Authored unit/enemy views share one model and camera per kind, preserving the co
 
 ### Mission Pins and Completion
 
-Available native markers are yellow question marks; future missions use dark stationary locks and muted paths, with small numbers showing their order. Completed markers are flags with optional earned bonus stars. Marker pictures occupy (42×48px) and bob over fixed ground shadows; names appear on hover/focus with pale-green labels. Names and hit areas stay fixed. CSS loops pause off-screen or while hidden. Seven completed missions earn two residents each; Ancient Valley earns one Mender. Harbor Run earns Tugboat and Freighter water residents, with no boats before that maritime completion. Replays do not duplicate them.
+Available native markers are yellow question marks; future missions use dark stationary locks and muted paths, with small numbers showing their campaign order. Completed markers are flags with optional earned bonus stars. Marker pictures occupy (42×48px) and bob over fixed ground shadows; names appear on hover/focus with pale-green labels. Names and hit areas stay fixed. CSS loops pause off-screen or while hidden. Each completed mission earns one chosen resident on its own authored landscape, using terrain-compatible patrols. Boat residents belong only to completed boat-bearing Open Sea missions. Replays and world changes do not duplicate residents.
 
-Only Hollow starts unlocked, followed by Bramble, Siltwater, Rough, Woodland, Tidepool, Harbor and Ancient. Every preceding main award is required to enter a later mission; bonuses never gate the next. Existing known awards remain, but noncontiguous awards cannot bypass an earlier missing main. Siltwater retains its Scoop/Scout reward; later missions share the saved completion/resident pipeline.
+Only Hollow starts unlocked. Meadow Isles, Sunstone Range and Open Sea contain twelve ordered missions each, as recorded in [CAMPAIGN.md](docs/CAMPAIGN.md). Every preceding main award is required to enter a later mission, including both world boundaries; bonuses never gate the next. Future landscapes can be browsed with the compact pictured world controls while mission buttons remain disabled. Existing known awards remain, but noncontiguous awards cannot bypass an earlier missing main.
 
 Reaching a mission flag produces a yellow star that rises 76 world pixels over 1.25 seconds with cubic ease-out, with the existing signal or completion chime. Reduced motion shows the star without travel for 0.35 seconds. The final reward freezes the simulation before opening the borderless completion dialog; a canvas click, Space from the game surface, or Escape skips that short beat. Space continues to activate focused native buttons. Completion and newly earned bonuses publish in the event frame and save immediately, even if the player returns to the map during the reward. The dialog offers a yellow **World map** button or **Try bonus** button with minimum height (44px); resuming restores the previous pause state. The bonus marker, ground star and text appear only after the current visit's main completion, including replays. The bonus ending freezes the mission for the same reward, then opens **Bonus complete** with a starred flag, **Bonus star earned** and only **World map**; Escape also returns to the map, and the final run cannot resume. Each replay gets a new ending even with its star already saved, without a duplicate award.
 
-Each mission has one main and one later bonus. Hollow's main is Shore (15,11), followed by charged-battery delivery at Ridge (15,2); Bramble requires hostile clearance and East arrival before 1 red, 1 blue and 2 green at (17,10); Siltwater reveals 2 red and 1 blue at (12,9) after Far bank arrival. Later missions mix original-unit arrival bonuses with delivery, as recorded in [ROSTER.md](docs/ROSTER.md#five-new-missions). Coordinates are zero-based. Exact colors meet each recipe, deposits remain recoverable and earned stars stay earned after retrieval. Visits restore authored terrain, materials, units and finite stock; prior awards do not reveal a bonus before that visit's main completes.
+Each mission has one main and one later optional bonus. Arrival flags can bind a role or the original authored unit. Main shipment flags show the required colored parts and charged batteries beside the short goal; supplies must actually be deposited on the marked tile, and empty batteries do not qualify. Hostile-clearance conditions can delay completion even after a shipment is in place. Hidden bonuses use authored arrival or delivery requirements and appear only after that visit's main. Exact definitions live in [missions.ts](src/levels/missions.ts) and its imported content files; [CAMPAIGN.md](docs/CAMPAIGN.md) describes the distinct challenges. Deposits remain recoverable and earned stars stay earned after retrieval. Visits restore authored terrain, materials, units and finite stock; prior awards do not reveal a bonus early.
 
 ## Do's and Don'ts
 
@@ -226,6 +271,10 @@ Each mission has one main and one later bonus. Hollow's main is Shore (15,11), f
 - **Don't** use LEGO marks, studs, figures, or copied models for this original world.
 - **Don't** bake inventory, a floor, or cast shadows into the reusable character pictures.
 - **Don't** treat the approved art study as a pixel layout contract or the focused evidence as whole-game validation.
+
+# Historical game design discussion
+
+The following sections preserve the original design discussion and attributed research. Current implementation statements have been reconciled where the campaign now settles an earlier question; proposals and unverified reference observations remain labeled as such.
 
 ## Concept
 
@@ -245,7 +294,7 @@ These points come from the project discussion:
 - **A broader tactical game in later missions.** The reference includes substantial combat scenarios, especially Ocean World’s final mission.
 - **Original content.** Use the reference to understand mechanics and pacing while developing a new game and new levels.
 
-The systems below are a proposed starting direction. Exact rules, unit types, campaign size, and implementation choices remain open.
+The systems below preserve the proposed starting direction. The implemented roster, three worlds, 36 missions and current rules are recorded above; statistics, balance, the final title and broader setting remain open.
 
 ## What matters in the reference
 
@@ -253,7 +302,7 @@ The original combined spatial resources with specialist units. Construction used
 
 There were also two scales of play: a landscape used to select missions, and separate terrain boards for the missions themselves. The first game’s expanded campaign contained five worlds of twelve missions. Available missions used question marks; completion added flags and bonus completion added stars. Completing missions usually opened one or two more, and friendly models increasingly populated the campaign map. [Reference rules and campaign structure](https://brickipedia.fandom.com/wiki/World_Builder)
 
-These are reference facts, not a commitment to reproduce every rule or count. Consumable plans remain undecided. The prototype now adopts batteries with preserved, depletable charge; energy costs and battery replacement are provisional design choices.
+These are reference facts, not a commitment to reproduce every rule or count. The prototype adopts finite per-model plans, spending one on each successful build without refunds, and batteries with preserved, depletable charge. Energy costs and battery replacement balance remain provisional.
 
 **Further reference recollection from the user:** goals generally required moving a creature to the goal rather than building a static structure there. The user remembers battery charge also acting as health, and destroyed creatures breaking into parts with an empty battery. Those parts could be rebuilt into an intact but powerless creature. We use this as the working model for rover objectives, damage, and wreckage; exact reference behavior still needs direct confirmation.
 
@@ -273,11 +322,11 @@ This mission is a useful design reference from the beginning. A prototype should
 
 ### Campaign map
 
-The proposed campaign map is a small landscape with selectable mission locations. It communicates progress and gives the campaign a sense of place. Completing missions opens further locations; occasional branches can let players choose between available challenges.
+The current campaign uses three authored landscapes: Meadow Isles, Sunstone Range and Open Sea, each with twelve numbered locations. Main completion opens the next level in one order, including world boundaries. The initial proposal for occasional branches remains historical; branching is not current campaign behavior.
 
-Each location should clearly show whether it is available, completed, or completed with its bonus objective. Changes to the landscape or its inhabitants could make progress visible beyond a completion counter.
+Locations show available question marks, locked future missions, completed flags and earned bonus stars. Each main completion also adds one role-appropriate resident to that world on compatible terrain; replays do not duplicate it.
 
-Future world themes, mission counts and cosmetic changes remain undecided. The current prototype uses eight ordered missions, with every preceding main required and bonuses optional.
+The current scope settles the world themes and count at three ordered worlds and 36 distinct handcrafted missions. Any expansion beyond those worlds, additional cosmetics and player-calibrated balance remain open.
 
 #### Historical world-map checkpoint · September 29, 2026 · before the toy-world redesign
 
@@ -293,15 +342,15 @@ The new controls extend the existing locally bundled Nunito Sans and warm paper 
 
 ### Individual missions
 
-Each mission has an authored terrain layout, starting units, supplies, available construction options, enemies, and objectives. The implemented foundation is a square logical tile grid presented isometrically, with explicit camera movement and the toy visual system recorded above. Terrain categories and later mission development remain open as discussed below.
+Each mission has an authored terrain layout, starting units, supplies, available construction options, enemies, and objectives. The implemented foundation is a square logical tile grid presented isometrically, with explicit camera movement and the toy visual system recorded above. Current terrain categories and the complete campaign are implemented as recorded above; further development and balance remain open.
 
-Terrain should create meaningful differences between units. Ground, rough ground, shallow water, and deep water are possible categories. Islands, channels, narrow crossings, and obstacles can divide the map into regions that require different tools or tactics to reach.
+Terrain creates meaningful differences between units through grass, sand, swamp, boardwalk, rough ground, shallow water and deep water profiles. Islands, channels, narrow crossings, and obstacles can divide the map into regions that require different tools or tactics to reach.
 
 The map can change during play. Moving an obstacle or altering a shoreline may create a route, close an approach, or let supplies reach another area. Those changes should interact with combat as well as traversal.
 
-A mission has a clear primary objective and may have an optional bonus. Possible objectives include reaching a location with a particular unit, transporting cargo, protecting something, or clearing a route. These are design options, not a fixed objective list.
+Every current mission has one clear main objective and one hidden optional bonus. Authored goals include role/original-unit arrival and actual colored-part/charged-battery delivery, sometimes requiring all hostiles cleared. Terrain and construction challenges make those objectives possible; additional objective types remain future design options.
 
-Mission state is provisionally self-contained. Whether anything carries between missions is an open question.
+Mission state is self-contained: visits restart terrain, units, supplies, batteries and finite plans. Saved main awards and bonus stars carry across visits and generate earned residents; in-progress state and inventory do not carry between missions.
 
 ## Proposed gameplay systems
 
@@ -311,7 +360,7 @@ The basic loop is to examine the situation, get materials into position, build a
 
 The proposed resource system keeps supplies physically on the map. A stockpile’s location should matter: moving materials across a channel or through a dangerous area creates decisions of its own. Transport units need a purpose throughout the campaign.
 
-The prototype uses alloy, signal cores, and batteries; construction draws from the full 3×3 area. Recipe costs, build duration, and recovery balance remain provisional.
+The current prototype uses red, blue, yellow and green parts, physical batteries and terrain-work dirt; construction draws loose supplies from the full 3×3 area and is immediate. Recipe costs and recovery balance remain provisional.
 
 ### Specialist units
 
@@ -405,7 +454,7 @@ Judge the slice by whether players can understand their options, execute orders 
 
 ## Open decisions
 
-This table preserves the questions from the initial discussion. The current prototype has since established TypeScript/Phaser, isometric presentation, and the approved toy art direction. Its provisional rules are recorded above and in [the prototype notes](docs/PROTOTYPE.md); the final title, setting, later systems, and balance still need development.
+This table preserves the questions from the initial discussion. The current prototype has since established TypeScript/Phaser, isometric presentation, and the approved toy art direction. Its provisional rules are recorded above and in [the prototype notes](docs/PROTOTYPE.md); the final title, broader setting, further systems, and balance still need development.
 
 | Decision | Why it matters |
 | --- | --- |
@@ -418,7 +467,7 @@ This table preserves the questions from the initial discussion. The current prot
 | Selection, movement, and action behavior | Establishes the actual interaction loop, including what happens when switching units |
 | Pause and time controls | Affects how much simultaneous attention missions demand |
 | Failure and recovery | Defines when losses require a restart and how a stuck state is communicated |
-| Campaign progression and persistence | Current prototype: eight ordered missions, each main unlocks the next; a current-visit main reveals its bonus, saved awards persist and visits restart fresh |
+| Campaign progression and persistence | Current prototype: 36 ordered missions in three worlds of twelve, each main unlocks the next across world boundaries; a current-visit main reveals its bonus, saved awards persist and visits restart fresh |
 
 ## Further reference work
 

@@ -1,6 +1,7 @@
 import { enemyDefinition, partCounts, recipeSupplies, unitDefinition } from '../core/catalog';
 import type { Grid, Terrain } from '../core/grid';
 import type { Mission } from './missions';
+import { seaMissions } from './open-sea';
 
 const legend: Record<string, Terrain> = { '.': 'grass', ':': 'sand', '~': 'water', w: 'deep-water', '^': 'rough', s: 'swamp', T: 'tree', '#': 'rock', '=': 'bridge' };
 function authoredGrid(rows: string[]): Grid {
@@ -41,37 +42,8 @@ export const rosterMissions: Mission[] = [
     bonus: { kind: 'delivery', ...partCounts(3, 1, 0, 4), name: 'Grove supplies', description: 'Deliver 3 red, 1 blue and 4 green to the grove’s star.', cell: { x: 17, y: 5 }, chargedBatteries: 0 },
     enemies: [], blueprints: { arborbot: 1, dozer: 1, forklift: 1, dumptruck: 1, pump: 1, hauler: 1, scout: 1 }, seed: 3102,
   },
-  {
-    id: 'tidepool-trail', name: 'Tidepool Trail', goal: 'Guide Frog to the far-bank flag',
-    brief: 'Frog and Duck can use land and pale shallow water. Fish can swim in shallow or dark deep water, but cannot enter land. Guide Frog to the eastern flag, then bring the original Duck back through the shallows for its bonus nest. Swamp ground uses more charge per step; keep an eye on the batteries.',
-    grid: authoredGrid([
-      'wwwwwwwwwwwwwwwwwwww', 'ww.......www......ww', 'w........www.......w', 'w...T....www.......w',
-      'w...T....www..::...w', 'w........~~~..::...w', 'w..::....~~~.......w', 'w..::....~~~.......w',
-      'w........~~~.......w', 'w........www.......w', 'w..sss...www.......w', 'w..sss...www...T...w',
-      'w........www...T...w', 'ww.......www......ww', 'www......www.....www', 'wwwwwwwwwwwwwwwwwwww',
-    ]),
-    rovers: [unitDefinition('frog', 'frog', { x: 3, y: 7 }), unitDefinition('duck', 'duck', { x: 16, y: 9 }), unitDefinition('fish', 'fish', { x: 10, y: 11 })],
-    piles: [{ cell: { x: 3, y: 9 }, supplies: recipeSupplies('hauler', 100) }, { cell: { x: 5, y: 11 }, supplies: supplies(0, 0, 0, 0, [53]) }],
-    goals: [{ id: 'frog-bank', name: 'Frog bank', cell: { x: 17, y: 4 }, kinds: ['frog'] }],
-    bonus: { kind: 'arrival', name: 'Duck nesting ground', description: 'Guide Duck across the shallows to the western nest.', cell: { x: 4, y: 12 }, unitId: 'duck' },
-    enemies: [], blueprints: { frog: 1, duck: 1, fish: 1, hauler: 1, scout: 1 }, seed: 3103,
-  },
-  {
-    id: 'harbor-run', name: 'Harbor Run', goal: 'Escort Freighter to the outer harbor',
-    brief: 'Tugboat carries 5 parts, Freighter carries 25, and Patrol boat fights adjacent water creatures automatically. Marina recharges nearby boats. Protect Freighter on its eastern journey, then return for a shore delivery. Cargo boats sail beside a shoreline pile to transfer it. Reef crabs and sharks stay in water; Gator can leave the shore.',
-    grid: authoredGrid([
-      '~~~~~~~~~~~~~~~~~~~~', '~~.....~~~wwwwww~~~~', '~......~~~wwwwww...~', '~......~~~wwwwww...~',
-      '~......~~~wwwwww...~', '~.....:~~~wwwwww...~', '~.....:~~~wwwwww...~', '~.....:~~~wwwwww...~',
-      '~......~~~wwwwww...~', '~......~~~wwwwww...~', '~~.....~~~wwwwww...~', '~~~...~~~~wwwwww...~',
-      '~~~~~~~~~~wwwwww...~', '~~~~~~~~~~wwwwww...~', '~~~~~~~~~~wwwwww~~~~', '~~~~~~~~~~~~~~~~~~~~',
-    ]),
-    rovers: [unitDefinition('tug', 'tug', { x: 8, y: 6 }), unitDefinition('freighter', 'freighter', { x: 10, y: 7 }), unitDefinition('patrolboat', 'patrolboat', { x: 9, y: 8 }), unitDefinition('marina', 'marina', { x: 7, y: 6 })],
-    piles: [{ cell: { x: 6, y: 7 }, supplies: supplies(2, 4, 0, 6) }, { cell: { x: 6, y: 5 }, supplies: recipeSupplies('patrolboat', 100) }],
-    goals: [{ id: 'freight-channel', name: 'Outer harbor', cell: { x: 14, y: 10 }, kinds: ['freighter'] }],
-    bonus: { kind: 'delivery', ...partCounts(2, 4, 0, 6), name: 'Outer harbor supplies', description: 'Deliver 2 red, 4 blue and 6 green to the outer shore.', cell: { x: 16, y: 9 }, chargedBatteries: 0 },
-    enemies: [enemyDefinition('water-crab', 'reef-crab', { x: 12, y: 3 }), enemyDefinition('shark', 'harbor-shark', { x: 12, y: 12 }), enemyDefinition('gator', 'harbor-gator', { x: 17, y: 6 })],
-    blueprints: { tug: 1, freighter: 1, patrolboat: 1, marina: 1 }, seed: 3104,
-  },
+  seaMissions[0],
+  seaMissions[4],
   {
     id: 'ancient-valley', name: 'Ancient Valley', goal: 'Clear the valley and reach the Lookout',
     brief: 'Mender uses its own charge to restore a nearby bot. Bot workshop provides power at camp; Sentry tower defends its neighboring tiles. Keep Mender near Warden while confronting Scorpion and Rex. Their defeated parts include charged batteries.',

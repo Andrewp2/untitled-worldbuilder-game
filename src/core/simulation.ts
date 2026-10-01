@@ -18,7 +18,8 @@ export type OrderResult = { ok: true } | { ok: false; reason: 'terrain' | 'occup
 export type ActionResult = { ok: true; id?: string; queued?: boolean } | { ok: false; reason: string };
 export type Pile = { cell: Cell; supplies: Supplies };
 export type Relay = { id: string; cell: Cell };
-export type Goal = { id: string; name: string; cell: Cell; kinds?: readonly UnitKind[]; clearEnemies?: boolean };
+export type DeliveryRequirements = PartCounts & { chargedBatteries: number };
+export type Goal = { id: string; name: string; cell: Cell; kinds?: readonly UnitKind[]; unitId?: string; clearEnemies?: boolean; delivery?: DeliveryRequirements };
 export type DeliveryObjective = PartCounts & { kind: 'delivery'; name: string; description: string; cell: Cell; chargedBatteries: number };
 export type ArrivalObjective = { kind: 'arrival'; name: string; description: string; cell: Cell; unitId: string };
 export type BonusObjective = DeliveryObjective | ArrivalObjective;
@@ -80,13 +81,24 @@ export class Simulation {
   private recordGoals(unit: Unit): void {
     if (!isMobile(unit.kind)) return;
     for (const goal of this.setup.goals ?? []) {
-      if (!sameCell(unit.cell, goal.cell) || this.reached.has(goal.id) || goal.kinds && !goal.kinds.includes(unit.kind) || goal.clearEnemies && this.enemies.length) continue;
-      this.reached.add(goal.id);
-      this.events.push({ kind: 'goal-reached', unitId: unit.id, goalId: goal.id,
-        complete: this.setup.goals!.every(goal => this.reached.has(goal.id)), text: `${goal.name} reached.`, error: false });
+      if (goal.delivery || !sameCell(unit.cell, goal.cell) || goal.kinds && !goal.kinds.includes(unit.kind) || goal.unitId && goal.unitId !== unit.id || goal.clearEnemies && this.enemies.length) continue;
+      this.reachGoal(goal, unit.id);
     }
     const bonus = this.setup.bonus;
     if (this.bonusUnlocked && !this.bonusReached && bonus?.kind === 'arrival' && unit.id === bonus.unitId && sameCell(unit.cell, bonus.cell)) this.awardBonus(bonus.cell);
+  }
+  private reachGoal(goal: Goal, unitId: string): void {
+    if (this.reached.has(goal.id)) return;
+    this.reached.add(goal.id);
+    this.events.push({ kind: 'goal-reached', unitId, goalId: goal.id,
+      complete: this.mainComplete, text: `${goal.name} reached.`, error: false });
+  }
+  private recordDeliveries(unitId = ''): void {
+    for (const goal of this.setup.goals ?? []) {
+      if (!goal.delivery || goal.clearEnemies && this.enemies.length) continue;
+      const pile = this.pileAt(goal.cell), required = goal.delivery;
+      if (pile && materials.every(color => pile.supplies[color] >= required[color]) && pile.supplies.batteries.filter(charge => charge > 0).length >= required.chargedBatteries) this.reachGoal(goal, unitId);
+    }
   }
   private awardBonus(cell: Cell): void {
     this.bonusReached = true;
@@ -114,6 +126,7 @@ export class Simulation {
     for (const m of materials) pile.supplies[m] += supplies[m];
     pile.supplies.batteries.push(...supplies.batteries);
     if (supplies.soil) pile.supplies.soil = (pile.supplies.soil ?? 0) + supplies.soil;
+    this.recordDeliveries();
     const bonus = this.setup.bonus;
     if (this.bonusUnlocked && bonus?.kind === 'delivery' && !this.bonusReached && sameCell(cell, bonus.cell) && materials.every(color => pile!.supplies[color] >= bonus[color]) && pile.supplies.batteries.filter(charge => charge > 0).length >= bonus.chargedBatteries) this.awardBonus(cell);
   }
@@ -587,6 +600,7 @@ export class Simulation {
       this.events.push({ kind: 'destroyed', unitId: enemy.id, faction: 'enemy', cell, text: `${enemy.name} defeated.`, error: false });
     }
     for (const unit of this.units) this.recordGoals(unit);
+    this.recordDeliveries();
   }
   private stepSupport(seconds: number): void {
     for (const source of this.units) {

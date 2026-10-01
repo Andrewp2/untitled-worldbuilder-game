@@ -36,6 +36,8 @@ main { position:relative; }
 .goal-marker { display:flex; color:#b8d5ef; width:20px; height:22px; }
 .goal-marker svg { width:20px; height:20px; }
 .goal-marker.complete { color:#c9ec65; }
+.goal-shipment { display:flex; align-items:center; gap:7px; }
+#mission-brief { margin-top:14px; }
 .bonus-marker { color:#ffdc59; }
 .bonus-marker.complete svg { fill:#ffdc59; }
 #progress { font-size:11px; margin-left:4px; color:var(--muted); }
@@ -114,8 +116,9 @@ main { position:relative; }
 #paused-label { position:absolute; top:22px; left:50%; transform:translateX(-50%); z-index:5; font-size:15px; font-weight:800; color:#ffdc59; }
 .world-heading { position:absolute; top:24px; left:25px; pointer-events:none; }
 .world-heading h1 { font-size:20px; font-weight:850; }
-.world-heading p { display:none; }
-.world-progress { position:absolute; top:52px; left:25px; font-size:11px; color:var(--muted); }
+.world-navigation { display:flex; align-items:center; gap:3px; margin-top:4px; pointer-events:auto; }
+.world-navigation .header-button { width:38px; height:38px; }
+.world-progress { margin-left:9px; font-size:12px; color:var(--muted); font-variant-numeric:tabular-nums; }
 .mission-locations { position:absolute; inset:0; pointer-events:none; }
 .mission-location { position:absolute; display:flex; flex-direction:column; align-items:center; transform:translate(-50%,-50px); padding:0; border:0; background:transparent; pointer-events:auto; width:max-content; }
 .location-marker { position:relative; display:grid; place-items:center; width:42px; height:48px; color:#ffda51; }

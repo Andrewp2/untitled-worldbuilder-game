@@ -1,45 +1,31 @@
-import { findPath, type Cell, type Mobility } from '../core/grid';
-import { worldMap } from '../levels/world-map';
+import { findPath, walkable, type Cell, type Grid, type Mobility } from '../core/grid';
+import { unitSpecs, type UnitKind } from '../core/catalog';
+import { worlds } from '../levels/world-map';
+import type { WorldId } from '../levels/missions';
 
-/** Residents are earned scenery; their routes never enter mission simulations. */
-export const residentHomes = [
-  { mission: 'hollow-reach', patrols: [
-    { kind: 'scout' as const, waypoints: [{ x: 5, y: 7 }, { x: 7, y: 7 }, { x: 7, y: 6 }, { x: 5, y: 6 }] },
-    { kind: 'hauler' as const, waypoints: [{ x: 6, y: 11 }, { x: 8, y: 11 }, { x: 8, y: 12 }, { x: 6, y: 12 }] },
-  ] },
-  { mission: 'bramble-crossing', patrols: [
-    { kind: 'scout' as const, waypoints: [{ x: 16, y: 12 }, { x: 17, y: 12 }, { x: 17, y: 13 }, { x: 16, y: 13 }] },
-    { kind: 'hauler' as const, waypoints: [{ x: 12, y: 3 }, { x: 14, y: 3 }, { x: 14, y: 2 }, { x: 12, y: 2 }] },
-  ] },
-  { mission: 'siltwater-reach', patrols: [
-    { kind: 'scoop' as const, waypoints: [{ x: 7, y: 9 }, { x: 8, y: 9 }, { x: 8, y: 8 }, { x: 7, y: 8 }] },
-    { kind: 'scout' as const, waypoints: [{ x: 8, y: 13 }, { x: 9, y: 13 }, { x: 9, y: 12 }, { x: 8, y: 12 }] },
-  ] },
-  { mission: 'rough-ridge', patrols: [
-    { kind: 'trailbuggy' as const, waypoints: [{ x: 7, y: 2 }, { x: 8, y: 2 }, { x: 8, y: 3 }, { x: 7, y: 3 }] },
-    { kind: 'snail' as const, waypoints: [{ x: 6, y: 5 }, { x: 7, y: 5 }, { x: 7, y: 6 }, { x: 6, y: 6 }] },
-  ] },
-  { mission: 'woodland-workshop', patrols: [
-    { kind: 'arborbot' as const, waypoints: [{ x: 3, y: 7 }, { x: 4, y: 7 }, { x: 4, y: 6 }, { x: 3, y: 6 }] },
-    { kind: 'dumptruck' as const, waypoints: [{ x: 14, y: 10 }, { x: 15, y: 10 }, { x: 15, y: 11 }, { x: 14, y: 11 }] },
-  ] },
-  { mission: 'tidepool-trail', patrols: [
-    { kind: 'frog' as const, waypoints: [{ x: 13, y: 5 }, { x: 13, y: 6 }, { x: 12, y: 6 }, { x: 12, y: 5 }] },
-    { kind: 'duck' as const, waypoints: [{ x: 7, y: 10 }, { x: 8, y: 10 }, { x: 8, y: 11 }, { x: 7, y: 11 }] },
-  ] },
-  { mission: 'harbor-run', patrols: [
-    { kind: 'tug' as const, waypoints: [{ x: 0, y: 3 }, { x: 0, y: 5 }, { x: 0, y: 6 }, { x: 0, y: 4 }] },
-    { kind: 'freighter' as const, waypoints: [{ x: 19, y: 9 }, { x: 19, y: 10 }, { x: 19, y: 12 }, { x: 19, y: 11 }] },
-  ] },
-  { mission: 'ancient-valley', patrols: [
-    { kind: 'mender' as const, waypoints: [{ x: 13, y: 12 }, { x: 14, y: 12 }, { x: 14, y: 13 }, { x: 13, y: 13 }] },
-  ] },
-];
+const residentKinds: Record<WorldId, UnitKind[]> = {
+  'meadow-isles': ['scout','hauler','scoop','dozer','arborbot','forklift','scout','hauler','warden','warden','dumptruck','snail'],
+  'sunstone-range': ['trailbuggy','warden','hauler','snail','mender','mender','trailbuggy','scoop','dozer','arborbot','forklift','warden'],
+  'open-sea': ['frog','freighter','fish','tug','patrolboat','freighter','tug','frog','forklift','patrolboat','freighter','arborbot'],
+};
 
-export function patrolRoute(waypoints: Cell[], mobility: Mobility = 'land'): Cell[] {
+/** Small scenery patrols are fitted to each authored landscape, never to a mission simulation. */
+export const residentHomes = worlds.flatMap(world => world.locations.map((location, i) => {
+  const kind = residentKinds[world.id][i], mobility = unitSpecs[kind].mobility;
+  const squares: Cell[][] = [];
+  for (let y = 0; y < world.grid.height - 1; y++) for (let x = 0; x < world.grid.width - 1; x++) {
+    const square = [{x,y}, {x:x+1,y}, {x:x+1,y:y+1}, {x,y:y+1}];
+    if (square.every(cell => walkable(world.grid, cell, mobility) && world.locations.every(pin => Math.abs(cell.x - pin.cell.x) + Math.abs(cell.y - pin.cell.y) > 1))) squares.push(square);
+  }
+  squares.sort((a,b) => Math.abs(a[0].x-location.cell.x)+Math.abs(a[0].y-location.cell.y)-Math.abs(b[0].x-location.cell.x)-Math.abs(b[0].y-location.cell.y));
+  if (!squares.length) throw new Error(`${world.name} needs a scenery route for ${kind}.`);
+  return { world: world.id, mission: location.id, patrols: [{ kind, waypoints: squares[0] }] };
+}));
+
+export function patrolRoute(grid: Grid, waypoints: Cell[], mobility: Mobility = 'land'): Cell[] {
   const route = [{ ...waypoints[0] }];
   for (let i = 0; i < waypoints.length; i++) {
-    const leg = findPath(worldMap, waypoints[i], waypoints[(i + 1) % waypoints.length], new Set(), mobility);
+    const leg = findPath(grid, waypoints[i], waypoints[(i + 1) % waypoints.length], new Set(), mobility);
     if (!leg) throw new Error('A world resident needs a connected patrol on its own terrain.');
     route.push(...leg);
   }

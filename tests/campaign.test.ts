@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { Campaign, PROGRESS_KEY, type ProgressStorage } from '../src/core/campaign';
 import { findPath, walkable } from '../src/core/grid';
 import { missions, createMission } from '../src/levels/missions';
-import { worldLocations, worldMap } from '../src/levels/world-map';
+import { worlds } from '../src/levels/world-map';
 
 const ids = missions.map(mission => mission.id);
 function finishWithBonus(campaign: Campaign, id: string): boolean {
@@ -96,9 +96,12 @@ describe('world map and mission completion', () => {
     expect(new Campaign(ids, storage).bonuses.size).toBe(2);
   });
   it('has a reachable map location for every mission', () => {
-    expect(worldLocations.map(location => location.id).sort()).toEqual([...ids].sort());
-    expect(worldLocations.every(location => walkable(worldMap, location.cell))).toBe(true);
-    expect(findPath(worldMap, worldLocations[0].cell, worldLocations[1].cell)).not.toBeNull();
+    expect(worlds.flatMap(world => world.locations.map(location => location.id)).sort()).toEqual([...ids].sort());
+    for (const world of worlds) {
+      expect(world.locations).toHaveLength(12);
+      expect(world.locations.every(location => walkable(world.grid, location.cell))).toBe(true);
+      for (const location of world.locations.slice(1)) expect(findPath(world.grid, world.locations[0].cell, location.cell), `${world.name}: ${location.id}`).not.toBeNull();
+    }
   });
   it('starts on the map and does not count leaving an unfinished mission', () => {
     const campaign = new Campaign(ids);

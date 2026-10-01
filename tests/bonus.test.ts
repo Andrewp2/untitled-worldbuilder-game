@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { unitDefinition, type Supplies } from '../src/core/catalog';
-import { unitSpecs, supportsCargo } from '../src/core/catalog';
-import { type Cell, type Grid, walkable, findPath } from '../src/core/grid';
+import { unitSpecs } from '../src/core/catalog';
+import { type Cell, type Grid, walkable, terrainAt } from '../src/core/grid';
 import { Simulation, type DeliveryObjective } from '../src/core/simulation';
 import { missions } from '../src/levels/missions';
 
@@ -47,15 +47,18 @@ describe('authored delivery bonuses', () => {
     expect(simulation.pileAt(bonus.cell)?.supplies).toEqual({ red: 3, blue: 1, batteries: [] , yellow: 0, green: 0});
     expect(simulation.drainEvents()).toHaveLength(1);
   });
-  it('places optional pads away from flags, reachable by a mission carrier or an authored terrain worker', () => {
+  it('places separate bonus targets with real delivery requirements or a traversable original-unit arrival', () => {
     for (const mission of missions) {
-      expect(walkable(mission.grid, mission.bonus.cell)).toBe(true);
-      if (mission.bonus.kind !== 'delivery') continue;
-      const accessible = mission.rovers.filter(unit => supportsCargo(unit.kind)).some(unit =>
-        [{x:mission.bonus.cell.x+1,y:mission.bonus.cell.y},{x:mission.bonus.cell.x-1,y:mission.bonus.cell.y},{x:mission.bonus.cell.x,y:mission.bonus.cell.y+1},{x:mission.bonus.cell.x,y:mission.bonus.cell.y-1}]
-          .some(cell => findPath(mission.grid, unit.start, cell, new Set(), unitSpecs[unit.kind].mobility)));
-      if (!accessible) expect(Object.keys(mission.blueprints).some(plan => ['scoop', 'arborbot', 'dozer', 'hauler'].includes(plan))).toBe(true);
-      expect(mission.goals.some(goal => goal.cell.x === mission.bonus.cell.x && goal.cell.y === mission.bonus.cell.y)).toBe(false);
+      const bonus = mission.bonus;
+      expect(terrainAt(mission.grid, bonus.cell), mission.name).not.toBeUndefined();
+      expect(['tree','rock'].includes(terrainAt(mission.grid, bonus.cell)!), mission.name).toBe(false);
+      expect(mission.goals.some(goal => goal.cell.x === bonus.cell.x && goal.cell.y === bonus.cell.y)).toBe(false);
+      if (bonus.kind === 'delivery') expect(bonus.red + bonus.blue + bonus.yellow + bonus.green + bonus.chargedBatteries).toBeGreaterThan(0);
+      else {
+        const original = mission.rovers.find(unit => unit.id === bonus.unitId);
+        expect(original, mission.name).toBeDefined();
+        expect(walkable(mission.grid, bonus.cell, unitSpecs[original!.kind].mobility), mission.name).toBe(true);
+      }
     }
   });
 });

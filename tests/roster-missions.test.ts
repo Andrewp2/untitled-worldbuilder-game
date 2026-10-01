@@ -21,7 +21,7 @@ describe('handcrafted campaign missions', () => {
       expect(mission.goals).toHaveLength(1);
       expect(Object.values(mission.blueprints).every(count => Number.isInteger(count) && count! > 0)).toBe(true);
       expect(s.bonusUnlocked).toBe(false);
-      for (const goal of mission.goals) expect(mission.rovers.some(unit => (!goal.kinds || goal.kinds.includes(unit.kind)) && isMobile(unit.kind) && walkable(mission.grid, goal.cell, unitSpecs[unit.kind].mobility)), `${mission.name} → ${goal.name}`).toBe(true);
+      for (const goal of mission.goals) if (!goal.delivery) expect(unitKinds.some(kind => (!goal.kinds || goal.kinds.includes(kind)) && (mission.rovers.some(unit => unit.kind === kind) || mission.blueprints[kind]) && isMobile(kind) && walkable(mission.grid, goal.cell, unitSpecs[kind].mobility)), `${mission.name} → ${goal.name}`).toBe(true);
       expect(s.grid.tiles).not.toBe(mission.grid.tiles);
     }
   });
@@ -61,21 +61,10 @@ describe('handcrafted campaign missions', () => {
     expect(s.orderCargo('forklift','pickup',{x:6,y:10}).ok).toBe(true); settled(s,'forklift');
     expect(s.orderCargo('forklift','drop',m.bonus.cell).ok).toBe(true); until(s,()=>s.bonusReached);
   });
-  it('guides Frog through shallow water, then unlocks the original Duck’s return journey', () => {
-    const m = rosterMissions[2], s = createMission(m);
-    expect(s.move('frog',m.goals[0].cell).ok).toBe(true); until(s,()=>s.mainComplete);
-    expect(s.bonusReached).toBe(false);
-    expect(s.move('duck',m.bonus.cell).ok).toBe(true); until(s,()=>s.bonusReached);
-  });
-  it('escorts Freighter to the harbor and completes the shore delivery with live water hazards', () => {
-    const m = rosterMissions[3], s = createMission(m);
-    expect(s.move('patrolboat',{x:13,y:4}).ok).toBe(true); s.step(4);
-    expect(s.move('freighter',m.goals[0].cell).ok).toBe(true); until(s,()=>s.mainComplete);
-    expect(s.orderCargo('freighter','pickup',{x:6,y:7}).ok).toBe(true); settled(s,'freighter');
-    expect(s.orderCargo('freighter','drop',m.bonus.cell).ok).toBe(true); until(s,()=>s.bonusReached);
-  });
   it('earns boats only from the maritime mission, and bot residents from their own mission', () => {
-    expect(residentHomes.filter(h=>h.patrols.some(p=>unitSpecs[p.kind].family==='boat')).map(h=>h.mission)).toEqual(['harbor-run']);
+    const boats = residentHomes.filter(h=>h.patrols.some(p=>unitSpecs[p.kind].family==='boat'));
+    expect(boats.length).toBeGreaterThan(0);
+    expect(boats.every(home => home.world === 'open-sea' && missions.find(m=>m.id===home.mission)!.rovers.some(unit=>unitSpecs[unit.kind].family==='boat'))).toBe(true);
     expect(residentHomes.some(h=>h.mission==='woodland-workshop' && h.patrols.some(p=>p.kind==='arborbot'))).toBe(true);
   });
   it('uses Mender through both valley encounters before the main goal, then delivers conserved salvage', () => {

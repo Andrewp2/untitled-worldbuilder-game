@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { constructionArea, key, neighbors, terrainAt, isWater, walkable, type Cell } from '../core/grid';
 import { toCell, toWorld, surfacePoint, WATER_DROP } from '../core/projection';
 import { BATTERY_CAPACITY, MOVE_ENERGY, blueprintNames, costTotal, describeCost, describeSupplies, recipes, load, defaultAction, supportsAction, isMobile, usesBattery, unitSpecs, type Blueprint, type UnitKind, type Supplies } from '../core/catalog';
-import type { WorkAction, BlueprintStock } from '../core/simulation';
+import type { WorkAction, BlueprintStock, Goal } from '../core/simulation';
 import { createMission, missions, type Mission } from '../levels/missions';
 import { diamond, drawParts, drawRelay, drawTerrain, partsBadge, polygon } from './art';
 import { TOY_BACKGROUND, drawStar, groundShadow, poseToy, preloadToyArt, toyActor, toyFlag, toyImage, waveFlag, type ToyActor, type ToyFlag } from './toy-art';
@@ -14,7 +14,7 @@ import type { SoundCue } from '../audio/score';
 
 export type Mode = 'move' | WorkAction | 'build' | 'dismantle';
 export type ViewState = {
-  mission: Pick<Mission, 'id' | 'name' | 'goal' | 'blueprints'> & { goals: { id: string; name: string }[] };
+  mission: Pick<Mission, 'id' | 'name' | 'goal' | 'brief' | 'blueprints'> & { goals: Pick<Goal, 'id' | 'name' | 'delivery'>[] };
   complete: boolean;
   celebrating: boolean;
   bonus: { name: string; description: string; reached: boolean; unlocked: boolean };
@@ -383,11 +383,12 @@ export class GameScene extends Phaser.Scene {
   private calculateFit(): void {
     this.cameras.main.setSize(this.scale.width, this.scale.height);
     this.viewWidth = this.scale.width; this.viewHeight = this.scale.height;
-    this.fitZoom = Math.min(this.scale.width / 1560, this.scale.height / 870, 1.1);
+    const size = this.simulation.grid.width + this.simulation.grid.height;
+    this.fitZoom = Math.min(this.scale.width / (size * 40 + 120), this.scale.height / (size * 20 + 150), 1.1);
   }
   private initialView(): void {
     this.overview();
-    if (this.fitZoom < 0.55) {
+    if (this.scale.width < 700 && this.fitZoom < 0.55) {
       // Keep units large enough to select on narrow screens; Overview still fits the full board.
       this.cameras.main.setZoom(0.65).centerOn(-160, 260);
       this.emitState();
@@ -398,7 +399,8 @@ export class GameScene extends Phaser.Scene {
     this.hover = null;
     this.calculateFit();
     this.cameras.main.setZoom(this.fitZoom);
-    this.cameras.main.centerOn(80, 330); this.emitState();
+    const { width, height } = this.simulation.grid;
+    this.cameras.main.centerOn((width - height) * 20, (width + height - 2) * 10); this.emitState();
   }
   private resizeView(): void {
     if (!this.ready) return;
@@ -425,13 +427,14 @@ export class GameScene extends Phaser.Scene {
   private clampCamera(): void {
     const c = this.cameras.main;
     // Bound the camera center, allowing a margin around the island at every zoom.
-    c.scrollX = Phaser.Math.Clamp(c.scrollX, -650 - c.width / 2, 850 - c.width / 2);
-    c.scrollY = Phaser.Math.Clamp(c.scrollY, -100 - c.height / 2, 820 - c.height / 2);
+    const { width, height } = this.simulation.grid;
+    c.scrollX = Phaser.Math.Clamp(c.scrollX, -height * 40 - 90 - c.width / 2, width * 40 + 90 - c.width / 2);
+    c.scrollY = Phaser.Math.Clamp(c.scrollY, -100 - c.height / 2, (width + height) * 20 + 100 - c.height / 2);
   }
   private emitState(): void {
     const relay = this.selectedRelay();
     this.bridge.state({
-      mission: { id: this.mission.id, name: this.mission.name, goal: this.mission.goal, goals: this.mission.goals.map(({ id, name }) => ({ id, name })), blueprints: this.mission.blueprints },
+      mission: { id: this.mission.id, name: this.mission.name, goal: this.mission.goal, brief: this.mission.brief, goals: this.mission.goals.map(({ id, name, delivery }) => ({ id, name, delivery })), blueprints: this.mission.blueprints },
       complete: this.complete(),
       celebrating: this.simulation.bonusReached ? !this.bonusCelebrationComplete : this.complete() && !this.celebrationComplete,
       bonus: { name: this.mission.bonus.name, description: this.mission.bonus.description, reached: this.simulation.bonusReached, unlocked: this.simulation.bonusUnlocked },

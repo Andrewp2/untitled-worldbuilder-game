@@ -3,7 +3,7 @@ import { stepPose, rewardPose } from '../src/view/motion';
 import { patrolRoute, residentHomes } from '../src/view/world-residents';
 import { unitSpecs, unitKinds, enemyKinds } from '../src/core/catalog';
 import { walkable } from '../src/core/grid';
-import { worldMap } from '../src/levels/world-map';
+import { worlds } from '../src/levels/world-map';
 
 describe('toy movement and reward timing', () => {
   it('lands at both ends of every step and stays planted when idle or motion is reduced', () => {
@@ -33,8 +33,9 @@ describe('toy movement and reward timing', () => {
   });
   it('keeps every resident patrol on connected terrain it can use', () => {
     for (const home of residentHomes) {
+      const worldMap = worlds.find(world => world.id === home.world)!.grid;
       for (const patrol of home.patrols) {
-        const route = patrolRoute(patrol.waypoints, unitSpecs[patrol.kind].mobility);
+        const route = patrolRoute(worldMap, patrol.waypoints, unitSpecs[patrol.kind].mobility);
         expect(route.length).toBeGreaterThan(1);
         route.forEach((cell, i) => {
           expect(walkable(worldMap, cell, unitSpecs[patrol.kind].mobility)).toBe(true);
