@@ -1,0 +1,36 @@
+{
+  "generatedWith": "Built-in imagegen",
+  "prompt": "Use case: stylized-concept\nAsset type: ONE transparent four-view sprite sheet of a new original game machine called Scoop.\nReference image: supplied units atlas is the binding material, camera, silhouette simplicity, eyes and toy-plastic visual language. Create a new character, not any existing unit.\nPrimary request: A square transparent 2 by 2 sheet containing FOUR views of precisely the SAME friendly compact YELLOW four-wheeled earth-moving rover. One complete isolated machine per quadrant, centered with generous transparent gutters, no visible grid. At a fixed elevated orthographic isometric camera rotate the model, not the camera.\nView order: TOP LEFT front pointing screen lower-right/southeast; TOP RIGHT front pointing screen lower-left/southwest. BOTTOM LEFT rear view with front bucket pointing screen upper-left/northwest. BOTTOM RIGHT rear view with front bucket pointing screen upper-right/northeast.\nSubject: chunky sunny-yellow low loader chassis, four broad dark rubber tires with turquoise hubs, two short turquoise hydraulic arms supporting a wide EMPTY yellow scoop bucket at the FRONT, held slightly above the tires' ground-contact plane. Cream-white inset panel with two bold black headlight eyes on the chassis above the bucket. Compact cobalt battery across the REAR, yellow fitted fenders, round sockets, broad glossy plastic highlights. A useful happy toy, same physical size in each view, easily readable at 92 pixels. No cab, driver, antenna, dirt in bucket or extra tools. Rear views show the blue battery and hide the front eyes. Every body and wheel fits its quadrant.\nLighting: clean broad highlights, intrinsic dark shading as in the reference.\nConstraints: TRUE transparent alpha. No floor, terrain, cast shadows, drop shadows, ovals or backdrop. No text, labels, logos, studs, LEGO pieces, watermark or frame. Exactly four machines, all four views consistent.\n",
+  "id": "scoop-ne",
+  "derivedFrom": ".impeccable/review/terrain-work/sources/scoop-generated.png",
+  "nativeDimensions": [
+    1254,
+    1254
+  ],
+  "sourceCell": [
+    0,
+    627,
+    627,
+    1254
+  ],
+  "sourceBoundingBox": [
+    40,
+    83,
+    593,
+    531
+  ],
+  "dimensions": [
+    384,
+    384
+  ],
+  "normalization": "Exact quadrant/alpha crop, Lanczos resizing and transparent padding. No redrawing.",
+  "groundAnchor": [
+    192,
+    338
+  ],
+  "physicalFootprint": [
+    192,
+    294
+  ],
+  "facing": "Rear-view filenames follow the existing facingPicture mapping (ne faces northwest, nw faces northeast)."
+}

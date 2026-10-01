@@ -1,0 +1,51 @@
+{
+  "generatedWith": "Built-in imagegen",
+  "prompt": "Use case: stylized-concept\nAsset type: clean original transparent sprite atlas of nine scenic and physical game objects for the approved toy-world game.\nInput image: the supplied toy-world art study is the approved binding reference for palette, materials, perspective, simple tree/rock/flag shapes and construction supplies. Generate clean standalone production art, never a crop from the study, and do not invent a different art direction.\nPrimary request: a square high-resolution 2048 by 2048 RGBA PNG image with exactly THREE evenly spaced columns and THREE evenly spaced rows, nine separate standalone objects total. Invisible cells are equally sized. Each whole object is centered inside its own cell, fully contained with at least 15 percent transparent margin, and all ground-contact anchors lie at 74 percent of cell height. No visible grid, no labels, no text. Orthographic isometric camera around 30 degrees elevation, same fixed angle as the supplied study; show each object from front-right/southeast.\nExact order left-to-right, top-to-bottom:\nROW 1:\nCell 1: A medium toy tree matching the study, dark brown chunky trunk, spherical umbrella crown made of a few LARGE bright lime-green rounded drooping leaf panels. The simple broad canopy reads clearly at small size. Bare root/trunk end, no ground patch, no grass, no rocks.\nCell 2: A chunky GRAY ROCK CLUSTER, three simple rounded faceted rocks of different sizes, medium gray plastic-stone material with broad pale highlights. No grass, no ground tile.\nCell 3: A small sunny YELLOW GOAL FLAG on a short gold pole with a yellow ball finial and a compact round charcoal-and-gray base, matching the study. Flag waving right. The flag is physically attached to the pole and base. No printed symbols.\nROW 2:\nCell 1: An ALLOY PILE of exactly three loose colorful construction connector panels, one cherry-red curved arch connector, one yellow curved arch connector with a broad round socket, one cobalt-blue chunky curved connector. Together a compact recognizable stack of the chunky parts shown in the reference; each part visible and joined only by piling, no scenery or unrelated tools.\nCell 2: A compact VIOLET CORE CARTRIDGE, chunky rounded-square toy power module in vivid purple glossy plastic, dark inset circular socket, pale cyan center and simple gray connector ends. Only one module. This is an original physical inventory part in the same toy vocabulary, no text.\nCell 3: A BLUE CYLINDRICAL BATTERY matching the reference: bright cobalt/cyan blue stout cylinder lying diagonally along the screen lower-left to upper-right isometric axis, charcoal ring caps at both ends, broad smooth highlight and one small round end connector. Only one battery, no iconography, no sparks.\nROW 3:\nCell 1: A SIGNAL RELAY: compact original glossy toy machine in the reference vocabulary, a small cobalt-blue four-footed base with a short turquoise mast and a single broad yellow antenna dish aimed up-right, dark central receiver nub, a few thick toy hinges. Cheerful, readable silhouette. NO wire, no ground, no broadcast rings or emitted graphics.\nCell 2: A SINGLE YELLOW CONNECTOR FOR CARGO, exactly one chunky curved yellow arch panel with a large circular socket at one end, identical in design to the yellow loose construction panel in the reference. Isolated, no pile, no other pieces.\nCell 3: A second tree variant, a SMALL rounded toy tree, short stout brown trunk and a compact rounded lime-green crown made of three or four large leaf lobes, simpler and about 70 percent as tall as the first tree. No scenery beneath it.\nStyle: same crisp clean pre-rendered isometric toy-game illustration as the study: saturated glossy molded plastic, broad confident highlights, firm shading, restrained dark contours, a few large recognizable forms. Trees and rocks feel like toys from this same original world; no realistic natural textures. At 64-pixel display size each silhouette is recognizable; at 256 pixels the objects remain clean.\nTransparency: genuinely transparent alpha background, no painted checkerboard. Absolutely no ground tile, no grass, no floor, no cast/contact/drop shadow, no dark oval beneath any object. Intrinsic object shading is allowed.\nAvoid: text, numbers, labels, border, grid lines, UI, watermarks, full landscape, new rovers or creatures, LEGO studs or logos, copied intellectual property, photorealism, tiny greebles, lots of small leaves, pastel colors, overlapping cells, clipped objects, loose pieces outside their cell. Nine objects only, in exactly the requested order.\n",
+  "category": "objects",
+  "id": "battery",
+  "derivedFrom": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+  "nativeDimensions": [
+    1254,
+    1254
+  ],
+  "sourceBoundingBox": {
+    "x": 883,
+    "y": 498,
+    "width": 331,
+    "height": 265
+  },
+  "dimensions": [
+    384,
+    384
+  ],
+  "row": 1,
+  "column": 2,
+  "atlas": "objects.png",
+  "atlasFrame": {
+    "x": 768,
+    "y": 384,
+    "width": 384,
+    "height": 384
+  },
+  "boundingBox": {
+    "x": 52,
+    "y": 114,
+    "width": 280,
+    "height": 224
+  },
+  "groundAnchor": [
+    192,
+    338
+  ],
+  "origin": [
+    0.5,
+    0.8802083333333334
+  ],
+  "normalization": {
+    "scale": 0.8459214501510574,
+    "width": 280,
+    "height": 224,
+    "horizontalAnchor": "Center of subject bounds",
+    "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+  }
+}

@@ -1,0 +1,7 @@
+# Reset progress documentation
+
+Added one scoped paragraph each to README.md Play, PRODUCT.md capabilities, DESIGN.md Buttons and Selection, and the toy-world brief; replaced the obsolete completion-merge paragraph in docs/PROTOTYPE.md. The documented control requires a fresh continuous three-second primary pointer, Space, or Enter hold, cancels interrupted input, clears completions/bonus stars and earned residents across the whole world map, returns there, and preserves audio settings. Existing Restart starts a fresh current mission and preserves saved awards. Saved progress refresh is authoritative; storage failures retain session progress.
+
+Added one schemaVersion 2 component entry to .impeccable/design.json with the shipped restart SVG, menu context, idle styling, focus treatment, and active-meter CSS. Existing tokens, narrative, historical previews, roster facts, and dated checkpoints remain intact. This local menu extension needs no new surface seed, comp, raster, or provenance record.
+
+The [finish review](finish-review.md) returned **ship** with no material fixes. [Evidence](evidence.md) records 33 passing focused tests, a passing build, and inspected 1280×720 idle/short-click captures; full native hold, removal of previously earned residents, and the second viewport remain unverified. The supplied detector has 37 advisories and zero non-advisory findings. This documentation pass inspected source and checked sidecar JSON; it ran no browser, detector, tests, or build and changed no application code.

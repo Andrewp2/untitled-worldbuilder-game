@@ -1,0 +1,36 @@
+{
+  "generatedWith": "Built-in imagegen",
+  "prompt": "Use case: stylized-concept\nAsset type: one original transparent resource sprite for a bright isometric toy-world game.\nPrimary request: ONE small pile of rich warm-brown earth: three chunky fitted rounded soil clods with two tiny pale pebbles, shaped like a neat scoopful. Broad clean highlights, warm brown shaded facets, polished playful pre-rendered 3D game illustration matching glossy original toy-world rovers. Elevated orthographic isometric view. Compact broad silhouette reads clearly at 24 pixels. Centered on a square canvas with generous transparent padding.\nConstraints: genuine transparent alpha. No grass, container, shovel, unit, floor, ground plane, shadow, background, text, logos, studs, watermark or borders.\n",
+  "id": "soil",
+  "derivedFrom": ".impeccable/review/terrain-work/sources/soil-generated.png",
+  "nativeDimensions": [
+    1254,
+    1254
+  ],
+  "sourceCell": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "sourceBoundingBox": [
+    230,
+    287,
+    1024,
+    926
+  ],
+  "dimensions": [
+    384,
+    384
+  ],
+  "normalization": "Exact quadrant/alpha crop, Lanczos resizing and transparent padding. No redrawing.",
+  "groundAnchor": [
+    192,
+    338
+  ],
+  "physicalFootprint": [
+    192,
+    310
+  ],
+  "facing": null
+}

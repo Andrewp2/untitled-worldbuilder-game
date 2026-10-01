@@ -1,0 +1,4 @@
+Use case: stylized-concept
+Asset type: one original transparent resource sprite for a bright isometric toy-world game.
+Primary request: ONE small pile of rich warm-brown earth: three chunky fitted rounded soil clods with two tiny pale pebbles, shaped like a neat scoopful. Broad clean highlights, warm brown shaded facets, polished playful pre-rendered 3D game illustration matching glossy original toy-world rovers. Elevated orthographic isometric view. Compact broad silhouette reads clearly at 24 pixels. Centered on a square canvas with generous transparent padding.
+Constraints: genuine transparent alpha. No grass, container, shovel, unit, floor, ground plane, shadow, background, text, logos, studs, watermark or borders.

@@ -1,0 +1,9 @@
+# Terrain-work documentation handoff — September 30, 2026
+
+Merged the shipped Scoop / Siltwater Reach facts into README.md, PRODUCT.md, DESIGN.md, docs/PROTOTYPE.md, .impeccable/toy-world-brief.md, and .impeccable/design.json. This is an ordinary extension of the approved toy world. The native Dig / Fill row, Scoop's yellow/turquoise role, one-dirt bucket, Space behavior, terrain rules, fresh replay, third mission, and 34-image inventory now match the implementation. The sidecar records Scoop's 2px hop and successful .4s work dip/puff, including pause and reduced motion.
+
+The [finish review](finish-review.md) returned **ship** with no material product defect owed. The [evidence](evidence.md) records 82 unique focused tests and a passing build, native distant digging, two-cell filling, Scout crossing, pristine restart, and the corrected desktop/mobile/user capture matrix. Full native completion and new earned residents were not replayed in this run; shared simulation/campaign checks cover them. Reduced motion has source and focused test evidence without browser emulation, and no audio listening claim is made. Three charge per successful terrain action remains provisional.
+
+Preserved DESIGN.md frontmatter tokens and its historical gameplay/reference discussion byte-for-byte. Historical toy-world/charm checkpoint paragraphs remain intact. No source, tests, image assets, index contract, or design identity changed; no detector/context rerun, new browser work, or repeated tests/build were required for this documentation merge.
+
+Validation: design sidecar and asset manifest parse as JSON; all 50 local Markdown links across the five edited Markdown files resolve; all 14 new prompt, sprite, sidecar, and saved-source references exist. The shipping directory contains 34 PNGs. This handoff's two local review/evidence links also resolve.

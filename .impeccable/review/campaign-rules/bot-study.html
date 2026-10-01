@@ -1,0 +1,19 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Bot model study</title>
+<style>body{margin:0;padding:24px;background:#0b335d;color:#eaf3ff;font:16px 'Nunito Sans Variable',sans-serif}h1{font-size:24px;margin:0 0 12px}section{display:flex;align-items:center;height:200px}h2{width:130px;font-size:18px}canvas{width:240px;height:200px;object-fit:contain}p{margin:0;color:#b8d5ef;font-size:12px}</style>
+<h1>Walking bots</h1><p>Actual game models, shared camera and lighting · four headings</p><main></main>
+<script type="module">
+import * as THREE from 'three';
+import '@fontsource-variable/nunito-sans';
+import {toyModel,modelCamera,MODEL_SIZE} from '/src/view/toy-models.ts';
+const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true}); renderer.setSize(MODEL_SIZE,MODEL_SIZE); renderer.setClearColor(0,0); renderer.outputColorSpace=THREE.SRGBColorSpace; renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=.95;
+const stage=new THREE.Scene(); stage.add(new THREE.HemisphereLight(0xffffff,0xc3d8a3,.7));
+const sun=new THREE.DirectionalLight(0xffffff,1.8);sun.position.set(-3,6,4);stage.add(sun);
+const fill=new THREE.DirectionalLight(0xd5ecff,.3);fill.position.set(4,3,-2);stage.add(fill);
+for(const [kind,name] of [['warden','Warden'],['arborbot','Arborbot'],['mender','Mender']]) {
+ const row=document.createElement('section'); const heading=document.createElement('h2');heading.textContent=name;row.append(heading);document.querySelector('main').append(row);
+ const model=toyModel(kind);stage.add(model);
+ for(const angle of [0,-Math.PI/2,Math.PI,Math.PI/2]) { model.rotation.y=angle;renderer.render(stage,modelCamera());const canvas=document.createElement('canvas');canvas.width=canvas.height=MODEL_SIZE;canvas.getContext('2d').drawImage(renderer.domElement,0,0);row.append(canvas); }
+ stage.remove(model);
+}
+renderer.dispose();
+</script></html>

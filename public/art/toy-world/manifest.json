@@ -1,0 +1,2521 @@
+{
+  "version": 1,
+  "reference": ".impeccable/mocks/toy-world-study.png",
+  "approval": {
+    "evidence": "User: \"Yeah I like this this looks a lot better\"; parent authorized carrying the approved playful toy look into the game.",
+    "note": "User approval covers character silhouettes, saturated toy materials and terrain; the study is not a pixel screen-layout contract."
+  },
+  "generation": "Built-in imagegen with approved study as reference and transparent_background:true",
+  "dimensions": {
+    "individualCell": [
+      384,
+      384
+    ],
+    "groundAnchor": [
+      192,
+      338
+    ],
+    "origin": [
+      0.5,
+      0.8802083333333334
+    ]
+  },
+  "produce": [
+    {
+      "id": "scout-se",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+        "boundingBox": {
+          "x": 26,
+          "y": 48,
+          "width": 293,
+          "height": 277
+        }
+      },
+      "output_path": "public/art/toy-world/scout-se.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/scout-se.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "Minor rendered details vary across directions; see global limitations.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 54,
+        "y": 77,
+        "width": 276,
+        "height": 261
+      }
+    },
+    {
+      "id": "scout-sw",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+        "boundingBox": {
+          "x": 344,
+          "y": 60,
+          "width": 290,
+          "height": 271
+        }
+      },
+      "output_path": "public/art/toy-world/scout-sw.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/scout-sw.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "Minor rendered details vary across directions; see global limitations.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 54,
+        "y": 80,
+        "width": 276,
+        "height": 258
+      }
+    },
+    {
+      "id": "scout-nw",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+        "boundingBox": {
+          "x": 653,
+          "y": 64,
+          "width": 272,
+          "height": 265
+        }
+      },
+      "output_path": "public/art/toy-world/scout-nw.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/scout-nw.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "Minor rendered details vary across directions; see global limitations.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 54,
+        "y": 69,
+        "width": 276,
+        "height": 269
+      }
+    },
+    {
+      "id": "scout-ne",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+        "boundingBox": {
+          "x": 955,
+          "y": 50,
+          "width": 280,
+          "height": 277
+        }
+      },
+      "output_path": "public/art/toy-world/scout-ne.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/scout-ne.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "Minor rendered details vary across directions; see global limitations.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 54,
+        "y": 65,
+        "width": 276,
+        "height": 273
+      }
+    },
+    {
+      "id": "hauler-se",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+        "boundingBox": {
+          "x": 14,
+          "y": 354,
+          "width": 311,
+          "height": 250
+        }
+      },
+      "output_path": "public/art/toy-world/hauler-se.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/hauler-se.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "Minor rendered details vary across directions; see global limitations.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 42,
+        "y": 97,
+        "width": 300,
+        "height": 241
+      }
+    },
+    {
+      "id": "hauler-sw",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+        "boundingBox": {
+          "x": 337,
+          "y": 354,
+          "width": 312,
+          "height": 252
+        }
+      },
+      "output_path": "public/art/toy-world/hauler-sw.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/hauler-sw.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "Minor rendered details vary across directions; see global limitations.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 42,
+        "y": 96,
+        "width": 300,
+        "height": 242
+      }
+    },
+    {
+      "id": "hauler-nw",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+        "boundingBox": {
+          "x": 650,
+          "y": 373,
+          "width": 286,
+          "height": 216
+        }
+      },
+      "output_path": "public/art/toy-world/hauler-nw.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/hauler-nw.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "Minor rendered details vary across directions; see global limitations.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 42,
+        "y": 111,
+        "width": 300,
+        "height": 227
+      }
+    },
+    {
+      "id": "hauler-ne",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+        "boundingBox": {
+          "x": 950,
+          "y": 376,
+          "width": 293,
+          "height": 219
+        }
+      },
+      "output_path": "public/art/toy-world/hauler-ne.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/hauler-ne.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "Minor rendered details vary across directions; see global limitations.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 42,
+        "y": 114,
+        "width": 300,
+        "height": 224
+      }
+    },
+    {
+      "id": "warden-se",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+        "boundingBox": {
+          "x": 22,
+          "y": 644,
+          "width": 306,
+          "height": 250
+        }
+      },
+      "output_path": "public/art/toy-world/warden-se.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/warden-se.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "Minor rendered details vary across directions; see global limitations.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 42,
+        "y": 93,
+        "width": 300,
+        "height": 245
+      }
+    },
+    {
+      "id": "warden-sw",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+        "boundingBox": {
+          "x": 338,
+          "y": 646,
+          "width": 301,
+          "height": 249
+        }
+      },
+      "output_path": "public/art/toy-world/warden-sw.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/warden-sw.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "Minor rendered details vary across directions; see global limitations.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 42,
+        "y": 90,
+        "width": 300,
+        "height": 248
+      }
+    },
+    {
+      "id": "warden-nw",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+        "boundingBox": {
+          "x": 649,
+          "y": 656,
+          "width": 287,
+          "height": 214
+        }
+      },
+      "output_path": "public/art/toy-world/warden-nw.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/warden-nw.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "Minor rendered details vary across directions; see global limitations.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 42,
+        "y": 114,
+        "width": 300,
+        "height": 224
+      }
+    },
+    {
+      "id": "warden-ne",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+        "boundingBox": {
+          "x": 946,
+          "y": 656,
+          "width": 291,
+          "height": 221
+        }
+      },
+      "output_path": "public/art/toy-world/warden-ne.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/warden-ne.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "Minor rendered details vary across directions; see global limitations.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 42,
+        "y": 110,
+        "width": 300,
+        "height": 228
+      }
+    },
+    {
+      "id": "bristleback-se",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+        "boundingBox": {
+          "x": 15,
+          "y": 933,
+          "width": 311,
+          "height": 265
+        }
+      },
+      "output_path": "public/art/toy-world/bristleback-se.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/bristleback-se.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "Minor rendered details vary across directions; see global limitations.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 42,
+        "y": 82,
+        "width": 300,
+        "height": 256
+      }
+    },
+    {
+      "id": "bristleback-sw",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+        "boundingBox": {
+          "x": 338,
+          "y": 934,
+          "width": 300,
+          "height": 264
+        }
+      },
+      "output_path": "public/art/toy-world/bristleback-sw.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/bristleback-sw.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "Minor rendered details vary across directions; see global limitations.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 42,
+        "y": 74,
+        "width": 300,
+        "height": 264
+      }
+    },
+    {
+      "id": "bristleback-nw",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+        "boundingBox": {
+          "x": 649,
+          "y": 939,
+          "width": 287,
+          "height": 265
+        }
+      },
+      "output_path": "public/art/toy-world/bristleback-nw.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/bristleback-nw.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "Minor rendered details vary across directions; see global limitations.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 42,
+        "y": 61,
+        "width": 300,
+        "height": 277
+      }
+    },
+    {
+      "id": "bristleback-ne",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+        "boundingBox": {
+          "x": 952,
+          "y": 931,
+          "width": 290,
+          "height": 274
+        }
+      },
+      "output_path": "public/art/toy-world/bristleback-ne.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/bristleback-ne.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "Minor rendered details vary across directions; see global limitations.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 42,
+        "y": 55,
+        "width": 300,
+        "height": 283
+      }
+    },
+    {
+      "id": "tree",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+        "boundingBox": {
+          "x": 51,
+          "y": 32,
+          "width": 341,
+          "height": 380
+        }
+      },
+      "output_path": "public/art/toy-world/tree.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/tree.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "None material to the approved toy vocabulary.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 84,
+        "y": 52,
+        "width": 257,
+        "height": 286
+      }
+    },
+    {
+      "id": "rocks",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+        "boundingBox": {
+          "x": 478,
+          "y": 118,
+          "width": 342,
+          "height": 284
+        }
+      },
+      "output_path": "public/art/toy-world/rocks.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/rocks.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "None material to the approved toy vocabulary.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 46,
+        "y": 96,
+        "width": 292,
+        "height": 242
+      }
+    },
+    {
+      "id": "flag",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+        "boundingBox": {
+          "x": 963,
+          "y": 50,
+          "width": 224,
+          "height": 345
+        }
+      },
+      "output_path": "public/art/toy-world/flag.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/flag.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "None material to the approved toy vocabulary.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 140,
+        "y": 52,
+        "width": 186,
+        "height": 286
+      }
+    },
+    {
+      "id": "alloy",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+        "boundingBox": {
+          "x": 41,
+          "y": 478,
+          "width": 370,
+          "height": 292
+        }
+      },
+      "output_path": "public/art/toy-world/alloy.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/alloy.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "None material to the approved toy vocabulary.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 52,
+        "y": 117,
+        "width": 280,
+        "height": 221
+      }
+    },
+    {
+      "id": "core",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+        "boundingBox": {
+          "x": 471,
+          "y": 495,
+          "width": 317,
+          "height": 264
+        }
+      },
+      "output_path": "public/art/toy-world/core.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/core.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "None material to the approved toy vocabulary.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 68,
+        "y": 131,
+        "width": 248,
+        "height": 207
+      }
+    },
+    {
+      "id": "battery",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+        "boundingBox": {
+          "x": 883,
+          "y": 498,
+          "width": 331,
+          "height": 265
+        }
+      },
+      "output_path": "public/art/toy-world/battery.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/battery.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "None material to the approved toy vocabulary.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 52,
+        "y": 114,
+        "width": 280,
+        "height": 224
+      }
+    },
+    {
+      "id": "relay",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+        "boundingBox": {
+          "x": 42,
+          "y": 798,
+          "width": 333,
+          "height": 411
+        }
+      },
+      "output_path": "public/art/toy-world/relay.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/relay.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "None material to the approved toy vocabulary.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 70,
+        "y": 36,
+        "width": 245,
+        "height": 302
+      }
+    },
+    {
+      "id": "connector",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+        "boundingBox": {
+          "x": 479,
+          "y": 904,
+          "width": 307,
+          "height": 234
+        }
+      },
+      "output_path": "public/art/toy-world/connector.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/connector.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "None material to the approved toy vocabulary.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 66,
+        "y": 146,
+        "width": 252,
+        "height": 192
+      }
+    },
+    {
+      "id": "tree-small",
+      "source_crop": {
+        "path": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+        "boundingBox": {
+          "x": 891,
+          "y": 862,
+          "width": 299,
+          "height": 307
+        }
+      },
+      "output_path": "public/art/toy-world/tree-small.png",
+      "strategy": "Faithful generation from approved study; transparent alpha extraction; normalized atlas export",
+      "prompt_used": "public/art/toy-world/tree-small.json",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "deviations": "None material to the approved toy vocabulary.",
+      "qa_status": "accepted",
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "boundingBox": {
+        "x": 80,
+        "y": 112,
+        "width": 220,
+        "height": 226
+      }
+    },
+    {
+      "id": "freighter",
+      "category": "world-map-resident",
+      "path": "freighter.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "origin": [
+        0.52,
+        0.72
+      ],
+      "displaySize": [
+        112,
+        112
+      ],
+      "provenance": "freighter.json",
+      "prompt": "freighter.prompt.txt",
+      "generatedWith": "Built-in imagegen",
+      "transparent": true
+    },
+    {
+      "id": "scoop-se",
+      "output_path": "public/art/toy-world/scoop-se.png",
+      "prompt_used": "public/art/toy-world/scoop-se.json",
+      "source_crop": {
+        "path": ".impeccable/review/terrain-work/sources/scoop-generated.png",
+        "cell": [
+          0,
+          0,
+          627,
+          627
+        ],
+        "bounds": [
+          34,
+          116,
+          607,
+          545
+        ]
+      },
+      "strategy": "Exact quadrant/alpha crop, Lanczos resizing and transparent padding. No redrawing.",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "qa_status": "accepted",
+      "deviations": "Minor direction details vary; bucket contents are a separate runtime dirt picture."
+    },
+    {
+      "id": "scoop-sw",
+      "output_path": "public/art/toy-world/scoop-sw.png",
+      "prompt_used": "public/art/toy-world/scoop-sw.json",
+      "source_crop": {
+        "path": ".impeccable/review/terrain-work/sources/scoop-generated.png",
+        "cell": [
+          627,
+          0,
+          1254,
+          627
+        ],
+        "bounds": [
+          21,
+          115,
+          594,
+          546
+        ]
+      },
+      "strategy": "Exact quadrant/alpha crop, Lanczos resizing and transparent padding. No redrawing.",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "qa_status": "accepted",
+      "deviations": "Minor direction details vary; bucket contents are a separate runtime dirt picture."
+    },
+    {
+      "id": "scoop-ne",
+      "output_path": "public/art/toy-world/scoop-ne.png",
+      "prompt_used": "public/art/toy-world/scoop-ne.json",
+      "source_crop": {
+        "path": ".impeccable/review/terrain-work/sources/scoop-generated.png",
+        "cell": [
+          0,
+          627,
+          627,
+          1254
+        ],
+        "bounds": [
+          40,
+          83,
+          593,
+          531
+        ]
+      },
+      "strategy": "Exact quadrant/alpha crop, Lanczos resizing and transparent padding. No redrawing.",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "qa_status": "accepted",
+      "deviations": "Minor direction details vary; bucket contents are a separate runtime dirt picture."
+    },
+    {
+      "id": "scoop-nw",
+      "output_path": "public/art/toy-world/scoop-nw.png",
+      "prompt_used": "public/art/toy-world/scoop-nw.json",
+      "source_crop": {
+        "path": ".impeccable/review/terrain-work/sources/scoop-generated.png",
+        "cell": [
+          627,
+          627,
+          1254,
+          1254
+        ],
+        "bounds": [
+          33,
+          83,
+          588,
+          531
+        ]
+      },
+      "strategy": "Exact quadrant/alpha crop, Lanczos resizing and transparent padding. No redrawing.",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "qa_status": "accepted",
+      "deviations": "Minor direction details vary; bucket contents are a separate runtime dirt picture."
+    },
+    {
+      "id": "soil",
+      "output_path": "public/art/toy-world/soil.png",
+      "prompt_used": "public/art/toy-world/soil.json",
+      "source_crop": {
+        "path": ".impeccable/review/terrain-work/sources/soil-generated.png",
+        "cell": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "bounds": [
+          230,
+          287,
+          1024,
+          926
+        ]
+      },
+      "strategy": "Exact quadrant/alpha crop, Lanczos resizing and transparent padding. No redrawing.",
+      "dimensions": [
+        384,
+        384
+      ],
+      "format": "png",
+      "transparency": "true alpha",
+      "qa_status": "accepted",
+      "deviations": "None."
+    }
+  ],
+  "direct": [],
+  "semantic": [
+    {
+      "id": "terrain-and-coasts",
+      "implementation": "Phaser composes terrain textures projected into isometric tile diamonds and raised earthy coast geometry beneath these cutouts.",
+      "notes": "Owned by the parent; terrain-surfaces.png and its sidecar are preserved.",
+      "qa_status": "needs_parent_review"
+    },
+    {
+      "id": "shadows",
+      "implementation": "Phaser draws independent small ground ellipses at the shared ground anchor. HTML/CSS owns roster and blueprint framing.",
+      "notes": "These rasters contain no floor, tile, card frame, or cast shadow.",
+      "qa_status": "accepted"
+    },
+    {
+      "id": "cargo",
+      "implementation": "Attach connector/core/battery textures as separate Phaser images on the Hauler bed; use its existing empty-bed art.",
+      "notes": "No carried inventory is baked into unit sprites.",
+      "qa_status": "accepted"
+    }
+  ],
+  "atlases": {
+    "units": {
+      "id": "units",
+      "path": "public/art/toy-world/units.png",
+      "output_path": "public/art/toy-world/units.png",
+      "source_crop": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+      "strategy": "Uniform repack of the generated atlas after transparent alpha isolation and normalization",
+      "prompt_used": "public/art/toy-world/units.json",
+      "format": "png",
+      "transparency": "true alpha",
+      "qa_status": "accepted",
+      "deviations": "Native source was 1254\u00d71254; normalized cell padding creates the larger sheet.",
+      "category": "units",
+      "dimensions": [
+        1536,
+        1536
+      ],
+      "cellDimensions": [
+        384,
+        384
+      ],
+      "rows": 4,
+      "columns": 4,
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "frames": [
+        {
+          "category": "units",
+          "id": "scout-se",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 26,
+            "y": 48,
+            "width": 293,
+            "height": 277
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 0,
+          "column": 0,
+          "atlas": "units.png",
+          "atlasFrame": {
+            "x": 0,
+            "y": 0,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 54,
+            "y": 77,
+            "width": 276,
+            "height": 261
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 0.9419795221843004,
+            "width": 276,
+            "height": 261,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "units",
+          "id": "scout-sw",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 344,
+            "y": 60,
+            "width": 290,
+            "height": 271
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 0,
+          "column": 1,
+          "atlas": "units.png",
+          "atlasFrame": {
+            "x": 384,
+            "y": 0,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 54,
+            "y": 80,
+            "width": 276,
+            "height": 258
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 0.9517241379310345,
+            "width": 276,
+            "height": 258,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "units",
+          "id": "scout-nw",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 653,
+            "y": 64,
+            "width": 272,
+            "height": 265
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 0,
+          "column": 2,
+          "atlas": "units.png",
+          "atlasFrame": {
+            "x": 768,
+            "y": 0,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 54,
+            "y": 69,
+            "width": 276,
+            "height": 269
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 1.0147058823529411,
+            "width": 276,
+            "height": 269,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "units",
+          "id": "scout-ne",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 955,
+            "y": 50,
+            "width": 280,
+            "height": 277
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 0,
+          "column": 3,
+          "atlas": "units.png",
+          "atlasFrame": {
+            "x": 1152,
+            "y": 0,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 54,
+            "y": 65,
+            "width": 276,
+            "height": 273
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 0.9857142857142858,
+            "width": 276,
+            "height": 273,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "units",
+          "id": "hauler-se",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 14,
+            "y": 354,
+            "width": 311,
+            "height": 250
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 1,
+          "column": 0,
+          "atlas": "units.png",
+          "atlasFrame": {
+            "x": 0,
+            "y": 384,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 42,
+            "y": 97,
+            "width": 300,
+            "height": 241
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 0.9646302250803859,
+            "width": 300,
+            "height": 241,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "units",
+          "id": "hauler-sw",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 337,
+            "y": 354,
+            "width": 312,
+            "height": 252
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 1,
+          "column": 1,
+          "atlas": "units.png",
+          "atlasFrame": {
+            "x": 384,
+            "y": 384,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 42,
+            "y": 96,
+            "width": 300,
+            "height": 242
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 0.9615384615384616,
+            "width": 300,
+            "height": 242,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "units",
+          "id": "hauler-nw",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 650,
+            "y": 373,
+            "width": 286,
+            "height": 216
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 1,
+          "column": 2,
+          "atlas": "units.png",
+          "atlasFrame": {
+            "x": 768,
+            "y": 384,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 42,
+            "y": 111,
+            "width": 300,
+            "height": 227
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 1.048951048951049,
+            "width": 300,
+            "height": 227,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "units",
+          "id": "hauler-ne",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 950,
+            "y": 376,
+            "width": 293,
+            "height": 219
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 1,
+          "column": 3,
+          "atlas": "units.png",
+          "atlasFrame": {
+            "x": 1152,
+            "y": 384,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 42,
+            "y": 114,
+            "width": 300,
+            "height": 224
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 1.023890784982935,
+            "width": 300,
+            "height": 224,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "units",
+          "id": "warden-se",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 22,
+            "y": 644,
+            "width": 306,
+            "height": 250
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 2,
+          "column": 0,
+          "atlas": "units.png",
+          "atlasFrame": {
+            "x": 0,
+            "y": 768,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 42,
+            "y": 93,
+            "width": 300,
+            "height": 245
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 0.9803921568627451,
+            "width": 300,
+            "height": 245,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "units",
+          "id": "warden-sw",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 338,
+            "y": 646,
+            "width": 301,
+            "height": 249
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 2,
+          "column": 1,
+          "atlas": "units.png",
+          "atlasFrame": {
+            "x": 384,
+            "y": 768,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 42,
+            "y": 90,
+            "width": 300,
+            "height": 248
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 0.9966777408637874,
+            "width": 300,
+            "height": 248,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "units",
+          "id": "warden-nw",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 649,
+            "y": 656,
+            "width": 287,
+            "height": 214
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 2,
+          "column": 2,
+          "atlas": "units.png",
+          "atlasFrame": {
+            "x": 768,
+            "y": 768,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 42,
+            "y": 114,
+            "width": 300,
+            "height": 224
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 1.0452961672473868,
+            "width": 300,
+            "height": 224,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "units",
+          "id": "warden-ne",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 946,
+            "y": 656,
+            "width": 291,
+            "height": 221
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 2,
+          "column": 3,
+          "atlas": "units.png",
+          "atlasFrame": {
+            "x": 1152,
+            "y": 768,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 42,
+            "y": 110,
+            "width": 300,
+            "height": 228
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 1.0309278350515463,
+            "width": 300,
+            "height": 228,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "units",
+          "id": "bristleback-se",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 15,
+            "y": 933,
+            "width": 311,
+            "height": 265
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 3,
+          "column": 0,
+          "atlas": "units.png",
+          "atlasFrame": {
+            "x": 0,
+            "y": 1152,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 42,
+            "y": 82,
+            "width": 300,
+            "height": 256
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 0.9646302250803859,
+            "width": 300,
+            "height": 256,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "units",
+          "id": "bristleback-sw",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 338,
+            "y": 934,
+            "width": 300,
+            "height": 264
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 3,
+          "column": 1,
+          "atlas": "units.png",
+          "atlasFrame": {
+            "x": 384,
+            "y": 1152,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 42,
+            "y": 74,
+            "width": 300,
+            "height": 264
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 1,
+            "width": 300,
+            "height": 264,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "units",
+          "id": "bristleback-nw",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 649,
+            "y": 939,
+            "width": 287,
+            "height": 265
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 3,
+          "column": 2,
+          "atlas": "units.png",
+          "atlasFrame": {
+            "x": 768,
+            "y": 1152,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 42,
+            "y": 61,
+            "width": 300,
+            "height": 277
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 1.0452961672473868,
+            "width": 300,
+            "height": 277,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "units",
+          "id": "bristleback-ne",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 952,
+            "y": 931,
+            "width": 290,
+            "height": 274
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 3,
+          "column": 3,
+          "atlas": "units.png",
+          "atlasFrame": {
+            "x": 1152,
+            "y": 1152,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 42,
+            "y": 55,
+            "width": 300,
+            "height": 283
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 1.0344827586206897,
+            "width": 300,
+            "height": 283,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        }
+      ]
+    },
+    "objects": {
+      "id": "objects",
+      "path": "public/art/toy-world/objects.png",
+      "output_path": "public/art/toy-world/objects.png",
+      "source_crop": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+      "strategy": "Uniform repack of the generated atlas after transparent alpha isolation and normalization",
+      "prompt_used": "public/art/toy-world/objects.json",
+      "format": "png",
+      "transparency": "true alpha",
+      "qa_status": "accepted",
+      "deviations": "Native source was 1254\u00d71254; normalized cell padding creates the larger sheet.",
+      "category": "objects",
+      "dimensions": [
+        1152,
+        1152
+      ],
+      "cellDimensions": [
+        384,
+        384
+      ],
+      "rows": 3,
+      "columns": 3,
+      "origin": [
+        0.5,
+        0.8802083333333334
+      ],
+      "groundAnchor": [
+        192,
+        338
+      ],
+      "frames": [
+        {
+          "category": "objects",
+          "id": "tree",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 51,
+            "y": 32,
+            "width": 341,
+            "height": 380
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 0,
+          "column": 0,
+          "atlas": "objects.png",
+          "atlasFrame": {
+            "x": 0,
+            "y": 0,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 84,
+            "y": 52,
+            "width": 257,
+            "height": 286
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 0.7526315789473684,
+            "width": 257,
+            "height": 286,
+            "horizontalAnchor": "Center of physical lower base",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "objects",
+          "id": "rocks",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 478,
+            "y": 118,
+            "width": 342,
+            "height": 284
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 0,
+          "column": 1,
+          "atlas": "objects.png",
+          "atlasFrame": {
+            "x": 384,
+            "y": 0,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 46,
+            "y": 96,
+            "width": 292,
+            "height": 242
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 0.8538011695906432,
+            "width": 292,
+            "height": 242,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "objects",
+          "id": "flag",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 963,
+            "y": 50,
+            "width": 224,
+            "height": 345
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 0,
+          "column": 2,
+          "atlas": "objects.png",
+          "atlasFrame": {
+            "x": 768,
+            "y": 0,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 140,
+            "y": 52,
+            "width": 186,
+            "height": 286
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 0.8289855072463768,
+            "width": 186,
+            "height": 286,
+            "horizontalAnchor": "Center of physical lower base",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "objects",
+          "id": "alloy",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 41,
+            "y": 478,
+            "width": 370,
+            "height": 292
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 1,
+          "column": 0,
+          "atlas": "objects.png",
+          "atlasFrame": {
+            "x": 0,
+            "y": 384,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 52,
+            "y": 117,
+            "width": 280,
+            "height": 221
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 0.7567567567567568,
+            "width": 280,
+            "height": 221,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "objects",
+          "id": "core",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 471,
+            "y": 495,
+            "width": 317,
+            "height": 264
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 1,
+          "column": 1,
+          "atlas": "objects.png",
+          "atlasFrame": {
+            "x": 384,
+            "y": 384,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 68,
+            "y": 131,
+            "width": 248,
+            "height": 207
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 0.7823343848580442,
+            "width": 248,
+            "height": 207,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "objects",
+          "id": "battery",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 883,
+            "y": 498,
+            "width": 331,
+            "height": 265
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 1,
+          "column": 2,
+          "atlas": "objects.png",
+          "atlasFrame": {
+            "x": 768,
+            "y": 384,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 52,
+            "y": 114,
+            "width": 280,
+            "height": 224
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 0.8459214501510574,
+            "width": 280,
+            "height": 224,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "objects",
+          "id": "relay",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 42,
+            "y": 798,
+            "width": 333,
+            "height": 411
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 2,
+          "column": 0,
+          "atlas": "objects.png",
+          "atlasFrame": {
+            "x": 0,
+            "y": 768,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 70,
+            "y": 36,
+            "width": 245,
+            "height": 302
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 0.7347931873479319,
+            "width": 245,
+            "height": 302,
+            "horizontalAnchor": "Center of physical lower base",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "objects",
+          "id": "connector",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 479,
+            "y": 904,
+            "width": 307,
+            "height": 234
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 2,
+          "column": 1,
+          "atlas": "objects.png",
+          "atlasFrame": {
+            "x": 384,
+            "y": 768,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 66,
+            "y": 146,
+            "width": 252,
+            "height": 192
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 0.8208469055374593,
+            "width": 252,
+            "height": 192,
+            "horizontalAnchor": "Center of subject bounds",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        },
+        {
+          "category": "objects",
+          "id": "tree-small",
+          "derivedFrom": ".impeccable/review/toy-world-art/sources/object-atlas-generated.png",
+          "nativeDimensions": [
+            1254,
+            1254
+          ],
+          "sourceBoundingBox": {
+            "x": 891,
+            "y": 862,
+            "width": 299,
+            "height": 307
+          },
+          "dimensions": [
+            384,
+            384
+          ],
+          "row": 2,
+          "column": 2,
+          "atlas": "objects.png",
+          "atlasFrame": {
+            "x": 768,
+            "y": 768,
+            "width": 384,
+            "height": 384
+          },
+          "boundingBox": {
+            "x": 80,
+            "y": 112,
+            "width": 220,
+            "height": 226
+          },
+          "groundAnchor": [
+            192,
+            338
+          ],
+          "origin": [
+            0.5,
+            0.8802083333333334
+          ],
+          "normalization": {
+            "scale": 0.7361563517915309,
+            "width": 220,
+            "height": 226,
+            "horizontalAnchor": "Center of physical lower base",
+            "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+          }
+        }
+      ]
+    }
+  },
+  "limitations": [
+    "Native generation returned 1254\u00d71254 rather than the requested 2048\u00d72048. Normalized atlases repack native cutouts into larger transparent cells; they do not represent additional generated detail.",
+    "Direction views are separately rendered illustrations, not guaranteed renders of one rigid 3D model. Small panel, ridge, and joint differences remain between views.",
+    "Bristleback ridge counts vary slightly across views, matching the reference\u2019s ridged silhouette. The gameplay identity remains the red six-legged creature.",
+    "Ground anchor uses the lowest visible contact edge at y=338. Unit and loose-part bounds are centered horizontally; trees, flag and relay center their lower physical base at x=192."
+  ],
+  "execution_order": [
+    "Generate 4\u00d74 directional unit atlas",
+    "Generate 3\u00d73 object atlas",
+    "Isolate alpha islands and normalize individual cells",
+    "Repack uniform atlases and embed exact generation prompts",
+    "Inspect full atlases plus game-size and roster-size previews"
+  ],
+  "blockers": [],
+  "assumptions": [
+    "Original glossy toy materials and approved saturated palette are binding.",
+    "The same individual PNG textures supply game units and larger roster/blueprint imagery.",
+    "No new art direction or full background scene is introduced."
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "evidence": ".impeccable/review/toy-world-art/evidence.md",
+    "inspected": [
+      "Approved study",
+      "Two generated native atlases",
+      "Two normalized full atlases",
+      "All unit frames at 80px cell size",
+      "All object frames at 80px cell size",
+      "Four southeast roster views at 256px cell size"
+    ],
+    "findings": "All subjects fit their cells and match the approved glossy toy vocabulary. Front and rear views read distinctly; Hauler beds are empty; alpha cutouts contain no text, floor or baked shadows. Native detached edge specks removed."
+  },
+  "terrain": {
+    "id": "terrain-surfaces",
+    "output_path": "public/art/toy-world/terrain-surfaces.png",
+    "prompt_used": "public/art/toy-world/terrain-surfaces.json",
+    "dimensions": [
+      2172,
+      724
+    ],
+    "panels": [
+      "grass",
+      "sand",
+      "water"
+    ],
+    "panelDimensions": [
+      724,
+      724
+    ],
+    "projection": {
+      "textureDimensions": [
+        160,
+        80
+      ],
+      "worldTileDimensions": [
+        80,
+        40
+      ],
+      "coastHeight": 22
+    },
+    "qa_status": "accepted"
+  },
+  "source_atlases": [
+    {
+      "output_path": "public/art/toy-world/units.png",
+      "prompt_used": "public/art/toy-world/units.json",
+      "dimensions": [
+        1536,
+        1536
+      ],
+      "note": "Normalized cutouts; runtime uses individual pictures."
+    },
+    {
+      "output_path": "public/art/toy-world/objects.png",
+      "prompt_used": "public/art/toy-world/objects.json",
+      "dimensions": [
+        1152,
+        1152
+      ],
+      "note": "Normalized cutouts; runtime uses individual pictures."
+    }
+  ],
+  "rendering": {
+    "sourceAlignment": "Lowest visible edge at y338 is export padding alignment, not a physical footprint center.",
+    "footprintOrigins": "src/view/grounding.ts",
+    "occlusion": "World footprint y; carried parts are children of their carrier.",
+    "shadows": "Soft contact graphics on a shared ground layer below all upright objects.",
+    "markers": "Ground-space marks below objects; status above them. Loose-part count badges appear only on hover.",
+    "terrain": "Water below raised terrain; each land or bridge tile paints its faces, top and outline together, back to front.",
+    "facing": "src/view/facing.ts corrects rear-view exports: ne pictures face northwest, and nw pictures face northeast."
+  }
+}

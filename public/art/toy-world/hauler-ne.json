@@ -1,0 +1,51 @@
+{
+  "generatedWith": "Built-in imagegen",
+  "prompt": "Use case: stylized-concept\nAsset type: original reusable transparent isometric game-unit sprite atlas for the approved toy-world game.\nInput image: the supplied toy-world art study is the binding approved visual reference for the Scout, Hauler, Bristleback, camera, palette, materials and simplicity. Recreate its actual toy shapes as clean production sprites, not crops or a new art direction.\nPrimary request: a square high-resolution 2048 by 2048 RGBA PNG sprite sheet, exactly FOUR equal-width columns and FOUR equal-height rows, containing exactly SIXTEEN separate unit sprites. There is no visible grid, no text and no background. Each invisible cell is 512 by 512. Each unit is fully contained in its own cell with generous transparent padding and the ground-contact center consistently at cell coordinate (256, 360). Body plus wheels/legs uses about 360 by 310 pixels per cell. Keep each unit's physical dimensions and design consistent across its four views. Orthographic isometric camera at about 30 degrees elevation, always looking down from the same camera position; rotate the MODEL around its vertical axis, never the camera.\nColumn order in EVERY ROW, left to right:\n1: FRONT pointing screen lower-right / southeast; eyes face lower-right.\n2: FRONT pointing screen lower-left / southwest; eyes face lower-left.\n3: BACK pointing screen upper-left / northwest; show the rear, hide the front eyes.\n4: BACK pointing screen upper-right / northeast; show the rear, hide the front eyes.\nRow order top to bottom:\nROW 1 SCOUT: bright lime-green small eager FOUR-wheeled rover exactly matching the study. Short rounded wedge hood, a cream-white blunt front panel with two large simple black headlight eyes and white highlights, charcoal treaded rubber wheels with lime hubs, short spring antenna with a yellow ball, visibly separate BLUE cylindrical battery cartridge across the rear. Four wheels total. No cargo.\nROW 2 HAULER: tangerine-orange low broad FOUR-wheeled utility rover exactly matching the study, broad deep open rectangular cargo bed at its rear, but this bed is COMPLETELY EMPTY in all views. Calm simple black headlight eyes in a cream-white front panel, blunt sloping nose, big charcoal treaded tires, bright turquoise wheel hubs and chunky axle joints. Clearly broader, longer and lower than Scout. No battery or supplies lying in the bed.\nROW 3 WARDEN: a new original specialist in precisely this approved toy vocabulary. COBALT-BLUE armored FOUR-wheeled rover with dark rubber tires and blue hubs, a broad thick curved blue front shield that is integral to its blunt nose, a cream-white inset panel on that shield with two bold black headlight eyes, chunky blue armor over wheel corners, compact sturdy body. No weapon, no turret, no cargo. Four wheels total. Reads like a sturdy guard toy; rear angles show a solid blue rear panel and discrete toy sockets.\nROW 4 BRISTLEBACK: cherry-red original mechanical creature matching the study, exactly SIX short articulated legs with red upper sections and charcoal feet, red fitted segmented shell, THREE large ivory ridges/spines along its back, small sharp black eyes, short blunt cylindrical red-and-charcoal snout. Animal silhouette distinct from vehicles, six legs total, slightly funny but clearly a hazard. Rear views show its back and ridges, not front eyes.\nStyle and materials: glossy molded toy plastic, broad clean highlights and firm dark shading, solid saturated panels, chunky hinges and sockets, restrained dark outlines. Use the same clean pre-rendered sprite-inspired 3D illustration as the reference, easy to read at 64-pixel game size and in a 256-pixel roster. Each cell is one standalone complete object.\nTransparency: TRUE transparent alpha background. Absolutely NO ground surface, NO floor, NO cast/contact/drop shadow or oval below the objects. Dark shading intrinsic to the toy is allowed. No checkerboard baked into pixels.\nAvoid: text, labels, numbers, grid lines, framing, contact sheets with captions, UI, card corners, watermarks, terrain, sky, loose pieces, cargo, copied intellectual property, LEGO studs, minifigures, photorealism, tiny sci-fi greebles, pastel colors, oversized character heads, clipping or overlap between cells. All 16 objects fully fit with clear transparent gaps.\n",
+  "category": "units",
+  "id": "hauler-ne",
+  "derivedFrom": ".impeccable/review/toy-world-art/sources/unit-atlas-generated.png",
+  "nativeDimensions": [
+    1254,
+    1254
+  ],
+  "sourceBoundingBox": {
+    "x": 950,
+    "y": 376,
+    "width": 293,
+    "height": 219
+  },
+  "dimensions": [
+    384,
+    384
+  ],
+  "row": 1,
+  "column": 3,
+  "atlas": "units.png",
+  "atlasFrame": {
+    "x": 1152,
+    "y": 384,
+    "width": 384,
+    "height": 384
+  },
+  "boundingBox": {
+    "x": 42,
+    "y": 114,
+    "width": 300,
+    "height": 224
+  },
+  "groundAnchor": [
+    192,
+    338
+  ],
+  "origin": [
+    0.5,
+    0.8802083333333334
+  ],
+  "normalization": {
+    "scale": 1.023890784982935,
+    "width": 300,
+    "height": 224,
+    "horizontalAnchor": "Center of subject bounds",
+    "operation": "Native alpha-island isolation, exact crop, Lanczos resizing and transparent padding; no redrawing."
+  }
+}
