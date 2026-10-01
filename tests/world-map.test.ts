@@ -4,6 +4,7 @@ import { toWorld } from '../src/core/projection';
 import { worlds } from '../src/levels/world-map';
 import { residentHomes, patrolRoute } from '../src/view/world-residents';
 import { unitSpecs } from '../src/core/catalog';
+import { backdropLayout } from '../src/view/world-backdrop';
 
 describe('authored world journeys', () => {
   it('joins successive mission pins on valid terrain, including the sea lanes', () => {
@@ -57,6 +58,37 @@ describe('authored world journeys', () => {
           }
         }
       }
+    }
+  });
+
+  it.each([[700, 900], [885, 901], [1280, 720], [1920, 1080]])('fills the view with ocean and keeps distant shores outside the map at %i×%i', (width, height) => {
+    for (const world of worlds) {
+      const span = world.grid.width + world.grid.height;
+      const zoom = Math.min(width / (span * 40 + 160), height / (span * 20 + 100), 1.1);
+      const center = { x: (world.grid.width - world.grid.height) * 20, y: (span - 2) * 10 };
+      const { bounds, islets } = backdropLayout(world.id, { width, height, zoom, center });
+      expect(bounds.x).toBeLessThan(center.x - width / zoom / 2);
+      expect(bounds.y).toBeLessThan(center.y - height / zoom / 2);
+      expect(bounds.x + bounds.width).toBeGreaterThan(center.x + width / zoom / 2);
+      expect(bounds.y + bounds.height).toBeGreaterThan(center.y + height / zoom / 2);
+      for (const islet of islets) {
+        for (let y = 0; y < islet.grid.height; y++) for (let x = 0; x < islet.grid.width; x++) {
+          if (['water', 'deep-water'].includes(islet.grid.tiles[y][x])) continue;
+          const tile = toWorld({ x, y });
+          for (const [dx, dy] of [[0,-20],[40,0],[0,20],[-40,0]]) {
+            const px = islet.x + (tile.x + dx) * islet.scale, py = islet.y + (tile.y + dy) * islet.scale;
+            const cell = { x: px / 80 + py / 40, y: py / 40 - px / 80 };
+            expect(cell.x < -.5 || cell.y < -.5 || cell.x > world.grid.width - .5 || cell.y > world.grid.height - .5, `${world.name}: scenery covers the mission landscape`).toBe(true);
+          }
+        }
+      }
+    }
+  });
+
+  it('rejects empty or invalid viewports before creating the sea pattern', () => {
+    const view = { width: 885, height: 901, zoom: .4, center: { x: 40, y: 480 } };
+    for (const invalid of [{ width: 0 }, { height: 0 }, { zoom: 0 }, { zoom: Infinity }]) {
+      expect(() => backdropLayout('meadow-isles', { ...view, ...invalid })).toThrow(RangeError);
     }
   });
 });

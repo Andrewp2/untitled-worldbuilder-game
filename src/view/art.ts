@@ -34,7 +34,8 @@ function terrainTextures(scene: Phaser.Scene): void {
   });
 }
 
-export function drawTerrain(scene: Phaser.Scene, grid: Grid): Phaser.GameObjects.GameObject[] {
+/** Mission boards keep water edges; maps blend into the sea; distant islets use the sea beneath them. */
+export function drawTerrain(scene: Phaser.Scene, grid: Grid, waterSurface: 'bounded' | 'open' | 'hidden'): Phaser.GameObjects.GameObject[] {
   terrainTextures(scene);
   // Paint each whole tile back to front. Separating all cliffs from all tops
   // let a rear cliff cover the next land/bridge tile in front of it.
@@ -48,6 +49,7 @@ export function drawTerrain(scene: Phaser.Scene, grid: Grid): Phaser.GameObjects
     if (y < 0 || y >= grid.height) continue;
     const terrain = grid.tiles[y][x], p = toWorld({ x, y });
     const water = isWater(terrain), bridge = terrain === 'bridge';
+    if (water && waterSurface === 'hidden') continue;
     if (bridge) {
       // A bridge replaces the walkable surface, not the river beneath it.
       waterGround.add(scene.add.image(p.x, p.y + WATER_DROP, 'toy-ground-water-' + (x % 2 + y % 2 * 2)).setDisplaySize(80.25, 40.125));
@@ -60,6 +62,7 @@ export function drawTerrain(scene: Phaser.Scene, grid: Grid): Phaser.GameObjects
     const top = p.y + (water ? WATER_DROP : 0);
     const height = water ? 6 : bridge ? 4 : WATER_DROP;
     const exposed = (dx: number, dy: number) => {
+      if (water && waterSurface !== 'bounded') return false;
       const next = terrainAt(grid, { x: x + dx, y: y + dy });
       return !next || (!water && (isWater(next) || (!bridge && next === 'bridge')));
     };

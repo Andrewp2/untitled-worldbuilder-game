@@ -130,7 +130,7 @@ export class GameScene extends Phaser.Scene {
     this.children.removeAll(true);
     this.objects = []; this.objectsSignature = ''; this.rovers.clear(); this.creatures.clear(); this.pileBadges.clear(); this.flashes = []; this.puffs = []; this.pilePictures.clear(); this.flags = []; this.rewards = [];
     this.workBeats.clear();
-    this.terrainObjects = drawTerrain(this, this.simulation.grid);
+    this.terrainObjects = drawTerrain(this, this.simulation.grid, 'bounded');
     this.water = this.add.graphics().setDepth(-1000.5);
     this.routes = this.add.graphics().setDepth(GROUND_MARK_DEPTH);
     this.markers = this.add.graphics().setDepth(STATUS_DEPTH);
@@ -510,7 +510,7 @@ export class GameScene extends Phaser.Scene {
       }
       if (events.some(event => (event.kind === 'terrain' || event.kind === 'obstacle') && !event.error)) {
         for (const object of this.terrainObjects) object.destroy();
-        this.terrainObjects = drawTerrain(this, this.simulation.grid);
+        this.terrainObjects = drawTerrain(this, this.simulation.grid, 'bounded');
       }
     }
     if (this.selected && !this.selectedRover() && !this.selectedRelay()) { this.selected = this.simulation.units[0]?.id ?? null; this.mode = 'move'; }

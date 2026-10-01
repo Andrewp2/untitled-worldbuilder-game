@@ -5,15 +5,20 @@ import { worlds } from '../levels/world-map';
 import type { WorldId } from '../levels/missions';
 import { drawTerrain } from './art';
 import { unitSpecs } from '../core/catalog';
-import { TOY_BACKGROUND, poseToy, preloadToyArt, toyActor, type ToyActor } from './toy-art';
+import { poseToy, preloadToyArt, toyActor, type ToyActor } from './toy-art';
 import { patrolRoute, residentHomes } from './world-residents';
 import { prepareToyModels } from './toy-models';
+import { backdropLayout, worldBackdrops } from './world-backdrop';
 
 export type MapPoint = { id: string; x: number; y: number };
 
 export class WorldMapScene extends Phaser.Scene {
   private water!: Phaser.GameObjects.Graphics;
   private trail!: Phaser.GameObjects.Graphics;
+  private sea!: Phaser.GameObjects.Graphics;
+  private swells!: Phaser.GameObjects.Graphics;
+  private islets: Phaser.GameObjects.Container[] = [];
+  private backdrop: ReturnType<typeof backdropLayout> | null = null;
   private world = worlds[0];
   private terrain: Phaser.GameObjects.GameObject[] = [];
   private ready = false;
@@ -27,13 +32,14 @@ export class WorldMapScene extends Phaser.Scene {
   preload(): void { preloadToyArt(this); }
   create(): void {
     prepareToyModels(this);
-    this.cameras.main.setBackgroundColor(TOY_BACKGROUND);
+    this.sea = this.add.graphics().setDepth(-1200);
+    this.swells = this.add.graphics().setDepth(-1150);
     this.water = this.add.graphics().setDepth(-1000.5);
     this.trail = this.add.graphics().setDepth(-850);
     this.ready = true;
     this.renderWorld();
     this.scale.on('resize', this.fit, this);
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => { this.ready = false; this.terrain = []; this.populated.clear(); this.residents = []; this.scale.off('resize', this.fit, this); });
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => { this.ready = false; this.terrain = []; this.islets = []; this.backdrop = null; this.populated.clear(); this.residents = []; this.scale.off('resize', this.fit, this); });
     this.events.on(Phaser.Scenes.Events.WAKE, this.fit, this);
     this.fit();
   }
@@ -46,7 +52,14 @@ export class WorldMapScene extends Phaser.Scene {
     for (const object of this.terrain) object.destroy();
     for (const resident of this.residents) resident.actor.root.destroy();
     this.residents = []; this.populated.clear(); this.water.clear();
-    this.terrain = drawTerrain(this, this.world.grid);
+    this.terrain = drawTerrain(this, this.world.grid, 'open');
+    for (const islet of this.islets) islet.destroy();
+    this.islets = worldBackdrops[this.world.id].islets.map(({ grid, scale }) => {
+      const objects = drawTerrain(this, grid, 'hidden') as (Phaser.GameObjects.Container | Phaser.GameObjects.Graphics)[];
+      objects.sort((a, b) => a.depth - b.depth);
+      return this.add.container(0, 0, objects).setScale(scale).setDepth(-1100);
+    });
+    this.cameras.main.setBackgroundColor(worldBackdrops[this.world.id].sea);
     this.drawTrail(); this.syncResidents();
   }
   setProgress(completed: ReadonlySet<string>): void {
@@ -78,7 +91,7 @@ export class WorldMapScene extends Phaser.Scene {
     }
   }
   fit(): void {
-    if (!this.ready) return;
+    if (!this.ready || this.scale.width <= 0 || this.scale.height <= 0) return;
     const { grid, locations } = this.world;
     const width = (grid.width + grid.height) * 40, height = (grid.width + grid.height) * 20;
     const center = { x: (grid.width - grid.height) * 20, y: (grid.width + grid.height - 2) * 10 };
@@ -86,6 +99,23 @@ export class WorldMapScene extends Phaser.Scene {
     // Sleeping scenes can retain the previous host's camera size until the next frame.
     // Size it before centering so the native pins and the canvas use the same viewport.
     this.cameras.main.setSize(this.scale.width, this.scale.height).setZoom(zoom).centerOn(center.x, center.y);
+    this.backdrop = backdropLayout(this.world.id, { width: this.scale.width, height: this.scale.height, zoom, center });
+    const bounds = this.backdrop.bounds;
+    this.sea.clear().fillStyle(worldBackdrops[this.world.id].sea).fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+    this.backdrop.islets.forEach((islet, i) => this.islets[i].setPosition(islet.x, islet.y));
+    // Bake the swells on layout changes; each frame only moves this one layer.
+    this.swells.clear().lineStyle(1.5, 0xc5faff, .20);
+    for (const wave of this.backdrop.waves) {
+      for (const [offset, length] of [[0, 60], [82, 30]]) {
+        this.swells.beginPath();
+        for (let step = 0; step <= 8; step++) {
+          const x = wave.x + offset + length * step / 8;
+          const y = wave.y + offset * .18 + Math.sin(step / 8 * Math.PI) * 3;
+          if (step) this.swells.lineTo(x, y); else this.swells.moveTo(x, y);
+        }
+        this.swells.strokePath();
+      }
+    }
     this.onLocations(locations.map(location => {
       const p = toWorld(location.cell);
       return { id: location.id, x: this.scale.width / 2 + (p.x - center.x) * zoom, y: this.scale.height / 2 + (p.y - center.y) * zoom };
@@ -95,6 +125,7 @@ export class WorldMapScene extends Phaser.Scene {
     if (!this.ready) return;
     if (!this.reducedMotion && !document.hidden) this.clock += Math.min(delta / 1000, .1);
     const phase = this.clock;
+    this.swells.setX(Math.sin(phase * .25) * 8);
     for (const resident of this.residents) {
       const step = this.reducedMotion ? resident.phase : phase * .65 + resident.phase;
       const index = Math.floor(step) % resident.route.length, progress = this.reducedMotion ? 0 : step % 1;
