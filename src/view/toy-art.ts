@@ -6,7 +6,7 @@ import { facingPicture } from './facing';
 import { stepPose } from './motion';
 
 export const TOY_BACKGROUND = '#063361';
-export const artUrl = (name: string) => `/art/toy-world/${name}.png`;
+export const artUrl = (name: string) => `${import.meta.env.BASE_URL}art/toy-world/${name}.png`;
 type ToyKind = UnitKind | EnemyKind;
 const objects = ['flag', 'soil', 'relay', 'connector'];
 

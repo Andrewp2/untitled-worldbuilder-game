@@ -42,7 +42,7 @@ const icons: Record<string, string> = {
 };
 export const icon = (name: string) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name]}</svg>`;
 export const mapFlag = (bonus: boolean) => `<svg class="map-flag" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M9 36V5" stroke="#f5ffd8" stroke-width="3" stroke-linecap="round"/><g class="flag-cloth"><path d="M10 7c8-4 13 5 22 1v18c-9 4-14-5-22-1z" fill="#ffda51"/>${bonus ? '<path d="m21 10 2 4 4.4.7-3.2 3.1.8 4.4-4-2.1-4 2.1.8-4.4-3.2-3.1 4.4-.7z" fill="#193960"/>' : ''}</g></svg>`;
-const modelImage = (name: string, className: string) => '<img class="' + className + '" src="' + (modelPortrait(name) ?? '/art/toy-world/' + name + '.png') + '" alt="" aria-hidden="true" draggable="false" />';
+const modelImage = (name: string, className: string) => '<img class="' + className + '" src="' + (modelPortrait(name) ?? import.meta.env.BASE_URL + 'art/toy-world/' + name + '.png') + '" alt="" aria-hidden="true" draggable="false" />';
 export const roverIcon = (heavy: boolean) => modelImage(heavy ? 'hauler-se' : 'scout-se', 'rover-icon');
 export const relayIcon = () => modelImage('relay', 'relay-icon');
 export const wardenIcon = () => modelImage('warden-se', 'rover-icon');

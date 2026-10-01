@@ -18,6 +18,21 @@ npm test       # focused movement, construction, cargo, battery, combat, and mis
 npm run build # type-check and bundle into dist/
 ```
 
+## GitHub Pages
+
+Play at [andrewp2.github.io/untitled-worldbuilder-game](https://andrewp2.github.io/untitled-worldbuilder-game/).
+
+Pushing to `main` runs the tests, builds the game and deploys `dist/` through [GitHub Actions](.github/workflows/deploy-pages.yml). The build uses the path supplied by GitHub Pages, and game assets follow Vite's base URL. Local development still runs at `/`.
+
+To check the Pages build locally:
+
+```sh
+npm run build -- --base=/untitled-worldbuilder-game/
+npm run preview -- --base=/untitled-worldbuilder-game/
+```
+
+Open `http://127.0.0.1:4173/untitled-worldbuilder-game/`. Saves stay in the browser for each site's origin; progress on localhost is separate from progress on GitHub Pages.
+
 ## Play
 
 Blueprints and supplies use pictures with counts. Hover for names, open the unit Info button for details, and open **Game menu → How to play** for controls and the resource legend. A short objective replaces the mission information panel. Pictured blueprints stay visible in the bottom toolbox; remaining stock is visible and costs appear on hover, focus or selection. Select units on the board or with 1–9. Installed charge uses one green bar with exact charge on hover. Invalid actions clear any transient message and use the existing error cue, honoring effects mute; success and reward messages expire after 3.5 seconds.
