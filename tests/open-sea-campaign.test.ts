@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { seaMissions } from '../src/levels/open-sea';
 import { createMission, missions } from '../src/levels/missions';
+import { cloneSupplies, TERRAIN_ENERGY } from '../src/core/catalog';
 import type { Simulation } from '../src/core/simulation';
 import { build, clearEnemies, defeat, deliver, go, refuel, work, until } from './helpers/campaign-play';
 
@@ -160,6 +161,18 @@ const solutions: Record<string, (s: Simulation) => void> = {
 };
 
 describe('authored Open Sea campaign', () => {
+  it('lets Three Tides Dozer combine the two coastal stockpiles', () => {
+    const s = createMission(missions.find(mission => mission.id === 'three-tides')!);
+    const target = { x: 9, y: 8 }, destination = { x: 9, y: 7 };
+    const kit = cloneSupplies(s.pileAt(destination)!.supplies);
+    go(s, 'dozer', { x: 9, y: 9 });
+    const charge = s.unit('dozer').battery;
+    work(s, 'dozer', 'push', target);
+    expect(s.pileAt(target)).toBeUndefined();
+    expect(s.pileAt(destination)?.supplies).toEqual({ ...kit, green: kit.green + 2 });
+    expect(s.unit('dozer').cell).toEqual({ x: 9, y: 9 });
+    expect(s.unit('dozer').battery).toBe(charge - TERRAIN_ENERGY);
+  });
   it.each(seaMissions.map(m => [m.id, missions.find(canonical => canonical.id === m.id)!] as const))('%s: completes main before bonus using actual supplies and automatic combat', (id, mission) => {
     const s = createMission(mission); expect(s.mainComplete).toBe(false); expect(s.bonusUnlocked).toBe(false);
     solutions[id](s); expect(s.mainComplete).toBe(true); expect(s.bonusReached).toBe(true);

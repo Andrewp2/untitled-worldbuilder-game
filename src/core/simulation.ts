@@ -260,13 +260,18 @@ export class Simulation {
   private inUse(cell: Cell): boolean {
     return this.blockedFor('').has(key(cell)) || this.units.some(unit => unit.route.some(point => sameCell(point, cell)));
   }
-  private clearGround(cell: Cell): boolean {
+  private clearGround(cell: Cell, allowPile = false): boolean {
     const terrain = terrainAt(this.grid, cell);
     return (terrain === 'grass' || terrain === 'sand' || terrain === 'swamp') && !this.inUse(cell) && !this.protectedSite(cell)
-      && !this.pileAt(cell) && !this.looseTrees.some(tree => sameCell(tree, cell));
+      && (allowPile || !this.pileAt(cell)) && !this.looseTrees.some(tree => sameCell(tree, cell));
   }
   private pushDestination(from: Cell, target: Cell): Cell {
     return { x: target.x * 2 - from.x, y: target.y * 2 - from.y };
+  }
+  private canPushFrom(from: Cell, target: Cell): boolean {
+    // Loose supplies merge at the destination. A boulder still needs an empty
+    // tile so it cannot bury parts. Planning and arrival use the same rule.
+    return this.clearGround(this.pushDestination(from, target), terrainAt(this.grid, target) !== 'rock');
   }
   private obstacleTargetProblem(id: string, action: ObstacleAction, target: Cell): string | null {
     const u = this.unit(id), terrain = terrainAt(this.grid, target);
@@ -291,7 +296,7 @@ export class Simulation {
     if (!adjacent(u.cell, target)) return 'Work on a directly adjacent tile.';
     const problem = this.obstacleTargetProblem(id, action, target);
     if (problem) return problem;
-    if (action === 'push' && !this.clearGround(this.pushDestination(u.cell, target))) return 'The tile beyond it must be clear ground.';
+    if (action === 'push' && !this.canPushFrom(u.cell, target)) return 'The tile beyond it must be clear ground.';
     return null;
   }
   moveObstacle(id: string, action: ObstacleAction, target: Cell): ActionResult {
@@ -329,7 +334,7 @@ export class Simulation {
   obstacleOrderPreview(id: string, action: ObstacleAction, target: Cell): { ok: true; approach: Approach } | { ok: false; reason: string } {
     const reason = this.obstacleTargetProblem(id, action, target);
     if (reason) return { ok: false, reason };
-    const approach = this.approach(id, target, action === 'push' ? cell => this.clearGround(this.pushDestination(cell, target)) : undefined);
+    const approach = this.approach(id, target, action === 'push' ? cell => this.canPushFrom(cell, target) : undefined);
     return approach ? { ok: true, approach } : { ok: false, reason: 'Cannot reach a working position beside that spot.' };
   }
   orderObstacle(id: string, action: ObstacleAction, target: Cell): ActionResult {
@@ -480,7 +485,7 @@ export class Simulation {
           if (!u.route.length || blocked.has(key(u.route[0])) || !walkable(this.grid, u.route[0], unitSpecs[u.kind].mobility)) {
             if (u.pending) {
               const target = u.pending.target;
-              const approach = this.approach(u.id, target, u.pending.action === 'push' ? cell => this.clearGround(this.pushDestination(cell, target)) : undefined);
+              const approach = this.approach(u.id, target, u.pending.action === 'push' ? cell => this.canPushFrom(cell, target) : undefined);
               u.route = approach?.route ?? [];
               if (approach) u.goal = approach.goal;
             } else u.route = findPath(this.grid, u.cell, u.goal, blocked, unitSpecs[u.kind].mobility) ?? [];

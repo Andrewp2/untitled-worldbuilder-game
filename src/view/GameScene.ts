@@ -285,7 +285,7 @@ export class GameScene extends Phaser.Scene {
     }
     if ((this.mode === 'push' || this.mode === 'uproot' || this.mode === 'plant') && this.selectedRover()) {
       const preview = this.simulation.obstacleOrderPreview(this.selected!, this.mode, this.hover);
-      return preview.ok ? this.mode === 'push' ? 'Push one tile away · keep the tile beyond clear' : this.mode === 'uproot' ? 'Lift this tree' : 'Plant this tree' : preview.reason;
+      return preview.ok ? this.mode === 'push' ? 'Push one tile away' : this.mode === 'uproot' ? 'Lift this tree' : 'Plant this tree' : preview.reason;
     }
     if (this.simulation.bonusUnlocked && key(this.hover) === key(this.mission.bonus.cell)) return `${this.mission.bonus.name} · ${this.simulation.bonusReached ? 'Bonus star earned' : this.mission.bonus.description}`;
     const plan = this.simulation.visibleBlueprints.find(plan => key(plan.cell) === key(this.hover!));

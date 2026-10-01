@@ -57,7 +57,7 @@ Music and effects have separate pictured controls inside Game menu. Both start o
 - Work protects current/next unit and enemy cells, relays, reserved friendly routes, loose piles, goal cells, and bonus pads. Routes avoid newly blocked terrain.
 - Land plus carried/loose dirt is conserved. Scoop releases dirt through dismantling or destruction; cargo rovers can haul loose dirt. Scoop cannot pick it back up. Rebuilding with a dead installed battery preserves its zero charge. Each simulation clones the authored grid; restart/replay restore terrain and do not save in-progress mutations.
 
-- Dozer pushes a rock or entire loose pile one tile away from its working side onto clear grass/sand/swamp. Distant Push chooses a reachable side with a legal destination and revalidates both on arrival. Protected sites, reserved routes, occupied tiles, and loose trees prevent the push.
+- Dozer pushes a rock or entire loose pile one tile away from its working side onto grass/sand/swamp. Loose piles can combine with an existing pile, preserving every colored part, battery charge and dirt load; rocks require an empty destination. Distant Push chooses a reachable side with a legal destination and revalidates both on arrival. Protected sites, reserved routes, occupied tiles, and loose trees prevent the push.
 - Arborbot lifts one planted or loose tree and replants on clear grass/sand/swamp, moving slower while loaded. It preserves the ground under uprooted trees and conserves tree count. Dismantling or destruction releases a carried tree for recovery without blocking wreck supplies. Distant Uproot/Plant revalidates on arrival.
 
 ## Provisional battery balance

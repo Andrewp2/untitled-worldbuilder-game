@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { enemyDefinition, enemyKinds, enemySpecs, emptySupplies, load, partCounts, recipeSupplies, unitDefinition, unitKinds, unitSpecs, usesBattery, type EnemyKind, type UnitKind } from '../src/core/catalog';
+import { enemyDefinition, enemyKinds, enemySpecs, emptySupplies, load, partCounts, recipeSupplies, TERRAIN_ENERGY, unitDefinition, unitKinds, unitSpecs, usesBattery, type EnemyKind, type UnitKind } from '../src/core/catalog';
 import { findPath, key, walkable, type Cell, type Grid, type Terrain } from '../src/core/grid';
 import { Simulation } from '../src/core/simulation';
 
@@ -125,6 +125,50 @@ describe('cargo roles and shore transfers', () => {
 });
 
 describe('Dozer obstacle work', () => {
+  it.each([{ x: 1, y: 0 }, { x: 0, y: 1 }, { x: -1, y: 0 }, { x: 0, y: -1 }])('merges adjacent piles when pushing in direction %j without walking or losing supplies', direction => {
+    const target = { x: 4, y: 2 }, start = { x: target.x - direction.x, y: target.y - direction.y };
+    const destination = { x: target.x + direction.x, y: target.y + direction.y };
+    const source = { ...partCounts(4, 2, 1, 3), batteries: [0, 63], soil: 1 };
+    const existing = { ...partCounts(1, 3, 2, 4), batteries: [18, 0], soil: 2 };
+    const grid = board('water');
+    for (const cell of [start, target, destination]) grid.tiles[cell.y][cell.x] = 'grass';
+    const s = new Simulation(grid, [unitDefinition('dozer', 'd', start, TERRAIN_ENERGY)], {
+      piles: [{ cell: target, supplies: source }, { cell: destination, supplies: existing }],
+    });
+    const before = state(s);
+    expect(s.obstacleOrderPreview('d', 'push', target).ok).toBe(true); expect(state(s)).toBe(before);
+    expect(s.orderObstacle('d', 'push', target)).toEqual({ ok: true });
+    expect(s.piles).toHaveLength(1); expect(s.pileAt(target)).toBeUndefined();
+    expect(s.pileAt(destination)?.supplies).toEqual({ ...partCounts(5, 5, 3, 7), batteries: [18, 0, 0, 63], soil: 3 });
+    expect(s.unit('d').cell).toEqual(start); expect(s.unit('d').battery).toBe(0);
+    expect(s.unit('d').cargo).toEqual(emptySupplies()); expect(s.unit('d').pending).toBeNull();
+    expect(source).toEqual({ ...partCounts(4, 2, 1, 3), batteries: [0, 63], soil: 1 });
+    expect(existing).toEqual({ ...partCounts(1, 3, 2, 4), batteries: [18, 0], soil: 2 });
+  });
+  it('drives beside a distant pile and merges it with a pile deposited after the order', () => {
+    const target = { x: 6, y: 2 }, destination = { x: 7, y: 2 };
+    const s = new Simulation(board(), [unitDefinition('dozer', 'd', { x: 0, y: 2 }), unitDefinition('hauler', 'h', { x: 7, y: 1 })], {
+      piles: [{ cell: target, supplies: { ...partCounts(2, 1), batteries: [0, 63] } },
+        { cell: { x: 8, y: 1 }, supplies: { ...partCounts(1, 0, 2), batteries: [18] } }],
+    });
+    expect(s.orderObstacle('d', 'push', target)).toEqual({ ok: true, queued: true });
+    expect(s.transfer('h', 'pickup', { x: 8, y: 1 }).ok).toBe(true);
+    expect(s.transfer('h', 'drop', destination).ok).toBe(true); s.step(20);
+    expect(s.pileAt(target)).toBeUndefined();
+    expect(s.pileAt(destination)?.supplies).toEqual({ ...partCounts(3, 1, 2), batteries: [18, 0, 63] });
+    expect(s.unit('d').cell).toEqual({ x: 5, y: 2 }); expect(s.unit('d').battery).toBe(92);
+    expect(s.unit('d').pending).toBeNull();
+    expect(s.drainEvents().filter(event => event.kind === 'obstacle' && !event.error)).toHaveLength(1);
+  });
+  it('does not bury a pile under a pushed boulder', () => {
+    const grid = board('grass', 3, 1); grid.tiles[0][1] = 'rock';
+    const s = new Simulation(grid, [unitDefinition('dozer', 'd', { x: 0, y: 0 })], {
+      piles: [{ cell: { x: 2, y: 0 }, supplies: recipeSupplies('scout', 63) }],
+    });
+    const before = state(s);
+    expect(s.orderObstacle('d', 'push', { x: 1, y: 0 }).ok).toBe(false); expect(state(s)).toBe(before);
+    expect(s.moveObstacle('d', 'push', { x: 1, y: 0 }).ok).toBe(false); expect(state(s)).toBe(before);
+  });
   it('pushes boulders while preserving the ground beneath, and moves entire loose piles without changing charge', () => {
     const grid = board(); grid.tiles[2][2] = 'rock'; grid.tiles[2][3] = 'sand';
     const s = new Simulation(grid, [unitDefinition('dozer', 'd', { x: 1, y: 2 })]);
