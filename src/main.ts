@@ -10,7 +10,7 @@ import { Campaign, PROGRESS_KEY, type ProgressStorage } from './core/campaign';
 import { WorldMapScene } from './view/WorldMapScene';
 import { worlds } from './levels/world-map';
 import { TOY_BACKGROUND } from './view/toy-art';
-import { attachHoldToConfirm } from './view/hold-to-confirm';
+import { attachResetControl } from './view/reset-control';
 
 let progressStorage: ProgressStorage | undefined;
 try { progressStorage = window.localStorage; } catch { /* A blocked store does not prevent play. */ }
@@ -29,11 +29,10 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       <div class="menu-options">
       <button id="music-toggle" class="header-button audio-button" aria-label="Music" title="Enable music" aria-pressed="false">${icon('musicOff')}</button>
       <button id="sound-toggle" class="header-button audio-button" aria-label="Sound effects" title="Enable sound effects" aria-pressed="false">${icon('soundOff')}</button>
-      <button id="restart" class="header-button" aria-label="Restart" title="Restart mission" hidden>${icon('restart')}</button>
       <button id="help-toggle" class="header-button" aria-label="Show controls" title="How to play" aria-expanded="false" aria-controls="help-panel">${icon('help')}</button>
       </div>
-      <button id="reset-progress" class="reset-progress" aria-label="Reset progress" aria-describedby="reset-progress-hint" title="Hold for 3 seconds to clear completed missions and bonus stars">
-        ${icon('restart')}<span>Reset progress<small id="reset-progress-hint" class="hold-hint">Hold 3s</small></span><i class="hold-meter" aria-hidden="true"></i>
+      <button id="reset-progress" class="reset-progress" aria-label="Reset ALL progress" aria-describedby="reset-progress-hint" title="Hold for 3 seconds to clear all completed missions and bonus stars">
+        ${icon('restart')}<span><span class="reset-label">Reset ALL progress</span><small id="reset-progress-hint" class="hold-hint">Hold 3s</small></span><i class="hold-meter" aria-hidden="true"></i>
       </button>
       </div>
       <button id="pause" class="header-button" aria-label="Pause" title="Pause" aria-pressed="false" hidden>${icon('pause')}</button>
@@ -144,7 +143,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       <div><dt>Stop and cancel</dt><dd>Stop ends a rover’s order after its current step. Esc cancels targeting; press it again to clear selection.</dd></div>
       <div><dt>Camera</dt><dd>Drag, WASD or arrows to pan. Scroll to zoom. F centers the selection; Home shows the whole island.</dd></div>
     </dl>
-    <p>Pause stops movement and combat. You can still build and transfer cargo beside stopped rovers. Restart resets the mission.</p>
+    <p>Pause stops movement and combat. You can still build and transfer cargo beside stopped rovers. Restart level starts this mission fresh and keeps your saved progress. On the world map, hold Reset ALL progress for 3 seconds to clear every completion and bonus star.</p>
   </section>
 `;
 
@@ -431,7 +430,8 @@ function showScreen(screen: 'world' | 'mission'): void {
   document.body.dataset.screen = screen;
   el('world-screen').hidden = screen !== 'world'; el('mission-screen').hidden = screen !== 'mission';
   el('mission-brief').hidden = screen !== 'mission';
-  for (const id of ['world-map', 'pause', 'restart']) el(id).hidden = screen === 'world';
+  for (const id of ['world-map', 'pause']) el(id).hidden = screen === 'world';
+  progressReset.setScreen(screen);
   el(`${screen === 'world' ? 'world' : 'mission'}-game-host`).prepend(el('game'));
   el('game').setAttribute('role', screen === 'world' ? 'img' : 'application');
   el('game').tabIndex = screen === 'world' ? -1 : 0;
@@ -499,11 +499,14 @@ el('focus').onclick = () => scene.focusSelected();
 el('camera-focus').onclick = () => scene.focusSelected();
 el('stop').onclick = () => scene.stopSelected();
 el('pause').onclick = () => scene.togglePause();
-el('restart').onclick = () => { if (campaign.currentMission) startMission(campaign.currentMission); };
 el('music-toggle').onclick = () => audio.setMusic(!audio.state.musicEnabled);
 el('sound-toggle').onclick = () => audio.setEffects(!audio.state.effectsEnabled);
-const progressReset = attachHoldToConfirm(el<HTMLButtonElement>('reset-progress'), () => {
-  campaign.reset(); selectedWorld = 'meadow-isles'; returnToWorld();
+const progressReset = attachResetControl(el<HTMLButtonElement>('reset-progress'), {
+  restartLevel: () => { if (campaign.currentMission) startMission(campaign.currentMission); },
+  resetProgress: () => {
+    if (campaign.screen !== 'world') return;
+    campaign.reset(); selectedWorld = 'meadow-isles'; returnToWorld();
+  },
 });
 el('zoom-in').onclick = () => scene.zoomBy(1.2);
 el('zoom-out').onclick = () => scene.zoomBy(1/1.2);

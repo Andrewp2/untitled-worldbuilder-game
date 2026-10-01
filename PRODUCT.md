@@ -34,7 +34,7 @@ Linked whirlpools are shallow-water tiles with fixed destinations. Entering jump
 
 The yellow license button beside Game menu opens the current builder license. Bonus stars determine Class 1 initially, Class 2 at 12, Class 3 at 24 and Class 4 at 36. The license shows a class portrait, unique star count and completed-world stamps, and offers Print license. Rank is derived from existing saved awards; replays cannot duplicate progress and Reset progress clears the license. Opening and closing the license preserves a mission’s pause state.
 
-Game menu's Reset progress control requires a continuous three-second hold to clear all completed missions, bonus stars, and earned residents across the whole world map and return there, preserving the chosen audio settings. Restart starts a fresh current mission while keeping saved awards.
+Game menu has one contextual reset control. Inside a mission, **Restart level** starts that mission fresh on click and keeps saved completions and bonus stars. On the world map, **Reset ALL progress** requires a continuous three-second hold to clear all completed missions, bonus stars, licenses, and earned residents across the whole campaign, preserving the chosen audio settings. Changing screens cancels any pending hold.
 
 Music and sound effects both start off on every load, including when old saved preferences say enabled. Each channel can be enabled separately for the current tab's session; audio preferences are not persisted. Activating Web Audio alone keeps both channels muted.
 
