@@ -100,7 +100,7 @@ describe('world map and mission completion', () => {
     for (const world of worlds) {
       expect(world.locations).toHaveLength(12);
       expect(world.locations.every(location => walkable(world.grid, location.cell))).toBe(true);
-      for (const location of world.locations.slice(1)) expect(findPath(world.grid, world.locations[0].cell, location.cell), `${world.name}: ${location.id}`).not.toBeNull();
+      for (const location of world.locations.slice(1)) expect(findPath(world.grid, world.locations[0].cell, location.cell, new Set(), world.trailMobility), `${world.name}: ${location.id}`).not.toBeNull();
     }
   });
   it('starts on the map and does not count leaving an unfinished mission', () => {

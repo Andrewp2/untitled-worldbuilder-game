@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { findPath, type Cell } from '../core/grid';
+import type { Cell } from '../core/grid';
 import { toWorld, surfacePoint, WATER_DROP } from '../core/projection';
 import { worlds } from '../levels/world-map';
 import type { WorldId } from '../levels/missions';
@@ -55,12 +55,12 @@ export class WorldMapScene extends Phaser.Scene {
   }
   private drawTrail(): void {
     this.trail.clear();
-    const { grid, locations } = this.world;
+    const { grid, locations, trails } = this.world;
     let unlocked = worlds.slice(0, worlds.indexOf(this.world)).every(world => world.locations.every(pin => this.completed.has(pin.id)));
-    for (const [index, location] of locations.slice(1).entries()) {
+    for (const [index, route] of trails.entries()) {
       unlocked &&= this.completed.has(locations[index].id);
-      for (const cell of findPath(grid, locations[index].cell, location.cell) ?? []) {
-        const p = toWorld(cell);
+      for (const cell of route) {
+        const p = surfacePoint(grid, cell);
         this.trail.fillStyle(unlocked ? 0xffe16a : 0x245b65, unlocked ? .9 : .35); this.trail.fillCircle(p.x, p.y, 3);
       }
     }

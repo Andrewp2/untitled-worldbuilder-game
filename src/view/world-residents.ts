@@ -1,4 +1,4 @@
-import { findPath, walkable, type Cell, type Grid, type Mobility } from '../core/grid';
+import { findPath, key, walkable, type Cell, type Grid, type Mobility } from '../core/grid';
 import { unitSpecs, type UnitKind } from '../core/catalog';
 import { worlds } from '../levels/world-map';
 import type { WorldId } from '../levels/missions';
@@ -10,17 +10,21 @@ const residentKinds: Record<WorldId, UnitKind[]> = {
 };
 
 /** Small scenery patrols are fitted to each authored landscape, never to a mission simulation. */
-export const residentHomes = worlds.flatMap(world => world.locations.map((location, i) => {
-  const kind = residentKinds[world.id][i], mobility = unitSpecs[kind].mobility;
-  const squares: Cell[][] = [];
-  for (let y = 0; y < world.grid.height - 1; y++) for (let x = 0; x < world.grid.width - 1; x++) {
-    const square = [{x,y}, {x:x+1,y}, {x:x+1,y:y+1}, {x,y:y+1}];
-    if (square.every(cell => walkable(world.grid, cell, mobility) && world.locations.every(pin => Math.abs(cell.x - pin.cell.x) + Math.abs(cell.y - pin.cell.y) > 1))) squares.push(square);
-  }
-  squares.sort((a,b) => Math.abs(a[0].x-location.cell.x)+Math.abs(a[0].y-location.cell.y)-Math.abs(b[0].x-location.cell.x)-Math.abs(b[0].y-location.cell.y));
-  if (!squares.length) throw new Error(`${world.name} needs a scenery route for ${kind}.`);
-  return { world: world.id, mission: location.id, patrols: [{ kind, waypoints: squares[0] }] };
-}));
+export const residentHomes = worlds.flatMap(world => {
+  const occupied = new Set<string>();
+  return world.locations.map((location, i) => {
+    const kind = residentKinds[world.id][i], mobility = unitSpecs[kind].mobility;
+    const squares: Cell[][] = [];
+    for (let y = 0; y < world.grid.height - 1; y++) for (let x = 0; x < world.grid.width - 1; x++) {
+      const square = [{x,y}, {x:x+1,y}, {x:x+1,y:y+1}, {x,y:y+1}];
+      if (square.every(cell => !occupied.has(key(cell)) && walkable(world.grid, cell, mobility) && world.locations.every(pin => Math.abs(cell.x - pin.cell.x) + Math.abs(cell.y - pin.cell.y) > 1))) squares.push(square);
+    }
+    squares.sort((a,b) => Math.abs(a[0].x-location.cell.x)+Math.abs(a[0].y-location.cell.y)-Math.abs(b[0].x-location.cell.x)-Math.abs(b[0].y-location.cell.y));
+    if (!squares.length) throw new Error(`${world.name} needs a scenery route for ${kind}.`);
+    squares[0].forEach(cell => occupied.add(key(cell)));
+    return { world: world.id, mission: location.id, patrols: [{ kind, waypoints: squares[0] }] };
+  });
+});
 
 export function patrolRoute(grid: Grid, waypoints: Cell[], mobility: Mobility = 'land'): Cell[] {
   const route = [{ ...waypoints[0] }];

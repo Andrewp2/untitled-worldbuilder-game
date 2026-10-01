@@ -322,7 +322,7 @@ This mission is a useful design reference from the beginning. A prototype should
 
 ### Campaign map
 
-The current campaign uses three authored landscapes: Meadow Isles, Sunstone Range and Open Sea, each with twelve numbered locations. Main completion opens the next level in one order, including world boundaries. The initial proposal for occasional branches remains historical; branching is not current campaign behavior.
+The current campaign uses three authored landscapes: Meadow Isles, Sunstone Range and Open Sea, each with twelve numbered locations. Their routes follow an irregular lagoon coast, a winding rocky valley, and an island chain with dotted sea lanes respectively. Authored bends connect the markers through the landscape; pins retain campaign order while their positions follow coves, clearings and passes. Hover/focus names sit outside fixed marker hit areas. Earned residents use distinct compatible patrols away from the pins. Main completion opens the next level in one order, including world boundaries. The initial proposal for occasional branches remains historical; branching is not current campaign behavior.
 
 Locations show available question marks, locked future missions, completed flags and earned bonus stars. Each main completion also adds one role-appropriate resident to that world on compatible terrain; replays do not duplicate it.
 
