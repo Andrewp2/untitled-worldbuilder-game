@@ -5,7 +5,7 @@ import { Simulation } from '../src/core/simulation';
 import { createHollowReach, hollowGoals } from '../src/levels/hollow-reach';
 
 const grid: Grid = { width: 10, height: 5, tiles: Array.from({length:5}, () => Array(10).fill('grass')) };
-const stock = (red = 0, blue = 0, batteries: number[] = []): Supplies => ({ red, blue, batteries , yellow: 0, green: 0});
+const stock = (red = 0, blue = 0, batteries: number[] = []): Supplies => ({ red, blue, batteries , yellow: 0, green: 0, tires: 0});
 const run = (s: Simulation, seconds = 15) => { for (let i = 0; i < seconds * 60; i++) s.step(1/60); };
 const state = (s: Simulation) => JSON.stringify({ units: s.units, piles: s.piles, relays: s.relays });
 const charged = () => new Simulation(grid, [unitDefinition('hauler','h',{x:0,y:2})]);
@@ -83,7 +83,7 @@ describe('3×3 construction and batteries', () => {
     expect(distant.build('relay',center).ok).toBe(false); expect(state(distant)).toBe(before);
   });
   it('requires a physical battery, accepts an empty one, and never grants it free charge', () => {
-    const s = new Simulation(grid,[],{blueprints:{hauler:2},piles:[{cell:{x:1,y:1},supplies:stock(2,1)}]});
+    const s = new Simulation(grid,[],{blueprints:{hauler:2},piles:[{cell:{x:1,y:1},supplies:{...stock(2,1),tires:4}}]});
     const before = state(s);
     expect(s.build('hauler',{x:2,y:2}).ok).toBe(false); expect(state(s)).toBe(before);
     s.piles[0].supplies.batteries.push(0);
@@ -110,7 +110,7 @@ describe('3×3 construction and batteries', () => {
   });
   it('uses the best available battery and returns the old one when replacing it', () => {
     const s = new Simulation(grid,[],{piles:[
-      {cell:{x:1,y:1},supplies:stock(2,1,[0])}, {cell:{x:3,y:3},supplies:stock(0,0,[45,90])},
+      {cell:{x:1,y:1},supplies:{...stock(2,1,[0]),tires:4}}, {cell:{x:3,y:3},supplies:stock(0,0,[45,90])},
     ]});
     const total = chargeTotal(s), result = s.build('hauler',{x:2,y:2}); if(!result.ok) throw Error(result.reason);
     expect(s.unit(result.id!).battery).toBe(90); expect(chargeTotal(s)).toBe(total);

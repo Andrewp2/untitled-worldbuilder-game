@@ -5,7 +5,7 @@ export const sunstoneAdditions: AuthoredMission[] = [
   {
     id: 'ridge-post', name: 'Ridge Post', goal: 'Build a far-bank Warden · secure the Post',
     challenge: 'A rough-ground courier must ferry a combat kit in two loads to a separate battlefield.',
-    brief: 'Trailbuggy can cross the rough ridge but cannot fight. Warden can fight but cannot cross the ridge. Carry the four-item kit across in two loads, assemble Warden on the eastern sand and clear the Crab before reaching Post. For the bonus, Warden donates blue pieces and Crab donates red pieces and a live battery: combine their recovered kits into Hauler on the far bank.',
+    brief: 'Trailbuggy can cross the rough ridge but cannot fight. Warden can fight but cannot cross the ridge. Carry the four-item kit across in two loads, assemble Warden on the eastern sand and clear the Crab before reaching Post. For the bonus, Warden donates blue pieces and Crab donates red pieces and a live battery: combine their recovered kits with the four tires stored at Post to build Hauler on the far bank.',
     grid: board([
       '~~~~~~~~~~~~~~~~~~~~',
       '~~~~~~~.~~~~~~~~~~.~',
@@ -24,7 +24,7 @@ export const sunstoneAdditions: AuthoredMission[] = [
       '~~~~~~~~~~~~~~~~~~~~',
     ], 'sand'),
     rovers: [unit('trailbuggy', 'courier', { x: 3, y: 6 })],
-    piles: [pile(4, 5, recipeSupplies('warden', 100))],
+    piles: [pile(4, 5, recipeSupplies('warden', 100)), pile(16, 4, stock(0, 0, 0, 0, [], 4))],
     goals: [{ id: 'post', name: 'Post', cell: { x: 17, y: 3 }, kinds: ['warden'], clearEnemies: true }],
     bonus: { kind: 'arrival', name: 'Post carrier', description: 'Combine Crab salvage with Warden’s kit · build Hauler for the southern star.', cell: { x: 15, y: 13 }, kinds: ['hauler'] },
     enemies: [enemyDefinition('crab', 'post-crab', { x: 17, y: 11 })],
@@ -177,7 +177,7 @@ export const sunstoneAdditions: AuthoredMission[] = [
   {
     id: 'salvage-chain', name: 'Salvage Chain', goal: 'Recover a Dozer kit · rescue Snail',
     challenge: 'Enemy salvage supplies a missing recipe color; later dismantling funds the bonus reserve.',
-    brief: 'No loose yellow parts exist at camp. Defeat Scorpion to obtain yellow and a charged battery, haul the red piece to that salvage and build Dozer. Clear the rock gate for the original Snail. For the bonus, Dozer’s installed battery can power Frog. Bring a green piece from camp beside Dozer before dismantling it, then reach the eastern pool.',
+    brief: 'No loose yellow parts exist at camp. Defeat Scorpion to obtain yellow and a charged battery, haul the red piece and four camp tires to that salvage and build Dozer. Clear the rock gate for the original Snail. For the bonus, Dozer’s installed battery can power Frog. Bring a green piece from camp beside Dozer before dismantling it, then reach the eastern pool.',
     grid: board([
       '~~~~~~~~~~~~~~~~~~~~',
       '~~~~~~~~..#~~~~~~~.~',
@@ -197,7 +197,7 @@ export const sunstoneAdditions: AuthoredMission[] = [
       '~~~~~~~~~~~~~~~~~~~~',
     ], 'sand'),
     rovers: [unit('warden', 'guard', { x: 3, y: 5 }), unit('mender', 'mender', { x: 3, y: 6 }), unit('snail', 'snail', { x: 3, y: 9 }), unit('hauler', 'carrier', { x: 3, y: 11 }), unit('pump', 'camp-station', { x: 4, y: 12 })],
-    piles: [pile(5, 3, stock(1)), pile(4, 10, stock(0, 0, 0, 4))],
+    piles: [pile(5, 3, stock(1, 0, 0, 0, [], 4)), pile(4, 10, stock(0, 0, 0, 4))],
     goals: [{ id: 'chain-home', name: 'Home', cell: { x: 17, y: 11 }, unitId: 'snail', kinds: ['snail'], clearEnemies: true }],
     bonus: { kind: 'arrival', name: 'Sun pool', description: 'Reuse Dozer’s battery with camp green pieces · build Frog for the eastern pool.', cell: { x: 13, y: 9 }, kinds: ['frog'] },
     enemies: [enemyDefinition('scorpion', 'kit-scorpion', { x: 7, y: 6 })],

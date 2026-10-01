@@ -23,6 +23,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <header class="topbar">
     <nav aria-label="Game controls">
       <button id="world-map" class="header-button" aria-label="World map" title="World map" hidden>${icon('map')}</button>
+      <button id="license-toggle" class="header-button license-toggle" aria-label="Builder’s license" title="Builder’s license" aria-controls="license-dialog"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 3h22v26H5z" fill="#ffdc59" stroke="#173558" stroke-width="2"/><path d="m16 7 2 4 4 .6-3 3 .7 4.4-3.7-2-3.7 2 .7-4.4-3-3 4-.6z" fill="#173558"/><path d="M10 24h12" stroke="#173558" stroke-width="2"/></svg></button>
       <button id="menu-toggle" class="header-button" aria-label="Game menu" title="Game menu" aria-expanded="false" aria-controls="game-menu">${icon('settings')}</button>
       <div id="game-menu" class="game-menu" hidden>
       <div class="menu-options">
@@ -113,17 +114,29 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     <button id="completion-map" class="completion-primary" autofocus>${icon('map')}World map</button>
     <button id="keep-exploring" class="completion-secondary">Keep exploring</button>
   </dialog>
+  <dialog id="license-dialog" class="license-dialog" aria-labelledby="license-title">
+    <button id="license-close" class="icon-button license-close" aria-label="Close license">${icon('close')}</button>
+    <h2 id="license-title">Builder’s license</h2>
+    <div id="license-portrait" class="license-portrait" aria-hidden="true"></div>
+    <strong id="license-class" class="license-class"></strong>
+    <p id="license-stars" class="license-stars"></p>
+    <div id="license-worlds" class="license-worlds"></div>
+    <p id="license-next" class="license-next"></p>
+    <button id="license-print" class="completion-primary">Print license</button>
+  </dialog>
   <section id="help-panel" class="help-panel" aria-label="Controls" hidden>
     <div class="help-heading"><h2>How to play</h2><button id="help-close" aria-label="Close controls">${icon('close')}</button></div>
     <p id="mission-brief" hidden></p>
-    <div class="resource-key"><span>${resourceIcon('red')}Red</span><span>${resourceIcon('blue')}Blue</span><span>${resourceIcon('yellow')}Yellow</span><span>${resourceIcon('green')}Green</span><span>${resourceIcon('battery')}Battery</span><span>${resourceIcon('soil')}Dirt</span></div>
+    <div class="resource-key"><span>${resourceIcon('red')}Red</span><span>${resourceIcon('blue')}Blue</span><span>${resourceIcon('yellow')}Yellow</span><span>${resourceIcon('green')}Green</span><span>${resourceIcon('tires')}Tires</span><span>${resourceIcon('battery')}Battery</span><span>${resourceIcon('soil')}Dirt</span></div>
     <dl>
       <div><dt>Audio</dt><dd>Music and sound effects start off. Use the note and speaker buttons in Game menu to enable them for this tab.</dd></div>
       <div><dt>Move</dt><dd>Click a rover (or press 1–9), then its destination. It keeps going when you select another rover.</dd></div>
       <div><dt>Pick up / Drop off</dt><dd>Choose an action, then a pile or drop-off tile. The rover drives beside it to transfer cargo. Space chooses Pick up when empty or Drop off when loaded.</dd></div>
-      <div><dt>Cargo</dt><dd>Hauler carries 4 parts; Scout carries 2. Pick up fills free space, taking red, blue, yellow and green parts, then batteries. Drop off unloads everything.</dd></div>
+      <div><dt>Cargo</dt><dd>Hauler carries 4 parts; Scout carries 2. Pick up fills free space, taking red, blue, yellow and green parts, then tires and batteries. Each tire takes one cargo slot. Drop off unloads everything.</dd></div>
       <div><dt>Scoop</dt><dd>Dig clear grass or sand to collect 1 dirt and leave water. Fill water to turn it into land. Scoop drives beside the target first; each action costs ${TERRAIN_ENERGY} charge. Space chooses Dig when empty or Fill when loaded. Its bucket is for terrain work; use a Hauler for cargo.</dd></div>
-      <div><dt>Build</dt><dd>Walk a mobile model onto a blue ground plan to collect a blueprint. Choose its picture in the toolbox, then a clear tile the model can use. Build boats and Fish in water; Marina needs shallow water. Parts must be on the ground within the 3×3 square centered on the site, including diagonals. No unit is needed nearby. Each successful build uses one blueprint; taking it apart does not restore that blueprint.</dd></div>
+      <div><dt>Build</dt><dd>Walk a mobile model onto a blue ground plan to collect a blueprint. Choose its picture in the toolbox, then a clear tile the model can use. Build boats and Fish in water; Marina needs shallow water. Parts must be on the ground within the 3×3 square centered on the site, including diagonals. No unit is needed nearby. Wheeled vehicles also need four tires. Each successful build uses one blueprint; taking it apart does not restore that blueprint.</dd></div>
+      <div><dt>Whirlpools</dt><dd>Swirls are shallow water. Enter one to jump to its linked exit with your cargo and battery intact. Moving into the entry costs one charge; the jump costs nothing extra. Leave the exit before entering it again to jump back. A blocked exit prevents entry.</dd></div>
+      <div><dt>Licenses</dt><dd>Bonus stars earn builder classes: Class 2 at 12 stars, Class 3 at 24, and Class 4 at all 36. Open the yellow license beside Game menu to view or print it. Completed worlds stamp the license; resetting progress clears it too.</dd></div>
       <div><dt>Combat</dt><dd>Move Warden beside a creature: it attacks automatically, spending ${attackEnergy('warden')} charge per hit. Creatures wander, then chase nearby rovers. Scout and Hauler cannot fight. Enemy hits drain the rover’s battery. A hit that empties it destroys the rover, leaving its parts, cargo, and an empty installed battery. Batteries carried as cargo keep their charge.</dd></div>
       <div><dt>Missions</dt><dd>Choose a location on the world map, then complete its main objective. Finishing pauses the mission: return to the world map or try the bonus. Each level has one main flag. Only after reaching it does the bonus star and its objective appear. Choose Try bonus to continue. Beat missions in map order to unlock the next one. Completed locations and earned stars are saved in this browser. Revisiting or restarting begins a fresh mission.</dd></div>
       <div><dt>Batteries</dt><dd>Charge powers movement and absorbs damage. Each rover needs a battery. Empty batteries work for building, but cannot power movement or actions. Full charge is ${BATTERY_CAPACITY}; moving costs ${MOVE_ENERGY} per tile, and each pickup or drop-off costs ${TRANSFER_ENERGY}. Using the last charge leaves an intact, powerless rover.</dd></div>
@@ -177,8 +190,11 @@ const displayStatus = (state: ViewState, unit: ViewState['units'][number]) => st
 let lastState = '', missionSignature = '';
 let pausedBeforeCompletion = false;
 let changingScreen = false;
+let licensePromotion = '';
+let pausedBeforeLicense = false;
 function renderWorldProgress(): void {
   const world = worlds.find(world => world.id === selectedWorld)!;
+  renderLicense();
   el('world-name').textContent = world.name;
   if (campaign.screen === 'world') document.title = `${world.name} · Untitled`;
   el('world-progress').textContent = `${world.locations.filter(pin => campaign.completed.has(pin.id)).length} / 12`;
@@ -316,13 +332,19 @@ function updateHud(state: ViewState): void {
     pausedBeforeCompletion = state.paused;
     renderWorldProgress();
   }
-  if (state.ready && state.bonus.reached && campaign.earnBonus(state.mission.id)) renderWorldProgress();
+  if (state.ready && state.bonus.reached) {
+    const previousClass = campaign.license.class;
+    if (campaign.earnBonus(state.mission.id)) {
+      licensePromotion = campaign.license.class > previousClass ? `Class ${campaign.license.class} builder’s license earned!` : '';
+      renderWorldProgress();
+    }
+  }
   if (state.ready && state.complete && !state.celebrating && (campaign.screen === 'complete' || campaign.screen === 'bonus-complete') && !el<HTMLDialogElement>('completion-dialog').open) {
     const bonusComplete = campaign.screen === 'bonus-complete';
     el('completion-title').textContent = bonusComplete ? 'Bonus complete' : 'Mission complete';
     el('completion-mission').textContent = state.mission.name;
     el('completion-bonus').hidden = false;
-    el('completion-bonus').textContent = bonusComplete ? 'Bonus star earned' : 'Bonus objective unlocked';
+    el('completion-bonus').textContent = bonusComplete ? licensePromotion || 'Bonus star earned' : 'Bonus objective unlocked';
     el('keep-exploring').hidden = bonusComplete;
     el('keep-exploring').textContent = 'Try bonus';
     document.querySelector('.completion-flag')!.innerHTML = mapFlag(bonusComplete);
@@ -331,6 +353,31 @@ function updateHud(state: ViewState): void {
     game.scene.pause('island');
   }
 }
+
+function renderLicense(): void {
+  const license = campaign.license;
+  el('license-class').textContent = `Class ${license.class} Builder`;
+  el('license-portrait').innerHTML = blueprintIcon(license.model);
+  el('license-stars').innerHTML = `${icon('star')}<span>${license.earnedStars} / 36 bonus stars</span>`;
+  el('license-next').textContent = license.nextStars === null ? 'Every bonus mastered.' : `${license.nextStars - license.earnedStars} more stars to Class ${license.class + 1}`;
+  el('license-worlds').innerHTML = worlds.map(world => {
+    const complete = world.locations.every(pin => campaign.completed.has(pin.id));
+    return `<span class="license-stamp${complete ? ' earned' : ''}" title="${complete ? 'Completed' : 'Finish all 12 missions in'} ${world.name}">${icon(complete ? 'check' : 'map')}<span>${world.name}</span></span>`;
+  }).join('');
+  el('license-toggle').title = `Builder’s license · Class ${license.class} · ${license.earnedStars} bonus stars`;
+}
+el('license-toggle').addEventListener('click', () => {
+  campaign.refresh(); renderLicense();
+  pausedBeforeLicense = el('pause').getAttribute('aria-pressed') === 'true';
+  if (campaign.screen === 'mission') scene.setPaused(true);
+  el<HTMLDialogElement>('license-dialog').showModal();
+});
+el('license-close').addEventListener('click', () => el<HTMLDialogElement>('license-dialog').close());
+el<HTMLDialogElement>('license-dialog').addEventListener('close', () => {
+  if (!changingScreen && campaign.screen === 'mission') scene.setPaused(pausedBeforeLicense);
+  focusMap();
+});
+el('license-print').addEventListener('click', () => window.print());
 
 let messageTimer: ReturnType<typeof setTimeout> | undefined;
 const scene = new GameScene({
@@ -366,6 +413,8 @@ game.events.once('toy-art-ready', () => {
     button.querySelector('.plan-cost')!.innerHTML = costIcons(recipes[plan]);
   }
   document.querySelector('.resource-key .resource-battery')!.outerHTML = resourceIcon('battery');
+  document.querySelector('#help-panel .resource-key')!.innerHTML = ['red', 'blue', 'yellow', 'green', 'tires', 'battery', 'soil'].map(kind => `<span>${resourceIcon(kind as Parameters<typeof resourceIcon>[0])}${kind === 'soil' ? 'Dirt' : kind[0].toUpperCase() + kind.slice(1)}</span>`).join('');
+  renderLicense();
   for (const action of ['move', 'pickup', 'drop', 'dig', 'fill', 'push', 'uproot', 'plant'] as const) el('mode-' + action).innerHTML = actionArt(action) + '<span>' + ({move:'Move',pickup:'Pick up',drop:'Drop off',dig:'Dig',fill:'Fill',push:'Push',uproot:'Uproot',plant:'Plant'}[action]) + '</span>';
 });
 
@@ -377,6 +426,7 @@ function closeMissionPanels(): void {
   el('game-menu').hidden = true; el('menu-toggle').setAttribute('aria-expanded', 'false');
   for (const id of ['unit-info', 'help-toggle']) el(id).setAttribute('aria-expanded', 'false');
   el<HTMLDialogElement>('completion-dialog').close();
+  el<HTMLDialogElement>('license-dialog').close();
 }
 function showScreen(screen: 'world' | 'mission'): void {
   document.body.dataset.screen = screen;
@@ -424,6 +474,7 @@ el('next-world').onclick = () => changeWorld(1);
 function keepExploring(): void {
   if (!campaign.keepExploring()) return;
   el<HTMLDialogElement>('completion-dialog').close();
+  el<HTMLDialogElement>('license-dialog').close();
   scene.resumeExploration();
   game.scene.resume('island'); scene.setPaused(pausedBeforeCompletion);
   if (!el<HTMLDialogElement>('completion-dialog').open) focusMap();

@@ -164,3 +164,30 @@ body[data-screen="mission"] .mission-location *,body[data-hidden="true"] .flag-c
 .location-order { position:absolute; top:34px; left:calc(50% - 19px); min-width:15px; padding:1px 3px; border-radius:4px; background:#123b61; color:#ffdc59; font-size:10px; font-weight:850; font-variant-numeric:tabular-nums; }
 .plan { position:relative; }
 .plan-stock { position:absolute; right:3px; bottom:4px; font-size:12px; font-weight:850; color:#ffdc59; font-variant-numeric:tabular-nums; }
+
+/* A keepsake uses the game's toy portraits and earned world stamps. */
+.license-dialog { position:relative; width:440px; max-width:calc(100vw - 40px); padding:32px; border:0; border-radius:16px; background:#fff5d9; color:#173558; text-align:center; box-shadow:0 16px 60px #00192f70; }
+.license-dialog::backdrop { background:#052e54b3; }
+.license-dialog h2 { font-size:27px; font-weight:900; }
+.license-close { position:absolute; top:8px; right:8px; color:#173558; }
+.license-close:hover { color:#173558 !important; background:#17355812 !important; }
+.license-portrait { display:grid; place-items:center; height:154px; margin:16px 0 8px; }
+.license-portrait .rover-icon { width:170px; height:145px; object-fit:contain; }
+.license-class { display:block; font-size:24px; font-weight:900; }
+.license-stars { display:flex; align-items:center; justify-content:center; gap:8px; margin:12px 0 24px; font-size:15px; font-weight:750; }
+.license-stars svg { width:25px; height:25px; color:#805400; }
+.license-worlds { display:flex; justify-content:center; gap:12px; }
+.license-stamp { display:flex; align-items:center; flex-direction:column; gap:6px; flex:1; color:#666b61; font-size:12px; line-height:1.2; }
+.license-stamp svg { width:30px; height:30px; }
+.license-stamp.earned { color:#35652f; font-weight:850; }
+.license-next { margin:24px 0 20px; font-size:14px; }
+.license-dialog .completion-primary { display:block; width:100%; min-height:44px; margin:0 auto; padding:10px 16px; border-radius:7px; color:#173558; font-size:14px; font-weight:800; }
+.license-dialog button:focus-visible { outline-color:#173558; }
+@media print {
+  @page { size:A5 landscape; margin:12mm; }
+  html,body,#app { width:auto; height:auto; overflow:visible; background:white; }
+  #app > :not(#license-dialog) { display:none !important; }
+  #license-dialog[open] { display:block; position:static; width:100%; max-width:none; margin:0; box-shadow:none; }
+  #license-dialog .license-close,#license-print { display:none; }
+  .license-dialog::backdrop { background:none; }
+}

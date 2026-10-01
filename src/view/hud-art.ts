@@ -1,4 +1,4 @@
-import { BATTERY_CAPACITY, materials, type Cost, type Material, type Supplies, type Blueprint } from '../core/catalog';
+import { BATTERY_CAPACITY, materials, partKinds, type Cost, type Material, type Supplies, type Blueprint } from '../core/catalog';
 import { modelPortrait, partColors } from './toy-models';
 
 const icons: Record<string, string> = {
@@ -60,25 +60,27 @@ export function actionArt(action: string): string {
   return `<span class="action-picture" aria-hidden="true">${terrain ? resourceIcon('soil') : resourceIcon('red')}${terrain ? '' : resourceIcon('blue')}<svg viewBox="0 0 32 32"><path d="${down ? 'M12 3h8v14h7L16 29 5 17h7z' : 'M12 29h8V15h7L16 3 5 15h7z'}" fill="#ffe36a" stroke="#173558" stroke-width="1.5" stroke-linejoin="round"/></svg></span>`;
 }
 
-export function resourceIcon(kind: Material | 'battery' | 'soil', charge = BATTERY_CAPACITY): string {
+export function resourceIcon(kind: Material | 'tires' | 'battery' | 'soil', charge = BATTERY_CAPACITY): string {
   const fraction = Math.max(0, Math.min(1, charge / BATTERY_CAPACITY));
-  const image = materials.includes(kind as Material) && !modelPortrait(kind)
+  const image = kind === 'tires' && !modelPortrait(kind)
+    ? '<svg class="resource-picture" viewBox="0 0 32 32"><ellipse cx="16" cy="17" rx="12" ry="8" fill="#263541"/><ellipse cx="16" cy="15" rx="11" ry="7" fill="#344652"/><ellipse cx="16" cy="15" rx="5" ry="3" fill="#c4d5df"/></svg>'
+    : materials.includes(kind as Material) && !modelPortrait(kind)
     ? `<svg class="resource-picture" viewBox="0 0 32 32"><path d="m3 13 13-7 13 7-13 7zM3 13v9l13 7 13-7v-9L16 20v9" fill="#${partColors[kind as Material].toString(16)}" stroke="#173558" stroke-width="1"/></svg>`
     : modelImage(kind, 'resource-picture');
   return '<span class="resource-icon' + (kind === 'battery' ? ' resource-battery' + (!charge ? ' is-empty' : '') : '') + '" aria-hidden="true" style="--charge:' + fraction * 100 + '%">' + image + (kind === 'battery' ? '<i></i>' : '') + '</span>';
 }
 export function costIcons(cost: Cost): string {
-  return [...materials, 'battery' as const].filter(kind => cost[kind] > 0)
+  return [...partKinds, 'battery' as const].filter(kind => cost[kind] > 0)
     .map(kind => `<span class="resource-count" title="${cost[kind]} ${kind}">${resourceIcon(kind)}<b>${cost[kind]}</b></span>`).join('');
 }
 export function cargoSlots(supplies: Supplies, capacity: number): string {
   if (capacity > 8) return [
-    ...materials.filter(kind => supplies[kind]).map(kind => `<span class="resource-count" title="${supplies[kind]} ${kind}">${resourceIcon(kind)}<b>${supplies[kind]}</b></span>`),
+    ...partKinds.filter(kind => supplies[kind]).map(kind => `<span class="resource-count" title="${supplies[kind]} ${kind}">${resourceIcon(kind)}<b>${supplies[kind]}</b></span>`),
     ...(supplies.batteries.length ? [`<span class="resource-count" title="Battery charges: ${supplies.batteries.join(', ')}">${resourceIcon('battery', Math.max(...supplies.batteries))}<b>${supplies.batteries.length}</b></span>`] : []),
     ...(supplies.soil ? [`<span class="resource-count" title="${supplies.soil} dirt">${resourceIcon('soil')}<b>${supplies.soil}</b></span>`] : []),
   ].join('');
   const parts = [
-    ...materials.flatMap(kind => Array.from({length:supplies[kind]}, () => ({kind, charge:BATTERY_CAPACITY, title:kind}))),
+    ...partKinds.flatMap(kind => Array.from({length:supplies[kind]}, () => ({kind, charge:BATTERY_CAPACITY, title:kind}))),
     ...supplies.batteries.map(charge => ({kind:'battery' as const, charge, title:`Battery: ${charge}/${BATTERY_CAPACITY}`})),
     ...Array.from({ length: supplies.soil ?? 0 }, () => ({ kind: 'soil' as const, charge: BATTERY_CAPACITY, title: 'Dirt' })),
   ];

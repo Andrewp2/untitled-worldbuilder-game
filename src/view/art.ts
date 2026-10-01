@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { toWorld, TILE_WIDTH, TILE_HEIGHT, WATER_DROP } from '../core/projection';
 import { terrainAt, isWater, type Grid } from '../core/grid';
-import { BATTERY_CAPACITY, emptySupplies, materials, type Supplies } from '../core/catalog';
+import { BATTERY_CAPACITY, emptySupplies, partKinds, type Supplies } from '../core/catalog';
 import { groundShadow, toyImage } from './toy-art';
 import { worldDepth } from './grounding';
 
@@ -90,7 +90,7 @@ export function drawTerrain(scene: Phaser.Scene, grid: Grid, waterSurface: 'boun
       coasts.lineStyle(2, 0xffd18b); coasts.lineBetween(p.x-34,top-2,p.x-2,top-18);
       coasts.lineBetween(p.x+2,top+18,p.x+34,top+2);
     } else {
-      const name = water || terrain === 'sand' || terrain === 'rough' || terrain === 'swamp' ? terrain : 'grass';
+      const name = terrain === 'whirlpool' ? 'water' : water || terrain === 'sand' || terrain === 'rough' || terrain === 'swamp' ? terrain : 'grass';
       layer.add(scene.add.image(p.x, top, 'toy-ground-' + name + '-' + (x % 2 + y % 2 * 2)).setDisplaySize(80.25, 40.125));
     }
     if (!water) {
@@ -111,7 +111,7 @@ export function drawTerrain(scene: Phaser.Scene, grid: Grid, waterSurface: 'boun
 
 export function drawParts(scene: Phaser.Scene, supplies: Supplies, cargo = false): Phaser.GameObjects.Container {
   const result = scene.add.container();
-  const names = [...materials.filter(color => supplies[color] > 0), ...(supplies.batteries.length ? ['battery'] : []), ...(supplies.soil ? ['soil'] : [])];
+  const names = [...partKinds.filter(color => supplies[color] > 0), ...(supplies.batteries.length ? ['battery'] : []), ...(supplies.soil ? ['soil'] : [])];
   names.forEach((name, i) => {
     const size = cargo ? 30 : 45;
     const columns = Math.min(3, names.length);
@@ -136,7 +136,7 @@ export function drawRelay(scene: Phaser.Scene): Phaser.GameObjects.Container {
 
 export function partsBadge(scene: Phaser.Scene, supplies: Supplies): Phaser.GameObjects.Container {
   const rows = [
-    ...materials.filter(color => supplies[color] > 0).map(color => ({ supplies: { ...emptySupplies(), [color]: 1 }, count: supplies[color] })),
+    ...partKinds.filter(color => supplies[color] > 0).map(color => ({ supplies: { ...emptySupplies(), [color]: 1 }, count: supplies[color] })),
     ...(supplies.batteries.length ? [{ supplies: { ...emptySupplies(), batteries: [Math.max(...supplies.batteries)] }, count: supplies.batteries.length }] : []),
     ...(supplies.soil ? [{ supplies: { ...emptySupplies(), soil: 1 }, count: supplies.soil }] : []),
   ];
@@ -145,7 +145,7 @@ export function partsBadge(scene: Phaser.Scene, supplies: Supplies): Phaser.Game
   badge.add(background);
   rows.forEach((row, index) => {
     const x = -width / 2 + index * 42;
-    const color = materials.find(color => row.supplies[color] > 0);
+    const color = partKinds.find(color => row.supplies[color] > 0);
     const modelIcon = color ?? (row.supplies.batteries.length ? 'battery' : undefined);
     const picture = modelIcon ? scene.add.image(x + 13, -9, 'toy-icon-' + modelIcon).setDisplaySize(22, 17)
       : drawParts(scene, row.supplies, true).setPosition(x + 13, 1).setScale(.8);

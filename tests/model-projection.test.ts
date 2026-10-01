@@ -11,6 +11,14 @@ const project = (p: Vector3) => {
   return { x: (v.x + 1) * MODEL_SIZE / 2, y: (1 - v.y) * MODEL_SIZE / 2 };
 };
 describe('model support plane matches the game grid', () => {
+  it('renders every carried tire when mixed cargo fits the visible hold', () => {
+    const model = toyModel('forklift');
+    addModelCargo(model, 'forklift', { ...emptySupplies(), red: 4, tires: 6 });
+    const cargo = model.getObjectByName('cargo')!;
+    // Each tire is a complete little model; each brick contributes a body and stud.
+    expect(cargo.children.filter(child => child.type === 'Group')).toHaveLength(6);
+    expect(cargo.children.filter(child => child.type === 'Mesh')).toHaveLength(8);
+  });
   it('keeps the full roster planted and unclipped in all four headings; boats occupy one tile', () => {
     for (const kind of [...unitKinds, ...enemyKinds]) {
       const model = toyModel(kind);
@@ -41,7 +49,7 @@ describe('model support plane matches the game grid', () => {
     for (const kind of ['hauler','dumptruck','forklift','freighter','tug','scoop','arborbot'] as const) {
       const model=toyModel(kind);
       addModelCargo(model,kind,{...emptySupplies(),red:kind==='scoop'||kind==='arborbot'?0:4,blue:kind==='scoop'||kind==='arborbot'?0:4,
-        batteries:kind==='scoop'||kind==='arborbot'?[]:[100,50],soil:kind==='scoop'?1:0},kind==='arborbot');
+        tires:kind==='scoop'||kind==='arborbot'?0:4,batteries:kind==='scoop'||kind==='arborbot'?[]:[100,50],soil:kind==='scoop'?1:0},kind==='arborbot');
       for(const angle of [0,Math.PI/2,Math.PI,-Math.PI/2]) {
         model.rotation.y=angle; model.updateMatrixWorld(true);
         const silhouette={left:Infinity,right:-Infinity,top:Infinity,bottom:-Infinity};
@@ -88,12 +96,12 @@ describe('model support plane matches the game grid', () => {
     for (const stone of model.children) expect(new Box3().setFromObject(stone).min.y).toBeCloseTo(0);
   });
   it('plants batteries and every enemy heading without clipping the atlas', () => {
-    for (const kind of ['battery', 'bristleback'] as const) {
+    for (const kind of ['battery', 'tires', 'bristleback'] as const) {
       const model = toyModel(kind);
       for (const [index, heading] of ['se', 'sw', 'ne', 'nw'].entries()) {
         model.rotation.y = index * Math.PI / 2;
         expect(new Box3().setFromObject(model).min.y).toBeCloseTo(0, 5);
-        expect(groundOrigin(kind === 'battery' ? kind : `${kind}-${heading}`))
+        expect(groundOrigin(kind === 'battery' || kind === 'tires' ? kind : `${kind}-${heading}`))
           .toEqual({ x: MODEL_ORIGIN.x / MODEL_SIZE, y: MODEL_ORIGIN.y / MODEL_SIZE });
         const silhouette = { left: Infinity, right: -Infinity, top: Infinity, bottom: -Infinity };
         model.traverse(mesh => {

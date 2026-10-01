@@ -22,7 +22,7 @@ const solutions: Record<string, (s: Simulation) => void> = {
     }
     const ship = build(s, 'freighter', { x: 14, y: 5 }); go(s, ship, s.setup.goals![0].cell);
     expect(s.mainComplete).toBe(true);
-    go(s, ship, { x: 12, y: 3 });
+    go(s, ship, { x: 14, y: 3 });
     deliver(s, ship, { x: 6, y: 9 }, { x: 15, y: 10 });
     const snail = build(s, 'snail', { x: 15, y: 10 }); go(s, snail, s.setup.bonus!.cell);
 

@@ -1,5 +1,5 @@
-import { adjacent, constructionArea, findPath, key, neighbors, sameCell, terrainAt, walkable, type Cell, type Grid, type Terrain } from './grid';
-import { attackEnergy, BATTERY_CAPACITY, MOVE_ENERGY, TRANSFER_ENERGY, TERRAIN_ENERGY, cloneSupplies, costTotal, emptyCost, emptySupplies, load, materials, recipes, recipeSupplies, supportsCargo, supportsAction, isMobile, usesBattery, unitSpecs, enemySpecs, unitDefinition, type Blueprint, type Cost, type Supplies, type PartCounts, type UnitDefinition, type UnitKind, type EnemyKind } from './catalog';
+import { adjacent, canEnter, movementDestination, validateWhirlpools, constructionArea, findPath, key, neighbors, sameCell, terrainAt, walkable, type Cell, type Grid, type Terrain } from './grid';
+import { attackEnergy, BATTERY_CAPACITY, MOVE_ENERGY, TRANSFER_ENERGY, TERRAIN_ENERGY, cloneSupplies, costTotal, emptyCost, emptySupplies, load, partKinds, recipes, recipeSupplies, supportsCargo, supportsAction, isMobile, usesBattery, unitSpecs, enemySpecs, unitDefinition, type Blueprint, type Cost, type Supplies, type PartCounts, type UnitDefinition, type UnitKind, type EnemyKind } from './catalog';
 
 export type CargoAction = 'pickup' | 'drop';
 export type TerrainAction = 'dig' | 'fill';
@@ -26,7 +26,7 @@ export type BlueprintPickup = { cell: Cell; blueprint: Blueprint; afterMain?: bo
 export type BlueprintStock = Partial<Record<Blueprint, number>>;
 export type BuildPreview = { ok: boolean; reason: string; available: Supplies; missing: Cost; batteryCharge: number | null };
 export type SimulationEvent = { unitId: string; text: string; error: boolean } &
-  ({ kind: 'cargo'; action: CargoAction } | { kind: 'terrain'; action: TerrainAction; cell: Cell } |
+  ({ kind: 'whirlpool'; cell: Cell; destination: Cell } | { kind: 'cargo'; action: CargoAction } | { kind: 'terrain'; action: TerrainAction; cell: Cell } |
     { kind: 'obstacle'; action: ObstacleAction; cell: Cell; destination?: Cell } |
     { kind: 'recharge'; targetId: string; cell: Cell; charge: number } | { kind: 'battery-empty' } |
     { kind: 'goal-reached'; goalId: string; complete: boolean } |
@@ -57,7 +57,8 @@ export class Simulation {
   private underObstacles = new Map<string, Terrain>();
   constructor(grid: Grid, definitions: UnitDefinition[], readonly setup: { piles?: Pile[]; goals?: Goal[]; bonus?: BonusObjective; blueprints?: BlueprintStock; blueprintPickups?: BlueprintPickup[]; enemies?: EnemyDefinition[]; seed?: number } = {}) {
     // Terrain belongs to this run. Digging must never rewrite the authored level.
-    this.grid = { ...grid, tiles: grid.tiles.map(row => [...row]) };
+    validateWhirlpools(grid);
+    this.grid = { ...grid, tiles: grid.tiles.map(row => [...row]), whirlpools: grid.whirlpools && Object.fromEntries(Object.entries(grid.whirlpools).map(([id, exit]) => [id, { ...exit }])) };
     this.blueprints = { ...(setup.blueprints ?? Object.fromEntries(Object.keys(recipes).map(kind => [kind, 1]))) };
     this.blueprintPickups = (setup.blueprintPickups ?? []).map(plan => ({ ...plan, cell: { ...plan.cell } }));
     grid.tiles.forEach((row, y) => row.forEach((tile, x) => {
@@ -91,7 +92,7 @@ export class Simulation {
     }
     for (const goal of this.setup.goals ?? []) {
       if (!sameCell(unit.cell, goal.cell) || goal.kinds && !goal.kinds.includes(unit.kind) || goal.unitId && goal.unitId !== unit.id || goal.clearEnemies && this.enemies.length) continue;
-      if (goal.cargo && (!materials.every(color => unit.cargo[color] >= goal.cargo![color])
+      if (goal.cargo && (!partKinds.every(color => unit.cargo[color] >= goal.cargo![color])
         || unit.cargo.batteries.filter(charge => charge > 0).length < goal.cargo.chargedBatteries)) continue;
       this.reachGoal(goal, unit.id);
     }
@@ -121,7 +122,7 @@ export class Simulation {
     const blocked = new Set(this.relays.map(r => key(r.cell)));
     for (const u of [...this.units, ...this.enemies]) if (u.id !== id) {
       blocked.add(key(u.cell));
-      if (u.next) blocked.add(key(u.next));
+      if (u.next) { blocked.add(key(u.next)); blocked.add(key(movementDestination(this.grid, u.next))); }
     }
     return blocked;
   }
@@ -130,7 +131,7 @@ export class Simulation {
   private addSupplies(cell: Cell, supplies: Supplies): void {
     let pile = this.pileAt(cell);
     if (!pile) { pile = { cell: { ...cell }, supplies: emptySupplies() }; this.piles.push(pile); }
-    for (const m of materials) pile.supplies[m] += supplies[m];
+    for (const m of partKinds) pile.supplies[m] += supplies[m];
     pile.supplies.batteries.push(...supplies.batteries);
     if (supplies.soil) pile.supplies.soil = (pile.supplies.soil ?? 0) + supplies.soil;
   }
@@ -164,7 +165,7 @@ export class Simulation {
     if (action === 'drop') { this.addSupplies(target, u.cargo); u.cargo = emptySupplies(); }
     else {
       const pile = this.pileAt(target)!;
-      for (const m of materials) {
+      for (const m of partKinds) {
         const quantity = Math.min(pile.supplies[m], u.capacity - load(u.cargo));
         u.cargo[m] += quantity; pile.supplies[m] -= quantity;
       }
@@ -178,7 +179,7 @@ export class Simulation {
     return { ok: true };
   }
   private approach(id: string, target: Cell, eligible: (cell: Cell) => boolean = () => true): Approach | null {
-    const u = this.unit(id), from = u.next ?? u.cell, blocked = this.blockedFor(id);
+    const u = this.unit(id), from = u.next ? movementDestination(this.grid, u.next) : u.cell, blocked = this.blockedFor(id);
     let best: Approach | null = null;
     for (const goal of neighbors(target)) {
       if (!eligible(goal)) continue;
@@ -361,23 +362,24 @@ export class Simulation {
     if (!battery || battery.charge <= u.battery) return { ok: false, reason: 'Drop a battery with more charge within this rover’s 3×3 area.' };
     battery.pile.supplies.batteries.splice(battery.index, 1);
     this.prunePiles();
-    this.addSupplies(u.cell, { red: 0, blue: 0, batteries: [u.battery] , yellow: 0, green: 0});
+    this.addSupplies(u.cell, { ...emptySupplies(), batteries: [u.battery] });
     u.battery = battery.charge; u.status = 'idle';
     return { ok: true };
   }
   buildPreview(blueprint: Blueprint, cell: Cell): BuildPreview {
     const available = emptySupplies(), missing = emptyCost();
     for (const pile of this.nearbyPiles(cell)) {
-      for (const m of materials) available[m] += pile.supplies[m];
+      for (const m of partKinds) available[m] += pile.supplies[m];
       available.batteries.push(...pile.supplies.batteries);
     }
-    for (const m of materials) missing[m] = Math.max(0, recipes[blueprint][m] - available[m]);
+    for (const m of partKinds) missing[m] = Math.max(0, recipes[blueprint][m] - available[m]);
     missing.battery = Math.max(0, recipes[blueprint].battery - available.batteries.length);
     const batteryCharge = recipes[blueprint].battery && available.batteries.length ? Math.max(...available.batteries) : null;
     const t = terrainAt(this.grid, cell);
     let reason = '';
     if (!this.blueprints[blueprint]) reason = 'No blueprints left for this model.';
     else if (blueprint === 'relay' ? t !== 'grass' && t !== 'sand' : !walkable(this.grid, cell, unitSpecs[blueprint].mobility)) reason = 'Choose a clear tile that this model can use.';
+    else if (t === 'whirlpool') reason = 'Keep whirlpools clear for travellers.';
     else if (this.blockedFor('').has(key(cell))) reason = 'That tile is in use. Choose an empty site.';
     else if (this.looseTrees.some(tree => sameCell(tree, cell))) reason = 'Move the loose tree before building here.';
     else if (costTotal(missing)) reason = 'Drop the missing parts within this site’s 3×3 area.';
@@ -390,7 +392,7 @@ export class Simulation {
     const battery = recipes[blueprint].battery ? this.bestBattery(cell)! : null;
     if (battery) battery.pile.supplies.batteries.splice(battery.index, 1);
     const remaining = { ...recipes[blueprint] };
-    for (const pile of this.nearbyPiles(cell)) for (const m of materials) {
+    for (const pile of this.nearbyPiles(cell)) for (const m of partKinds) {
       const take = Math.min(remaining[m], pile.supplies[m]);
       pile.supplies[m] -= take; remaining[m] -= take;
     }
@@ -424,7 +426,7 @@ export class Simulation {
   }
   preview(id: string, goal: Cell): Cell[] | null {
     const u = this.unit(id);
-    return isMobile(u.kind) ? findPath(this.grid, u.next ?? u.cell, goal, this.blockedFor(id), unitSpecs[u.kind].mobility) : null;
+    return isMobile(u.kind) ? findPath(this.grid, u.next ? movementDestination(this.grid, u.next) : u.cell, movementDestination(this.grid, goal), this.blockedFor(id), unitSpecs[u.kind].mobility) : null;
   }
   private movementCost(cell: Cell): number { return terrainAt(this.grid, cell) === 'swamp' ? MOVE_ENERGY * 3 : MOVE_ENERGY; }
   move(id: string, goal: Cell): OrderResult {
@@ -434,7 +436,7 @@ export class Simulation {
     const route = this.preview(id, goal);
     if (!route) return { ok: false, reason: 'unreachable' };
     if (route.length && u.battery < this.movementCost(route[0])) return { ok: false, reason: 'energy' };
-    u.pending = null; u.route = route; u.goal = { ...goal };
+    u.pending = null; u.route = route; u.goal = { ...movementDestination(this.grid, goal) };
     u.status = u.next || route.length ? 'moving' : u.battery ? 'idle' : 'depleted';
     return { ok: true };
   }
@@ -442,7 +444,7 @@ export class Simulation {
     const u = this.unit(id);
     u.pending = null; u.route = [];
     // The active edge was paid for before departure, so even its last charge gets it to the center.
-    u.goal = u.next ? { ...u.next } : null;
+    u.goal = u.next ? { ...movementDestination(this.grid, u.next) } : null;
     u.status = u.next ? 'moving' : u.battery || !usesBattery(u.kind) ? 'idle' : 'depleted';
   }
   position(u: Pick<Unit, 'cell' | 'next' | 'progress'>): Cell {
@@ -482,7 +484,7 @@ export class Simulation {
             u.goal = null; u.route = []; u.status = u.battery ? 'idle' : 'depleted'; break;
           }
           const blocked = this.blockedFor(u.id);
-          if (!u.route.length || blocked.has(key(u.route[0])) || !walkable(this.grid, u.route[0], unitSpecs[u.kind].mobility)) {
+          if (!u.route.length || !canEnter(this.grid, u.route[0], blocked, unitSpecs[u.kind].mobility)) {
             if (u.pending) {
               const target = u.pending.target;
               const approach = this.approach(u.id, target, u.pending.action === 'push' ? cell => this.canPushFrom(cell, target) : undefined);
@@ -506,11 +508,20 @@ export class Simulation {
         u.progress += advance; budget -= advance;
         if (u.progress >= 1 - 1e-9) {
           u.cell = u.next; u.next = null; u.progress = 0;
+          this.enterWhirlpool(u);
           this.recordGoals(u);
           if (!u.pending && u.goal && sameCell(u.cell, u.goal)) { u.goal = null; u.route = []; u.status = u.battery ? 'idle' : 'depleted'; }
         }
       }
     }
+  }
+
+  private enterWhirlpool(actor: Unit | Enemy): void {
+    const destination = movementDestination(this.grid, actor.cell);
+    if (sameCell(destination, actor.cell)) return;
+    const cell = { ...actor.cell };
+    actor.cell = { ...destination };
+    this.events.push({ kind: 'whirlpool', unitId: actor.id, cell, destination: { ...destination }, text: '', error: false });
   }
 
   private random(): number {
@@ -544,7 +555,7 @@ export class Simulation {
         } else if (!target && enemy.decisionTimer <= 0) {
           if (this.distance(enemy.cell, enemy.start) > enemy.patrolRadius) next = findPath(this.grid, enemy.cell, enemy.start, blocked, enemySpecs[enemy.kind].mobility)?.[0];
           else {
-            const choices = neighbors(enemy.cell).filter(cell => walkable(this.grid, cell, enemySpecs[enemy.kind].mobility) && !blocked.has(key(cell)) && this.distance(cell, enemy.start) <= enemy.patrolRadius);
+            const choices = neighbors(enemy.cell).filter(cell => canEnter(this.grid, cell, blocked, enemySpecs[enemy.kind].mobility) && this.distance(cell, enemy.start) <= enemy.patrolRadius);
             // Include staying still so wandering has pauses rather than constant pacing.
             next = choices[Math.floor(this.random() * (choices.length + 1))];
           }
@@ -554,7 +565,7 @@ export class Simulation {
       }
       if (enemy.next) {
         enemy.progress += seconds * enemy.speed;
-        if (enemy.progress >= 1 - 1e-9) { enemy.cell = enemy.next; enemy.next = null; enemy.progress = 0; }
+        if (enemy.progress >= 1 - 1e-9) { enemy.cell = enemy.next; enemy.next = null; enemy.progress = 0; this.enterWhirlpool(enemy); }
       }
     }
   }

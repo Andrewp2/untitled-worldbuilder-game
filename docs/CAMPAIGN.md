@@ -4,6 +4,12 @@ All three worlds have twelve ordered missions. Each mission has one main goal an
 
 This pass responds to the repetitive delivery bonuses and rectangular banks in the first campaign. The seven opening missions have new layouts and solutions. The remaining 29 have revised coasts, obstacles or route geometry and reworked objective pairs. Some later mains retain their useful engineering or combat idea; their bonuses add another terrain, salvage or power decision. All flags require a mobile model on the target. Five convoy mains additionally require cargo aboard that model. Loose deposits never finish a goal, and no bonus is a block shipment.
 
+Every wheeled recipe also needs four tires. Tires occupy one cargo slot each and survive dismantling or destruction along with colored parts. Blueprint counts still limit rebuilds.
+
+Linked whirlpools count as shallow water: entering one takes its unit and cargo to a predetermined exit without an extra battery cost. The exit is reserved while entering, and a unit must leave and re-enter before it jumps back. Reef Courier uses the pair to enter a sealed port; Deepwater Maze offers a power-saving pond detour.
+
+Builder licenses use saved bonus stars: Class 1 initially, Class 2 at 12, Class 3 at 24, Class 4 at all 36. The yellow license button shows a printable keepsake, an earned portrait and stamps for finished worlds. Replays cannot duplicate stars; Reset progress also resets the license.
+
 Blue ground plans add one construction use when a mobile unit walks onto their tile. A plan may appear after the main. Successful construction consumes stock; dismantling and destruction do not refund it. Donated batteries retain their charge, so rebuilding does not provide free movement. Warden attacks cost two power rather than one; repair support, static defenses and regrouping matter in the later fights. Those values remain provisional until player testing.
 
 ## Meadow Isles
@@ -28,7 +34,7 @@ Blue ground plans add one construction use when a mobile unit walks onto their t
 | # | Mission | Main decision | Bonus twist |
 | --- | --- | --- | --- |
 | 13 | Rough Ridge | Recycle Scout with loose red/blue into Trailbuggy for the rocky saddle. | Scoop makes a separate low crossing; Warden protects the original Snail’s route. |
-| 14 | Ridge Post | Ferry a Warden kit across rough terrain its finished model cannot cross. | Combine defeated Crab’s red pieces and battery with Warden’s blue kit to build Hauler. |
+| 14 | Ridge Post | Ferry a Warden kit across rough terrain its finished model cannot cross. | Combine defeated Crab’s red pieces and battery, Warden’s blue kit and four spare tires at Post to build Hauler. |
 | 15 | Mudline | Use dry waypoints; the shorter swamp route exhausts the starting battery. | Recharge and recycle Hauler with a green piece into Frog for the bog pool. |
 | 16 | Boulder Courtyard | Move Snail inside the holding bay to permit reverse pushes. | Combine Dozer and Hauler’s kits into Trailbuggy for the high rocky court. |
 | 17 | Repair Column | Keep Mender close through two Scorpion fights. | Use field salvage to restore the original Mender for the northern overlook. |
@@ -45,8 +51,8 @@ Blue ground plans add one construction use when a mobile unit walks onto their t
 | # | Mission | Main decision | Bonus twist |
 | --- | --- | --- | --- |
 | 25 | Tidepool Trail | Protect a boat transfer that restores the original Frog; use the shallow route. | Return through the shallows, recycle Duck’s battery with a shore blue piece and build Fish directly into the enclosed western tidepool. |
-| 26 | Reef Courier | Use Tugboat’s small hold to assemble a remote Freighter. | Ship a Snail kit ashore; the garden star lies inland. |
-| 27 | Deepwater Maze | Dig three canal plugs and dispose of each dirt load without sealing Fish’s escape. | Recycle Scoop into Duck to cross land to a disconnected waste pond. |
+| 26 | Reef Courier | Use Tugboat’s small hold to assemble a remote Freighter, then enter the sealed reef port through linked whirlpools. | Ship a Snail kit ashore; the garden star lies inland. |
+| 27 | Deepwater Maze | Dig three canal plugs and dispose of each dirt load without sealing Fish’s escape. | Recycle Scoop into Duck; linked whirlpools offer a power-saving route from the western pool to the waste pond. |
 | 28 | Marina Relay | Ferry a kit larger than Tugboat’s hold and build a berth beside the empty Freighter. | Build Frog directly inside a deep-water island using a diagonal shoreline kit. |
 | 29 | Harbor Run | Coordinate land and sea defense; Freighter must reach its berth with camp stores aboard. | Bring blue salvage to the sealed quay pond and build Fish directly into it. |
 | 30 | Wreck Recovery | Recover power beyond a hostile reef and restore the original stranded ship. | Dismantle Patrol boat in the northern shallows to build Duck on the island shore. |

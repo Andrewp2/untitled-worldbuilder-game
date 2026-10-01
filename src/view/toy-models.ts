@@ -9,7 +9,7 @@ import { directions } from './facing';
 export const MODEL_SIZE = 384;
 export const MODEL_ORIGIN = { x: 192, y: 280 };
 export const MODEL_TILE_WIDTH = 320;
-export const modelKinds = [...unitKinds, ...enemyKinds, 'battery', 'soil', 'rocks', 'tree', 'tree-small', 'red', 'blue', 'yellow', 'green'] as const;
+export const modelKinds = [...unitKinds, ...enemyKinds, 'battery', 'tires', 'soil', 'rocks', 'tree', 'tree-small', 'red', 'blue', 'yellow', 'green'] as const;
 export type ModelKind = typeof modelKinds[number];
 const portraits = new Map<string, string>();
 export const modelPortrait = (name: string): string | undefined => portraits.get(name);
@@ -36,9 +36,12 @@ export function addModelCargo(model: THREE.Group, kind: UnitKind, supplies: Supp
     const i = index++, columns = 2, row = Math.floor(i / columns) % 2, tier = Math.floor(i / 4);
     return [x + (row - .5) * width / 2, floor + .045 + tier * .085, (i % columns - .5) * width / 2] as [number, number, number];
   };
-  for (const color of materials) for (let i = 0; i < Math.min(supplies[color], 12 - index); i++) {
+  for (const color of materials) for (let i = 0; i < supplies[color] && index < 12; i++) {
     const at = slot(); box(cargo, partColors[color], [.13, .075, .12], at, .013);
     cylinder(cargo, partColors[color], .026, .012, [at[0], at[1] + .043, at[2]]);
+  }
+  for (let i = 0; i < supplies.tires && index < 12; i++) {
+    const at = slot(), tire = toyModel('tires'); tire.scale.setScalar(.30); tire.position.set(at[0], at[1] - .02, at[2]); cargo.add(tire);
   }
   for (const _charge of supplies.batteries.slice(0, Math.max(0, 12 - index))) {
     const at = slot(); const cell = new THREE.Group(); battery(cell, 0, 0, .32); cell.position.set(...at); cargo.add(cell);
@@ -275,6 +278,16 @@ export function toyModel(kind: ModelKind): THREE.Group {
     group.position.y = .005;
     return group;
   }
+  if (kind === 'tires') {
+    const tire = piece(group, new THREE.TorusGeometry(.19, .065, 8, 20), 0x263541, 0, .065, 0);
+    tire.rotation.x = Math.PI / 2;
+    for (let i = 0; i < 16; i++) {
+      const angle = i * Math.PI * 2 / 16;
+      const tread = box(group, 0x344652, [.05, .09, .025], [Math.cos(angle) * .249, .065, Math.sin(angle) * .249], .008);
+      tread.rotation.y = -angle;
+    }
+    return group;
+  }
   if (kind === 'battery') {
     // The cap rings support the cell, matching the installed rover batteries.
     battery(group, 0, .078 * 1.8, 1.8);
@@ -435,7 +448,7 @@ function renderModel(scene: Phaser.Scene, model: THREE.Group, name: string, dire
     const portrait = document.createElement('canvas'); portrait.width = right - left + 17; portrait.height = bottom - top + 17;
     portrait.getContext('2d')!.drawImage(canvas, left, top, right - left + 1, bottom - top + 1, 8, 8, right - left + 1, bottom - top + 1);
     portraits.set(frame, portrait.toDataURL('image/png'));
-    if (name in partColors || name === 'battery' || name === 'soil') scene.textures.addCanvas('toy-icon-' + frame, portrait);
+    if (name in partColors || name === 'battery' || name === 'tires' || name === 'soil') scene.textures.addCanvas('toy-icon-' + frame, portrait);
   }
   stage.remove(model);
   model.traverse(child => { if (child instanceof THREE.Mesh) { child.geometry.dispose(); (child.material as THREE.Material).dispose(); } });
@@ -444,7 +457,7 @@ function renderModel(scene: Phaser.Scene, model: THREE.Group, name: string, dire
 /** Cache all four loaded views together. Cargo shares the model's depth buffer. */
 export function cargoModel(scene: Phaser.Scene, kind: UnitKind, supplies: Supplies, carryingTree: boolean): string {
   if (!load(supplies) && !carryingTree) return kind;
-  const name = kind + '-load-' + [...materials.map(color => Math.min(supplies[color], 12)), supplies.batteries.length, supplies.soil ?? 0, Number(carryingTree)].join('-');
+  const name = kind + '-load-' + [...materials.map(color => Math.min(supplies[color], 12)), Math.min(supplies.tires, 12), supplies.batteries.length, supplies.soil ?? 0, Number(carryingTree)].join('-');
   if (!scene.textures.exists('toy-' + name + '-se')) {
     const model = toyModel(kind); addModelCargo(model, kind, supplies, carryingTree);
     renderModel(scene, model, name, true, false);

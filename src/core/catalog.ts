@@ -2,9 +2,11 @@ import type { Cell, Mobility } from './grid';
 
 export const materials = ['red', 'blue', 'yellow', 'green'] as const;
 export type Material = typeof materials[number];
-export type PartCounts = Record<Material, number>;
-export type Supplies = Record<Material, number> & { batteries: number[]; soil?: number };
-export type Cost = Record<Material, number> & { battery: number };
+export const partKinds = [...materials, 'tires'] as const;
+export type PartKind = typeof partKinds[number];
+export type PartCounts = Record<PartKind, number>;
+export type Supplies = PartCounts & { batteries: number[]; soil?: number };
+export type Cost = PartCounts & { battery: number };
 export const unitKinds = ['scout', 'hauler', 'warden', 'scoop', 'trailbuggy', 'snail', 'dozer', 'forklift', 'arborbot', 'dumptruck', 'mender', 'frog', 'duck', 'fish', 'tug', 'freighter', 'patrolboat', 'pump', 'workshop', 'sentry', 'marina'] as const;
 export type UnitKind = typeof unitKinds[number];
 export type Blueprint = UnitKind | 'relay';
@@ -29,35 +31,35 @@ export type UnitDefinition = {
   color: number; speed: number; capacity: number; start: Cell; battery: number;
   damage: number; attackInterval: number;
 };
-export const partCounts = (red = 0, blue = 0, yellow = 0, green = 0): PartCounts => ({ red, blue, yellow, green });
+export const partCounts = (red = 0, blue = 0, yellow = 0, green = 0, tires = 0): PartCounts => ({ red, blue, yellow, green, tires });
 export const emptySupplies = (): Supplies => ({ ...partCounts(), batteries: [] });
 export const cloneSupplies = (s: Supplies): Supplies => ({ ...s, batteries: [...s.batteries] });
 export const emptyCost = (): Cost => ({ ...partCounts(), battery: 0 });
-export const load = (s: Supplies): number => materials.reduce((sum, color) => sum + s[color], 0) + s.batteries.length + (s.soil ?? 0);
-export const costTotal = (s: Cost): number => materials.reduce((sum, color) => sum + s[color], 0) + s.battery;
+export const load = (s: Supplies): number => partKinds.reduce((sum, color) => sum + s[color], 0) + s.batteries.length + (s.soil ?? 0);
+export const costTotal = (s: Cost): number => partKinds.reduce((sum, color) => sum + s[color], 0) + s.battery;
 export const describeCost = (s: Cost): string => [
-  ...materials.filter(m => s[m] > 0).map(m => `${s[m]} ${m}`),
+  ...partKinds.filter(m => s[m] > 0).map(m => `${s[m]} ${m}`),
   ...(s.battery ? [`${s.battery} ${s.battery === 1 ? 'battery' : 'batteries'}`] : []),
 ].join(' · ') || 'None';
 export const describeSupplies = (s: Supplies): string => [
-  ...materials.filter(m => s[m] > 0).map(m => `${s[m]} ${m}`),
+  ...partKinds.filter(m => s[m] > 0).map(m => `${s[m]} ${m}`),
   ...(s.soil ? [`${s.soil} dirt`] : []),
   ...(s.batteries.length ? [s.batteries.length === 1
     ? s.batteries[0] === 0 ? '1 empty battery' : `1 battery (${s.batteries[0]}/${BATTERY_CAPACITY})`
     : `${s.batteries.length} batteries (${s.batteries.join(', ')} charge)`] : []),
 ].join(' · ') || 'Empty';
 export const recipes: Record<Blueprint, Cost> = {
-  scout: { ...partCounts(0, 0, 1, 1), battery: 1 },
-  hauler: { ...partCounts(2, 1), battery: 1 },
+  scout: { ...partCounts(0, 0, 1, 1), tires: 4, battery: 1 },
+  hauler: { ...partCounts(2, 1), tires: 4, battery: 1 },
   relay: { ...partCounts(1, 1, 0, 2), battery: 0 },
   warden: { ...partCounts(1, 2), battery: 1 },
-  scoop: { ...partCounts(1, 1, 2), battery: 1 },
-  trailbuggy: { ...partCounts(1, 1, 1), battery: 1 },
+  scoop: { ...partCounts(1, 1, 2), tires: 4, battery: 1 },
+  trailbuggy: { ...partCounts(1, 1, 1), tires: 4, battery: 1 },
   snail: { ...partCounts(0, 0, 1), battery: 1 },
-  dozer: { ...partCounts(1, 0, 2), battery: 1 },
-  forklift: { ...partCounts(1, 1, 2), battery: 1 },
+  dozer: { ...partCounts(1, 0, 2), tires: 4, battery: 1 },
+  forklift: { ...partCounts(1, 1, 2), tires: 4, battery: 1 },
   arborbot: { ...partCounts(1, 0, 1, 3), battery: 1 },
-  dumptruck: { ...partCounts(3, 1, 2), battery: 1 },
+  dumptruck: { ...partCounts(3, 1, 2), tires: 4, battery: 1 },
   mender: { ...partCounts(1, 2, 1, 1), battery: 1 },
   frog: { ...partCounts(0, 0, 0, 1), battery: 1 },
   duck: { ...partCounts(0, 0, 1), battery: 1 },
@@ -119,7 +121,7 @@ export function defaultAction(kind: UnitKind, cargo: Supplies, carryingTree = fa
 }
 export function recipeSupplies(blueprint: Blueprint, charge = 0): Supplies {
   const supplies = emptySupplies();
-  for (const color of materials) supplies[color] = recipes[blueprint][color];
+  for (const color of partKinds) supplies[color] = recipes[blueprint][color];
   supplies.batteries = Array.from({ length: recipes[blueprint].battery }, () => charge);
   return supplies;
 }

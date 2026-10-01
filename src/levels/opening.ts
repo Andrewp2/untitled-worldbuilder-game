@@ -6,7 +6,7 @@ export const openingMissions: AuthoredMission[] = [
   {
     id: 'hollow-reach', name: 'Hollow Reach', goal: 'Build Scout · reach Shore',
     challenge: 'Find a plan with Duck, assemble Scout, then use the two models’ different terrain access.',
-    brief: 'Move Duck onto the blue Scout plan. Build Scout beside the yellow, green and battery pile. Scout reaches Shore by land; the bonus nest is in shallow water, where Duck can paddle.',
+    brief: 'Move Duck onto the blue Scout plan. Build Scout beside the yellow, green, tire and battery pile. Scout reaches Shore by land; the bonus nest is in shallow water, where Duck can paddle.',
     grid: board([
       '~~~~~~~~~~~~~~', '~~~.....~~~~~~', '~~..:....~~~~~', '~....T....~~~~',
       '~....T.....~~~', '~~...T..:..~~~', '~~~.........~~', '~~~~...~~~~~~~',
@@ -70,14 +70,14 @@ export const openingMissions: AuthoredMission[] = [
   {
     id: 'woodland-workshop', name: 'Tidal Workshop', goal: 'Recycle Duck · reach the rocky headland',
     challenge: 'Reuse the only yellow piece and its battery across two terrain specialists; build on water diagonally from the shore.',
-    brief: 'Duck supplies the only yellow piece. Find the Trailbuggy plan, then take Duck apart beside the red/blue kit and build Trailbuggy. After Headland, find the Duck plan. Recover Trailbuggy’s parts on the southeast shore and construct Duck directly on the isolated shallow-water star using the diagonal of its 3×3 building area.',
+    brief: 'Duck supplies the only yellow piece. Find the Trailbuggy plan, then take Duck apart beside the red/blue/tire kit and build Trailbuggy. After Headland, find the Duck plan. Recover Trailbuggy’s parts on the southeast shore and construct Duck directly on the isolated shallow-water star using the diagonal of its 3×3 building area.',
     grid: board([
       'wwwwwwwwwwwwwwww', 'wwwwwwwwwwwwwwww', 'www....www...www', 'ww......ww...www',
       'w.......ww...www', 'w......^^^^.wwww', 'w......wwwww~www', 'ww.....wwwwwwwww',
       'www....wwwwwwwww', 'wwwwwwwwwwwwwwww',
     ]),
     rovers: [unit('hauler', 'carrier', { x: 3, y: 6 }), unit('duck', 'duck', { x: 4, y: 5 })],
-    piles: [pile(4, 6, stock(1, 1))],
+    piles: [pile(4, 6, stock(1, 1, 0, 0, [], 4))],
     blueprints: {}, blueprintPickups: [{ cell: { x: 4, y: 4 }, blueprint: 'trailbuggy' }, { cell: { x: 11, y: 3 }, blueprint: 'duck', afterMain: true }],
     goals: [{ id: 'headland', name: 'Headland', cell: { x: 11, y: 4 }, kinds: ['trailbuggy'] }],
     bonus: { kind: 'arrival', name: 'Secret nest', description: 'Build Duck directly on the shallow-water star beside the rocky shore.', cell: { x: 12, y: 6 }, kinds: ['duck'] },
@@ -93,7 +93,7 @@ export const openingMissions: AuthoredMission[] = [
       '~~~....~~~~.....~~', '~~~.............~~', '~~~~...........~~~', '~~~~~~~~~~~~~~~~~~',
     ]),
     rovers: [unit('hauler', 'carrier', { x: 2, y: 5 })],
-    piles: [pile(3, 4, stock(0, 0, 2, 0, [100])), pile(10, 4, stock(1, 1)), pile(5, 9, stock(0, 0, 0, 3))],
+    piles: [pile(3, 4, stock(0, 0, 2, 0, [100])), pile(10, 4, stock(1, 1, 0, 0, [], 4)), pile(5, 9, stock(0, 0, 0, 3))],
     blueprints: {}, blueprintPickups: [{ cell: { x: 3, y: 5 }, blueprint: 'forklift' }, { cell: { x: 12, y: 7 }, blueprint: 'arborbot', afterMain: true }],
     goals: [{ id: 'depot', name: 'Depot', cell: { x: 14, y: 8 }, kinds: ['forklift'] }],
     bonus: { kind: 'arrival', name: 'Grove guest', description: 'Recycle Forklift into Arborbot · bring the gate tree to the grove star.', cell: { x: 13, y: 2 }, kinds: ['arborbot'], carryingTree: true },

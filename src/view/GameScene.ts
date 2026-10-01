@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { constructionArea, key, neighbors, terrainAt, isWater, walkable, type Cell } from '../core/grid';
+import { constructionArea, key, neighbors, movementDestination, terrainAt, isWater, walkable, type Cell } from '../core/grid';
 import { toCell, toWorld, surfacePoint, WATER_DROP } from '../core/projection';
 import { BATTERY_CAPACITY, MOVE_ENERGY, blueprintNames, costTotal, describeCost, describeSupplies, recipes, load, defaultAction, supportsAction, isMobile, usesBattery, unitSpecs, type Blueprint, type UnitKind, type Supplies } from '../core/catalog';
 import type { WorkAction, BlueprintStock, Goal } from '../core/simulation';
@@ -294,6 +294,10 @@ export class GameScene extends Phaser.Scene {
     const enemy = this.simulation.enemies.find(enemy => key(enemy.cell) === key(this.hover!));
     if (enemy) return `${enemy.name} · ${enemy.health}/${enemy.maxHealth} health${enemy.kind === 'crab' ? ' · cannot cross rough ground' : ''}`;
     const terrain = terrainAt(this.simulation.grid, this.hover), selected = this.selectedRover();
+    if (terrain === 'whirlpool') {
+      const exit = movementDestination(this.simulation.grid, this.hover);
+      return `Whirlpool → ${exit.x + 1}, ${exit.y + 1} · shallow water · enter to jump`;
+    }
     if (selected && (terrain === 'rough' || isWater(terrain))) return `${terrain === 'rough' ? 'Rough ground' : terrain === 'deep-water' ? 'Deep water' : 'Shallow water'} · ${selected.name} ${walkable(this.simulation.grid, this.hover, unitSpecs[selected.kind].mobility) ? 'can cross' : 'cannot cross'}`;
     return '';
   }
@@ -500,6 +504,11 @@ export class GameScene extends Phaser.Scene {
           if (event.kind === 'hit') continue;
         }
         if (event.kind === 'blueprint-found') { this.bridge.sound('signal'); this.bridge.message(`${blueprintNames[event.blueprint]} blueprint found.`); continue; }
+        if (event.kind === 'whirlpool') {
+          this.bridge.sound('signal');
+          this.flashes.push({ cell: event.cell, until: time + 220 }, { cell: event.destination, until: time + 220 });
+          continue;
+        }
         if (event.kind === 'recharge') { this.workBeats.set(event.targetId, { cell: event.cell, elapsed: 0 }); continue; }
         if (event.kind === 'cargo' && !event.error) this.bridge.sound(event.action);
         if ((event.kind === 'terrain' || event.kind === 'obstacle') && !event.error) {
@@ -573,6 +582,24 @@ export class GameScene extends Phaser.Scene {
     this.water.clear();
     for (let y = 0; y < this.simulation.grid.height; y++) for (let x = 0; x < this.simulation.grid.width; x++) {
       const terrain = this.simulation.grid.tiles[y][x];
+      if (terrain === 'whirlpool') {
+        const p = toWorld({ x, y });
+        this.water.fillStyle(0x236888, .8); this.water.fillEllipse(p.x, p.y + WATER_DROP, 61, 29);
+        // A spiral lies on the same water plane as the projected grid.
+        this.water.lineStyle(2.3, 0xd1f7ee, .95); this.water.beginPath();
+        for (let i = 0; i <= 64; i++) {
+          const t = i / 64, angle = t * Math.PI * 5 - phase * 1.4;
+          const radius = 3 + t * 25;
+          const sx = p.x + Math.cos(angle) * radius, sy = p.y + WATER_DROP + Math.sin(angle) * radius * .5;
+          if (i) this.water.lineTo(sx, sy); else this.water.moveTo(sx, sy);
+        }
+        this.water.strokePath();
+        if (hovered === key({ x, y })) {
+          const exit = this.point(movementDestination(this.simulation.grid, { x, y }));
+          this.water.lineStyle(2, 0xffdc59); this.water.strokeEllipse(exit.x, exit.y, 62, 30);
+        }
+        continue;
+      }
       if ((!isWater(terrain) && terrain !== 'bridge') || (x * 7 + y * 3) % 13 !== 0) continue;
       const p = toWorld({ x, y }); const offset = Math.sin(phase + x + y) * 3;
       this.water.lineStyle(1, 0xc5faff, 0.18);
@@ -598,7 +625,14 @@ export class GameScene extends Phaser.Scene {
       if (u.goal) {
         this.routes.lineStyle(selected ? 3 : 2, u.color, selected ? 0.85 : 0.45);
         this.routes.beginPath();
-        nodes.forEach((n, i) => { const p = this.point(n); if (i) this.routes.lineTo(p.x, p.y); else this.routes.moveTo(p.x, p.y); });
+        nodes.forEach((n, i) => {
+          const p = this.point(n);
+          if (i > 1 && terrainAt(this.simulation.grid, nodes[i - 1]) === 'whirlpool') {
+            const exit = this.point(movementDestination(this.simulation.grid, nodes[i - 1]));
+            this.routes.moveTo(exit.x, exit.y);
+          }
+          if (i) this.routes.lineTo(p.x, p.y); else this.routes.moveTo(p.x, p.y);
+        });
         this.routes.strokePath();
         for (const n of nodes.slice(1)) { const p = this.point(n); this.routes.fillStyle(u.color, selected ? 0.95 : 0.5); this.routes.fillCircle(p.x, p.y, 3); }
         const end = this.point(u.goal);

@@ -26,6 +26,16 @@ colors:
   location-label: "#eef5cbdc"
   location-ink: "#133956"
   map-contact-shadow: "#12381c30"
+  whirlpool-fill: "#236888"
+  whirlpool-spiral: "#d1f7ee"
+  tire-rubber: "#263541"
+  tire-tread: "#344652"
+  license-paper: "#fff5d9"
+  license-star: "#805400"
+  license-stamp-pending: "#666b61"
+  license-stamp-earned: "#35652f"
+  license-backdrop: "#052e54b3"
+  license-hover: "#17355812"
 typography:
   headline:
     fontFamily: "Nunito Sans Variable, sans-serif"
@@ -54,6 +64,25 @@ typography:
   canvas-count:
     fontFamily: "Nunito Sans Variable, sans-serif"
     fontSize: "17px"
+  license-title:
+    fontFamily: "Nunito Sans Variable, sans-serif"
+    fontSize: "27px"
+    fontWeight: 900
+  license-class:
+    fontFamily: "Nunito Sans Variable, sans-serif"
+    fontSize: "24px"
+    fontWeight: 900
+  license-stars:
+    fontFamily: "Nunito Sans Variable, sans-serif"
+    fontSize: "15px"
+    fontWeight: 750
+  license-stamp:
+    fontFamily: "Nunito Sans Variable, sans-serif"
+    fontSize: "12px"
+    lineHeight: 1.2
+  license-next:
+    fontFamily: "Nunito Sans Variable, sans-serif"
+    fontSize: "14px"
 rounded:
   charge: "2px"
   small: "4px"
@@ -64,6 +93,7 @@ rounded:
   plan: "10px"
   help: "12px"
   dialog: "14px"
+  license: "16px"
   dock: "20px"
 spacing:
   compact: "4px"
@@ -108,6 +138,12 @@ components:
     backgroundColor: "transparent"
     textColor: "{colors.ink}"
     rounded: "{rounded.popover}"
+  builder-license:
+    backgroundColor: "{colors.license-paper}"
+    textColor: "{colors.on-active}"
+    rounded: "{rounded.license}"
+    padding: "32px"
+    width: "440px"
 ---
 
 # Design System: Untitled
@@ -154,6 +190,8 @@ Native captures were inspected at the actual 885×901 desktop viewport. Populate
 
 The [five-section finish review](.impeccable/review/campaign-expansion/finish-review.md) returns **fix** solely for stale current-scope documentation and the required final recording pass, with no extension UI repair remaining. This recording updates the actual tokens and sidecar previews. The [scoped finish verdict](.impeccable/review/campaign-expansion/finish-verdict.md) marks the documentation correction resolved and ready to ship, without whole-surface approval. The single detector pass records 33 advisory palette/radius/type documentation mismatches, not a mechanical UI defect or clean-zero audit. No raster or provenance asset changed; the 34-PNG manifest remains intact. Current deployment status is available in [GitHub Actions](https://github.com/Andrewp2/untitled-worldbuilder-game/actions/workflows/deploy-pages.yml).
 
+**Whirlpools, tires and licenses checkpoint · October 1, 2026:** [Evidence](.impeccable/review/whirlpools-tires-licenses/evidence.md) records focused movement, resource, rank and model-projection checks and public-command solutions for all 36 mains and bonuses. The final source export excluding the matte trial passed all 293 tests in 28 files and the Pages-base production build. The source adds shallow-water spirals, shared tire pictures and a printable builder license. Native browser inspection and its screenshot alternative timed out, so this pass has no current screenshot, live interaction or print-dialog verification. Historical captures do not verify these additions.
+
 ## Colors
 
 **Historical ground-contact correction:** Footprint origins, shared shadow depth, attached cargo sorting, ground/status separation, and quiet music startup were checked after user feedback. The build and 18 focused audio, picking, and grounding checks passed. The reviewer returned **ship**, scoring all four requested fixes resolved; see [the correction evidence](.impeccable/review/grounding/evidence.md) and [its scoped verdict](.impeccable/review/grounding/finish-verdict.md).
@@ -168,12 +206,15 @@ The UI palette places white and pale blue information on deep navy and cool blue
 
 - **Charge Lime** (`charge`): remaining battery charge and ready status. Goal completion uses green cues; completed map locations now use flags rather than colored circular fields.
 - **Role colors:** lime Scout, tangerine Hauler, cobalt Warden, yellow Scoop with turquoise arms/hubs and a blue rear battery, and cherry-red Bristleback belong to authored rover models and retained creature art. Their silhouettes and eyes carry identity alongside color. Dirt uses a warm-brown shared cutout.
+- **License Gold** (`license-star`) and **Earned Stamp Green** (`license-stamp-earned`): the saved bonus-star total and completed-world stamps on the cream license.
 
 ### Neutral
 
 - **Deep Navy** (`frame`) and **Island Blue** (`field`): application frame and canvas background.
 - **Control Blue** (`panel`) and **Hover Blue** (`hover`): menu/details, hover labels, and interactive surface states; the translucent dock has its own token.
 - **Cloud White** (`ink`), **Pale Blue** (`muted`), and **Blue Line** (`line`): primary text, secondary details, and structural dividers.
+- **License Cream** (`license-paper`): the printable keepsake surface, with the existing dark blue `on-active` ink, muted pending stamps and a blue backdrop. Its close control uses the faint dark-ink `license-hover` fill.
+- **Whirlpool Blue** (`whirlpool-fill`) and **Spiral Aqua** (`whirlpool-spiral`): a low water-plane pool with a readable pale spiral. **Tire Rubber** (`tire-rubber`) and **Tire Tread** (`tire-tread`) belong to the shared physical resource model.
 
 **The Yellow State Rule.** Use yellow to identify the current command, selection, mission markers or primary completion action; use green for charge and completed-goal status.
 
@@ -184,6 +225,8 @@ Locally bundled **Nunito Sans Variable** supplies native controls and resource c
 **The Short Label Rule.** Keep the normal view to names, short goals, action labels, pictures, and counts. Put unit details and instructions behind their native disclosure controls; show one short objective with pictured shipment requirements, and keep mission-specific hints inside How to play.
 
 Canvas labels and resource counts use pure white at 16px and 17px in world coordinates, rasterized at resolution 2; the camera scales them with the board. These are distinct from native control sizes.
+
+The license retains Nunito Sans: a heavy title and class, a smaller bonus-star total, compact world stamps and a next-class hint. Its frontmatter roles record the sizes and weights; earned stamps strengthen their label weight to (850).
 
 ## Layout
 
@@ -202,6 +245,7 @@ Depth comes from authored toy models, retained cutouts, raised terrain, footprin
 - **Marker lift** (`drop-shadow(0 3px 2px #25410f60)`): separates mission symbols from the island. Names appear only on hover/focus.
 - **Dialog separation** (`0 12px 40px #001e4566`): lift the completion dialog above its dimmed backdrop.
 - **Dock separation** (`0 8px 22px #001e4540`), **menu/detail separation** (`0 6px 18px #001e4550`), **help separation** (`0 12px 35px #001b3d66`), and **feedback separation** (`0 5px 18px #001e4540`): keep contextual controls readable above the board.
+- **License separation** (`0 16px 60px #00192f70`): lift the cream keepsake above its blue backdrop; the print stylesheet removes this shadow.
 
 **The Ground Contact Rule.** Align cutouts to their physical footprint centers in `src/view/grounding.ts`, rather than the lowest alpha edge. Soft contact shadows share a ground layer beneath all upright objects. World objects sort by footprint position; cargo sorts inside its carrier. Idle bodies, facing changes, and flag masts preserve contact with the tile. A moving body may lift briefly during a step, while its footprint, sorting origin, and shadow stay on the terrain. Tile markings stay below bodies; charge bars and status remain above them.
 
@@ -210,6 +254,8 @@ Quiet grass/sand/water planes and sparse ripples are the current reversible terr
 ## Shapes
 
 Machines use a few large fitted forms, visible joints, expressive front eyes and distinct overall proportions. Warden, Arborbot and Mender use four jointed walking legs with planted feet; work vehicles and cars retain their broad wheels. Hauler's empty bed leaves room for real carried parts; Scoop's front bucket holds a separate pictured dirt load. Bristleback keeps an articulated animal silhouette; trees have rounded leaf crowns and stones remain chunky. UI corners are gently rounded, with circular utility controls and soft rectangular controls. The completion dialog has a larger corner radius (14px); blueprint buttons have rounded rectangular corners (10px). Authored SVG symbols remain simple strokes for actions, status, and navigation.
+
+The builder license uses the slightly broader `license` corner radius. Loose tires are dark horizontal rings with raised tread, sharing the toy camera and grounded support plane.
 
 ## Components
 
@@ -237,6 +283,12 @@ Loose-part picture/count badges appear only while their pile's tile is hovered. 
 
 Four distinct red/blue/yellow/green quantities persist through recipes, pickup/drop, construction, dismantling, wrecks, and bonus checks; colors cannot substitute. Cargo-capable rovers use pictured loads anchored inside their rendered bodies. Scoop’s one-dirt bucket is exclusive to Dig/Fill and cannot pick up/drop dirt. Bucket dirt becomes recoverable loose dirt through dismantling/destruction. Filled cargo pictures remain visible; empty boxes and the routine numeric capacity are hidden. Installed charge uses one green native progress bar (80×6px), with no repeated battery picture or visible number; the exact value is available on hover and through accessible value text. The battery-swap control appears when replacement is available. Installed charge remains fuel/health for mobile units and Sentry; dismantling preserves it, while an enemy wreck leaves the installed battery empty and carried batteries keep their charge. An empty battery still builds a powerless unit. Charging station, Bot workshop, and Marina instead show structural integrity and use automatic family support.
 
+Tires use one shared ring-and-tread model in ground piles, hover counts, build costs and cargo pictures. Actual model cargo contains scaled tire geometry inside the carrier, alongside colored parts and batteries; it follows the same heading, lift and sorting as the carrier. Each tire occupies one cargo slot, and wheeled build costs show four pictured tires.
+
+### Whirlpools
+
+Linked shallow-water tiles carry pale spirals over dark blue elliptical pools on the same lower plane as other water. Their two-to-one projection follows the grid. Hovering an entry outlines its linked exit in yellow and names the destination in the contextual hint; routes break across the jump rather than drawing a walk through intervening terrain. The spiral turns with the existing presentation clock, freezing on pause and remaining static for reduced motion. Entry and exit briefly flash after a jump, with the existing signal cue; no audio listening check is claimed.
+
 ### Motion
 
 Four direction views follow facing. Each grid step now takes off and lands: Scout lifts 6 world pixels, Hauler 3.5, Warden 2.8, Scoop 2, and Bristleback 5, following the simulation’s actual step progress. Moving bodies rock and compress slightly; cargo follows their lift inside the carrier container. Shadows stay on the ground and become slightly smaller and lighter during a hop. Idle bodies remain planted. Successful terrain work gives Scoop and its dirt a (3px) dip and a three-particle dirt puff over (.4s), while the footprint and shadow stay planted. Pause freezes the current pose, work beat, flag cloth, selection bob, and water ripples. Reduced motion removes hops, rocking, work dip/puff, cloth flutter, marker bobbing, resident patrols, and control transitions, while gameplay movement and readable outcomes remain. These preferences are read live. Presentation leaves destinations, energy, collisions, and independent orders in the simulation.
@@ -254,6 +306,12 @@ Only Hollow starts unlocked. Meadow Isles, Sunstone Range and Open Sea contain t
 Reaching a mission flag produces a yellow star that rises 76 world pixels over 1.25 seconds with cubic ease-out, with the existing signal or completion chime. Reduced motion shows the star without travel for 0.35 seconds. The final reward freezes the simulation before opening the borderless completion dialog; a canvas click, Space from the game surface, or Escape skips that short beat. Space continues to activate focused native buttons. Completion and newly earned bonuses publish in the event frame and save immediately, even if the player returns to the map during the reward. The dialog offers a yellow **World map** button or **Try bonus** button with minimum height (44px); resuming restores the previous pause state. The bonus marker, ground star and text appear only after the current visit's main completion, including replays. The bonus ending freezes the mission for the same reward, then opens **Bonus complete** with a starred flag, **Bonus star earned** and only **World map**; Escape also returns to the map, and the final run cannot resume. Each replay gets a new ending even with its star already saved, without a duplicate award.
 
 Each mission has one main and one later optional bonus. Arrival flags can bind a role or the original authored unit. Convoy flags show required cargo beside the short goal; the loaded carrier must stand on the flag, and empty batteries do not qualify. Loose deposits cannot complete a flag. Hostile-clearance conditions can delay completion even after a loaded arrival. Every bonus requires an original or newly constructed creature/model to arrive; some also require a carried tree or remaining charge. Bonuses appear only after that visit's main. Exact definitions live in [missions.ts](src/levels/missions.ts) and its imported content files; [CAMPAIGN.md](docs/CAMPAIGN.md) describes the distinct challenges. Cargo stays aboard at completion; earned stars persist after leaving the target. Ground blueprints are finite pickups collected by walking a mobile model onto their tile, with some revealed only after the main. Visits restore authored terrain, materials, units and finite stock; prior awards do not reveal a bonus early.
+
+### Builder’s License
+
+A yellow pictured license beside Game menu opens a centered, borderless cream keepsake with dark blue ink. The shared toy portrait occupies a (170×145px) image area. Class 1 shows Scout; earned Classes 2, 3 and 4 show Frog, Dumptruck and Warden at 12, 24 and 36 saved bonus stars. The total counts unique awards. Three world stamps change from muted map symbols to green check symbols with stronger labels after all twelve mains in that world are complete.
+
+The close control uses dark blue focus and hover cues on the light surface. Opening the license pauses an active mission; closing it restores the prior pause state. **Print license** is a separate full-width yellow action with a (44px) minimum height. Source print styles select A5 landscape with (12mm) margins and hide the game, close and print controls. The current browser and print output remain unverified.
 
 ## Do's and Don'ts
 

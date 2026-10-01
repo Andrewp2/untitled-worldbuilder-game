@@ -21,18 +21,18 @@ const totals = (s: Simulation): Cost => {
 };
 const snapshot = (s: Simulation) => JSON.stringify({ units: s.units, piles: s.piles, relays: s.relays });
 const fixture = () => new Simulation(grid, [unitDefinition('hauler', 'h', { x: 1, y: 1 })], { piles: [
-  { cell: { x: 2, y: 1 }, supplies: { red: 5, blue: 1, batteries: [] , yellow: 0, green: 0} },
+  { cell: { x: 2, y: 1 }, supplies: { red: 5, blue: 1, batteries: [] , yellow: 0, green: 0, tires: 0} },
 ] });
 
 describe('local cargo actions', () => {
   it('limits pickup to capacity, preserves excess, and merges a complete drop', () => {
     const s = fixture(), before = totals(s);
     expect(s.transfer('h', 'pickup', { x: 2, y: 1 }).ok).toBe(true);
-    expect(s.unit('h').cargo).toEqual({ red: 4, blue: 0, batteries: [] , yellow: 0, green: 0});
-    expect(s.pileAt({ x: 2, y: 1 })?.supplies).toEqual({ red: 1, blue: 1, batteries: [] , yellow: 0, green: 0});
+    expect(s.unit('h').cargo).toEqual({ red: 4, blue: 0, batteries: [] , yellow: 0, green: 0, tires: 0});
+    expect(s.pileAt({ x: 2, y: 1 })?.supplies).toEqual({ red: 1, blue: 1, batteries: [] , yellow: 0, green: 0, tires: 0});
     expect(s.transfer('h', 'drop', { x: 2, y: 1 }).ok).toBe(true);
     expect(load(s.unit('h').cargo)).toBe(0);
-    expect(s.pileAt({ x: 2, y: 1 })?.supplies).toEqual({ red: 5, blue: 1, batteries: [] , yellow: 0, green: 0});
+    expect(s.pileAt({ x: 2, y: 1 })?.supplies).toEqual({ red: 5, blue: 1, batteries: [] , yellow: 0, green: 0, tires: 0});
     expect(totals(s)).toEqual(before);
   });
   it('rejects distant, diagonal, moving, full, empty, and obstructed actions without mutations', () => {
@@ -59,13 +59,13 @@ describe('spatial construction and recovery', () => {
     const s = new Simulation(grid, [], { piles: [
       { cell: { x: 4, y: 2 }, supplies: { ...partCounts(1), batteries: [] } },
       { cell: { x: 5, y: 2 }, supplies: { ...partCounts(0, 0, 0, 2), batteries: [] } },
-      { cell: { x: 4, y: 3 }, supplies: { red: 0, blue: 1, batteries: [] , yellow: 0, green: 0} },
-      { cell: { x: 5, y: 3 }, supplies: { red: 20, blue: 10, batteries: [] , yellow: 0, green: 0} },
+      { cell: { x: 4, y: 3 }, supplies: { red: 0, blue: 1, batteries: [] , yellow: 0, green: 0, tires: 0} },
+      { cell: { x: 5, y: 3 }, supplies: { red: 20, blue: 10, batteries: [] , yellow: 0, green: 0, tires: 0} },
     ] });
     const before = totals(s);
     expect(s.build('relay', { x: 4, y: 2 }).ok).toBe(true);
     expect(s.piles).toHaveLength(1);
-    expect(s.piles[0].supplies).toEqual({ red: 20, blue: 10, batteries: [] , yellow: 0, green: 0});
+    expect(s.piles[0].supplies).toEqual({ red: 20, blue: 10, batteries: [] , yellow: 0, green: 0, tires: 0});
     expect(totals(s)).toEqual(before);
     s.dismantle(s.relays[0].id);
     expect(s.pileAt({ x: 4, y: 2 })?.supplies).toEqual(recipeSupplies('relay'));
@@ -148,7 +148,7 @@ it('preserves materials through hauling and relay salvage, with goals completed 
 
 
 it('requires the specified part colors rather than an equal total of other colors', () => {
-  const s = new Simulation(grid, [], { piles: [{ cell: { x: 3, y: 2 }, supplies: { ...partCounts(0, 0, 1, 0), batteries: [64] } }] });
+  const s = new Simulation(grid, [], { piles: [{ cell: { x: 3, y: 2 }, supplies: { ...partCounts(0, 0, 1, 0, 4), batteries: [64] } }] });
   s.piles[0].supplies.red = 1; // Same total as a Scout recipe, but red cannot substitute for green.
   const before = snapshot(s);
   expect(s.buildPreview('scout', { x: 3, y: 2 }).missing.green).toBe(1);
@@ -158,7 +158,7 @@ it('requires the specified part colors rather than an equal total of other color
   expect(s.unit(built.id!).battery).toBe(64);
   expect(s.piles[0].supplies.red).toBe(1);
   s.dismantle(built.id!);
-  expect(s.pileAt({ x: 3, y: 2 })?.supplies).toEqual({ ...partCounts(1, 0, 1, 1), batteries: [64] });
+  expect(s.pileAt({ x: 3, y: 2 })?.supplies).toEqual({ ...partCounts(1, 0, 1, 1, 4), batteries: [64] });
 });
 
 

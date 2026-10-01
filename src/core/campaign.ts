@@ -1,4 +1,10 @@
 export const PROGRESS_KEY = 'untitled-worldbuilder-game.progress';
+export const builderRanks = [
+  { class: 1, stars: 0, model: 'scout' },
+  { class: 2, stars: 12, model: 'frog' },
+  { class: 3, stars: 24, model: 'dumptruck' },
+  { class: 4, stars: 36, model: 'warden' },
+] as const;
 export type ProgressStorage = Pick<Storage, 'getItem' | 'setItem'>;
 
 /** Mission completion persists; each visit to a mission starts a fresh run. */
@@ -16,6 +22,12 @@ export class Campaign {
   }
   get completed(): ReadonlySet<string> { return this.completedIds; }
   get bonuses(): ReadonlySet<string> { return this.bonusIds; }
+  get license() {
+    const stars = this.bonusIds.size;
+    const rank = [...builderRanks].reverse().find(rank => stars >= rank.stars)!;
+    const next = builderRanks.find(candidate => candidate.stars > stars);
+    return { ...rank, earnedStars: stars, nextStars: next?.stars ?? null };
+  }
   isUnlocked(id: string): boolean {
     const index = this.missionIds.indexOf(id);
     return index >= 0 && this.missionIds.slice(0, index).every(previous => this.completedIds.has(previous));

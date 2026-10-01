@@ -35,8 +35,8 @@ export const startingPiles: Pile[] = [
 ];
 // A spare and an empty battery make charge-preserving construction easy to explore.
 startingPiles.push(
-  { cell: { x: 7, y: 4 }, supplies: { red: 0, blue: 0, batteries: [100] , yellow: 0, green: 0} },
-  { cell: { x: 2, y: 8 }, supplies: { red: 0, blue: 0, batteries: [0] , yellow: 0, green: 0} },
+  { cell: { x: 7, y: 4 }, supplies: { red: 0, blue: 0, batteries: [100] , yellow: 0, green: 0, tires: 0} },
+  { cell: { x: 2, y: 8 }, supplies: { red: 0, blue: 0, batteries: [0] , yellow: 0, green: 0, tires: 0} },
 );
 export const createHollowReach = () => new Simulation(hollowReach, unitDefinitions, { piles: startingPiles, goals: hollowGoals });
 export const hollowGoals = [

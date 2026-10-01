@@ -107,11 +107,11 @@ describe('wandering and pursuit', () => {
 describe('wreckage and the second handcrafted mission', () => {
   it('returns a destroyed moving rover’s recipe and cargo once, with an empty installed battery', () => {
     const simulation = arena('hauler', creature({ damage: 100 })), unit = simulation.unit('rover');
-    unit.battery = 36; unit.cargo = { red: 2, blue: 1, batteries: [37] , yellow: 0, green: 0};
+    unit.battery = 36; unit.cargo = { red: 2, blue: 1, batteries: [37] , yellow: 0, green: 0, tires: 0};
     expect(simulation.orderCargo(unit.id,'drop',{ x: 7, y: 6 }).ok).toBe(true);
     run(simulation, 1);
     expect(simulation.units).toHaveLength(0);
-    expect(simulation.pileAt({ x: 3, y: 3 })?.supplies).toEqual({ red: 4, blue: 2, batteries: [0,37], yellow: 0, green: 0 });
+    expect(simulation.pileAt({ x: 3, y: 3 })?.supplies).toEqual({ red: 4, blue: 2, batteries: [0,37], yellow: 0, green: 0, tires: 4 });
     expect(simulation.pileAt({ x: 7, y: 6 })).toBeUndefined();
     run(simulation, 2); expect(simulation.piles).toHaveLength(1);
     const rebuilt = simulation.build('hauler',{ x: 3, y: 3 }); expect(rebuilt.ok).toBe(true);

@@ -28,7 +28,7 @@ describe('Scoop terrain work', () => {
   it('rejects occupied, reserved, protected, out-of-bounds, and obstructed sites without spending charge or changing terrain', () => {
     const s = new Simulation(board(), [unitDefinition('scoop', 's', { x: 2, y: 2 }), unitDefinition('scout', 'r', { x: 0, y: 0 })], {
       goals: [{ id: 'flag', name: 'Flag', cell: { x: 2, y: 1 } }],
-      piles: [{ cell: { x: 1, y: 2 }, supplies: { red: 1, blue: 0, batteries: [] , yellow: 0, green: 0} }],
+      piles: [{ cell: { x: 1, y: 2 }, supplies: { red: 1, blue: 0, batteries: [] , yellow: 0, green: 0, tires: 0} }],
       bonus: { kind: 'arrival', name: 'Bonus', description: '', cell: { x: 2, y: 3 }, kinds: ['snail'] },
     });
     const initial = snapshot(s);

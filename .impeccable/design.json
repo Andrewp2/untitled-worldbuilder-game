@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-01T05:00:02.166488+00:00",
+  "generatedAt": "2026-10-01T21:47:05.552384+00:00",
   "title": "Design System: Untitled",
   "extensions": {
     "colorMeta": {
@@ -339,6 +339,146 @@
           "oklch(83.57% 0.0659 149.49)",
           "oklch(95.00% 0.0659 149.49)"
         ]
+      },
+      "whirlpool-fill": {
+        "role": "secondary",
+        "displayName": "Whirlpool Blue",
+        "tonalRamp": [
+          "oklch(15.00% 0.0845 232.53)",
+          "oklch(26.43% 0.0845 232.53)",
+          "oklch(37.86% 0.0845 232.53)",
+          "oklch(49.29% 0.0845 232.53)",
+          "oklch(60.71% 0.0845 232.53)",
+          "oklch(72.14% 0.0845 232.53)",
+          "oklch(83.57% 0.0845 232.53)",
+          "oklch(95.00% 0.0845 232.53)"
+        ]
+      },
+      "whirlpool-spiral": {
+        "role": "secondary",
+        "displayName": "Spiral Aqua",
+        "tonalRamp": [
+          "oklch(15.00% 0.0410 179.45)",
+          "oklch(26.43% 0.0410 179.45)",
+          "oklch(37.86% 0.0410 179.45)",
+          "oklch(49.29% 0.0410 179.45)",
+          "oklch(60.71% 0.0410 179.45)",
+          "oklch(72.14% 0.0410 179.45)",
+          "oklch(83.57% 0.0410 179.45)",
+          "oklch(95.00% 0.0410 179.45)"
+        ]
+      },
+      "tire-rubber": {
+        "role": "neutral",
+        "displayName": "Tire Rubber",
+        "tonalRamp": [
+          "oklch(15.00% 0.0293 242.93)",
+          "oklch(26.43% 0.0293 242.93)",
+          "oklch(37.86% 0.0293 242.93)",
+          "oklch(49.29% 0.0293 242.93)",
+          "oklch(60.71% 0.0293 242.93)",
+          "oklch(72.14% 0.0293 242.93)",
+          "oklch(83.57% 0.0293 242.93)",
+          "oklch(95.00% 0.0293 242.93)"
+        ]
+      },
+      "tire-tread": {
+        "role": "neutral",
+        "displayName": "Tire Tread",
+        "tonalRamp": [
+          "oklch(15.00% 0.0307 237.80)",
+          "oklch(26.43% 0.0307 237.80)",
+          "oklch(37.86% 0.0307 237.80)",
+          "oklch(49.29% 0.0307 237.80)",
+          "oklch(60.71% 0.0307 237.80)",
+          "oklch(72.14% 0.0307 237.80)",
+          "oklch(83.57% 0.0307 237.80)",
+          "oklch(95.00% 0.0307 237.80)"
+        ]
+      },
+      "license-paper": {
+        "role": "neutral",
+        "displayName": "License Cream",
+        "tonalRamp": [
+          "oklch(15.00% 0.0381 90.65)",
+          "oklch(26.43% 0.0381 90.65)",
+          "oklch(37.86% 0.0381 90.65)",
+          "oklch(49.29% 0.0381 90.65)",
+          "oklch(60.71% 0.0381 90.65)",
+          "oklch(72.14% 0.0381 90.65)",
+          "oklch(83.57% 0.0381 90.65)",
+          "oklch(95.00% 0.0381 90.65)"
+        ]
+      },
+      "license-star": {
+        "role": "secondary",
+        "displayName": "License Gold",
+        "tonalRamp": [
+          "oklch(15.00% 0.1022 74.13)",
+          "oklch(26.43% 0.1022 74.13)",
+          "oklch(37.86% 0.1022 74.13)",
+          "oklch(49.29% 0.1022 74.13)",
+          "oklch(60.71% 0.1022 74.13)",
+          "oklch(72.14% 0.1022 74.13)",
+          "oklch(83.57% 0.1022 74.13)",
+          "oklch(95.00% 0.1022 74.13)"
+        ]
+      },
+      "license-stamp-pending": {
+        "role": "neutral",
+        "displayName": "Pending Stamp Gray",
+        "tonalRamp": [
+          "oklch(15.00% 0.0166 128.82)",
+          "oklch(26.43% 0.0166 128.82)",
+          "oklch(37.86% 0.0166 128.82)",
+          "oklch(49.29% 0.0166 128.82)",
+          "oklch(60.71% 0.0166 128.82)",
+          "oklch(72.14% 0.0166 128.82)",
+          "oklch(83.57% 0.0166 128.82)",
+          "oklch(95.00% 0.0166 128.82)"
+        ]
+      },
+      "license-stamp-earned": {
+        "role": "secondary",
+        "displayName": "Earned Stamp Green",
+        "tonalRamp": [
+          "oklch(15.00% 0.0985 141.56)",
+          "oklch(26.43% 0.0985 141.56)",
+          "oklch(37.86% 0.0985 141.56)",
+          "oklch(49.29% 0.0985 141.56)",
+          "oklch(60.71% 0.0985 141.56)",
+          "oklch(72.14% 0.0985 141.56)",
+          "oklch(83.57% 0.0985 141.56)",
+          "oklch(95.00% 0.0985 141.56)"
+        ]
+      },
+      "license-backdrop": {
+        "role": "neutral",
+        "displayName": "License Backdrop Blue",
+        "tonalRamp": [
+          "oklch(15.00% 0.0812 251.41)",
+          "oklch(26.43% 0.0812 251.41)",
+          "oklch(37.86% 0.0812 251.41)",
+          "oklch(49.29% 0.0812 251.41)",
+          "oklch(60.71% 0.0812 251.41)",
+          "oklch(72.14% 0.0812 251.41)",
+          "oklch(83.57% 0.0812 251.41)",
+          "oklch(95.00% 0.0812 251.41)"
+        ]
+      },
+      "license-hover": {
+        "role": "neutral",
+        "displayName": "License Close Hover",
+        "tonalRamp": [
+          "oklch(15.00% 0.0721 253.87)",
+          "oklch(26.43% 0.0721 253.87)",
+          "oklch(37.86% 0.0721 253.87)",
+          "oklch(49.29% 0.0721 253.87)",
+          "oklch(60.71% 0.0721 253.87)",
+          "oklch(72.14% 0.0721 253.87)",
+          "oklch(83.57% 0.0721 253.87)",
+          "oklch(95.00% 0.0721 253.87)"
+        ]
       }
     },
     "typographyMeta": {
@@ -369,6 +509,26 @@
       "location": {
         "displayName": "Location Hover Label",
         "purpose": "13px heavy labels revealed on native mission pin hover/focus."
+      },
+      "license-title": {
+        "displayName": "License Title",
+        "purpose": "27px heavy heading on the cream builder license."
+      },
+      "license-class": {
+        "displayName": "Builder Class",
+        "purpose": "24px heavy rank beneath the shared earned model portrait."
+      },
+      "license-stars": {
+        "displayName": "License Bonus Count",
+        "purpose": "15px saved unique bonus-star total."
+      },
+      "license-stamp": {
+        "displayName": "World Stamp Label",
+        "purpose": "Compact 12px world names with 1.2 line height; earned labels use weight 850."
+      },
+      "license-next": {
+        "displayName": "Next Class Hint",
+        "purpose": "14px remaining-star hint or all-bonuses completion message."
       }
     },
     "shadows": [
@@ -401,6 +561,11 @@
         "name": "feedback-separation",
         "value": "0 5px 18px #001e4540",
         "purpose": "Temporary board feedback."
+      },
+      {
+        "name": "license-separation",
+        "value": "0 16px 60px #00192f70",
+        "purpose": "Cream license above its blue backdrop; removed by the print stylesheet."
       }
     ],
     "motion": [
@@ -448,6 +613,11 @@
         "name": "construction-smoke",
         "value": ".7s billow; .25s static puff for reduced motion",
         "purpose": "Immediate construction, dismantling and destruction share a puff that reveals underlying parts; its elapsed time freezes on pause. Native construction is visually captured; combat and preference variants have source evidence."
+      },
+      {
+        "name": "whirlpool-spiral",
+        "value": "2.5-turn projected spiral; 1.4 radians/second; 3–28 world-pixel radius with 1:2 vertical projection",
+        "purpose": "Linked shallow-water entries on the lower water plane. The shared presentation clock freezes on pause and for reduced motion; hover outlines the linked exit in yellow."
       }
     ],
     "breakpoints": [
@@ -535,6 +705,12 @@
       "description": "Continuous three-second primary pointer, Space or Enter hold confirms; interrupted holds cancel. The snippet depicts its native idle state.",
       "html": "<button class=\"ds-button ds-reset\" aria-label=\"Reset progress\" aria-describedby=\"ds-reset-hint\" title=\"Hold for 3 seconds to clear completed missions and bonus stars\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 9a8 8 0 1 1 0 7M4 4v5h5\"/></svg><span>Reset progress<small id=\"ds-reset-hint\" class=\"ds-hold-hint\">Hold 3s</small></span><i class=\"ds-hold-meter\" aria-hidden=\"true\"></i></button>",
       "css": ".ds-button {font-family:'Nunito Sans Variable',sans-serif;cursor:pointer;transition:background .15s,color .15s;} .ds-button:disabled {opacity:.3;cursor:default;} .ds-button:focus-visible {outline:3px solid #ffdc59;outline-offset:3px;} @media(prefers-reduced-motion:reduce){.ds-button{transition:none;}} .ds-reset {position:relative;display:flex;align-items:center;gap:9px;min-height:48px;padding:8px 10px;border:0;border-radius:8px;overflow:hidden;background:#ffffff0c;color:#ffdc59;text-align:left;font-size:12px;font-weight:800;user-select:none;touch-action:none;} .ds-reset svg {width:23px;height:23px;flex-shrink:0;} .ds-reset:hover,.ds-reset.ds-holding {background:#ffffff12;} .ds-hold-hint {display:block;margin-top:2px;color:var(--muted,#b8d5ef);font-size:11px;font-weight:500;} .ds-hold-meter {position:absolute;left:0;right:0;bottom:0;height:3px;background:#ffdc59;transform:scaleX(0);transform-origin:left;} .ds-holding .ds-hold-meter {transform:scaleX(1);transition:transform 3000ms linear;} "
+    },
+    {
+      "name": "Builder’s License",
+      "kind": "card",
+      "refersTo": "builder-license",
+      "description": "Cream printable keepsake using the license corner radius (16px), shared rank portrait, saved bonus count and earned world stamps. Source-derived record only; no preview or current visual verification."
     }
   ],
   "narrative": {

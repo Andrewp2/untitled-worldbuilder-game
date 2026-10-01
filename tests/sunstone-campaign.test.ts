@@ -77,7 +77,7 @@ const solutions: Record<string, (s: Simulation) => void> = {
     go(s, 'guard', { x: 3, y: 5 }); go(s, 'mender', { x: 3, y: 6 });
     const salvage = s.piles.find(p => p.supplies.yellow === 4)!;
     expect(salvage).toBeDefined(); const source = { ...salvage.cell };
-    work(s, 'carrier', 'pickup', { x: 5, y: 3 }); work(s, 'carrier', 'drop', source);
+    deliver(s, 'carrier', { x: 5, y: 3 }, source);
     const site = [{ x: source.x + 1, y: source.y }, { x: source.x, y: source.y + 1 }, { x: source.x - 1, y: source.y }].find(cell => s.buildPreview('dozer', cell).ok)!;
     const dozer = build(s, 'dozer', site);
     work(s, dozer, 'push', { x: 10, y: 8 }); work(s, dozer, 'push', { x: 11, y: 8 });
