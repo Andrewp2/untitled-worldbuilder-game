@@ -11,7 +11,6 @@ export type WorldObjectKind = 'parts' | 'prop' | 'flag' | 'relay' | 'rover' | 'e
 const footprints: Record<string, [number, number]> = {
   flag: [192, 322], relay: [192, 310],
   connector: [192, 310],
-  soil: [192, 310],
 };
 export function groundOrigin(name: string): Cell {
   if (isModelPicture(name)) return { x: MODEL_ORIGIN.x / 384, y: MODEL_ORIGIN.y / 384 };

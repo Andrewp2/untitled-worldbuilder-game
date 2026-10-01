@@ -4,9 +4,9 @@ import { worlds } from '../levels/world-map';
 import type { WorldId } from '../levels/missions';
 
 const residentKinds: Record<WorldId, UnitKind[]> = {
-  'meadow-isles': ['scout','hauler','scoop','dozer','arborbot','forklift','scout','hauler','warden','warden','dumptruck','snail'],
+  'meadow-isles': ['scout','trailbuggy','scoop','dozer','trailbuggy','forklift','scout','hauler','warden','warden','dumptruck','snail'],
   'sunstone-range': ['trailbuggy','warden','hauler','snail','mender','mender','trailbuggy','scoop','dozer','arborbot','forklift','warden'],
-  'open-sea': ['frog','freighter','fish','tug','patrolboat','freighter','tug','frog','forklift','patrolboat','freighter','arborbot'],
+  'open-sea': ['frog','freighter','fish','tug','patrolboat','freighter','tug','frog','dumptruck','patrolboat','freighter','arborbot'],
 };
 
 /** Small scenery patrols are fitted to each authored landscape, never to a mission simulation. */

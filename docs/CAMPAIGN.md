@@ -1,68 +1,66 @@
-# Campaign expansion: 36 handcrafted missions
+# Campaign redesign: 36 handcrafted missions
 
-The current implementation contains 36 missions in three ordered worlds. All 36 main objectives and 36 bonuses have public-command simulation solutions. The expanded registry, distinct maps and compact world navigation are implemented locally and have native desktop review. The [scoped finish verdict](../.impeccable/review/campaign-expansion/finish-verdict.md) marks the documentation correction resolved and ready to ship. GitHub Pages deploys `main`; current deployment status is available in [Actions](https://github.com/Andrewp2/untitled-worldbuilder-game/actions/workflows/deploy-pages.yml).
+All three worlds have twelve ordered missions. Each mission has one main goal and one bonus revealed after that visit’s main. Reaching the bonus ends the visit through the final popup. Replays restore the authored terrain, units, supplies, battery charge and finite plans; saved awards remain.
 
-Three worlds contain twelve missions each. Main objectives unlock the next level in a single order, including world boundaries. Every mission has one main objective and one hidden, optional bonus. Main completion opens the existing continuation popup; bonus completion ends that visit with the final popup. Replays reset finite plans, supplies, batteries and terrain, while retaining saved awards.
+This pass responds to the repetitive delivery bonuses and rectangular banks in the first campaign. The seven opening missions have new layouts and solutions. The remaining 29 have revised coasts, obstacles or route geometry and reworked objective pairs. Some later mains retain their useful engineering or combat idea; their bonuses add another terrain, salvage or power decision. All flags require a mobile model on the target. Five convoy mains additionally require cargo aboard that model. Loose deposits never finish a goal, and no bonus is a block shipment.
 
-The progression starts with individual actions, then forces relationships between unit roles. Sunstone adds rough terrain, costly swamp routes, mobile repair, forward construction and salvage. Open Sea adds deep/shallow restrictions, shoreline transfers, canals, launch sites and fleet logistics. The final missions require combined construction, transport, energy planning and real-time automatic combat. The authored difficulty curve uses those interacting constraints; player-calibrated balance remains provisional.
+Blue ground plans add one construction use when a mobile unit walks onto their tile. A plan may appear after the main. Successful construction consumes stock; dismantling and destruction do not refund it. Donated batteries retain their charge, so rebuilding does not provide free movement. Warden attacks cost two power rather than one; repair support, static defenses and regrouping matter in the later fights. Those values remain provisional until player testing.
 
-The [stitched original maps](https://rockraidersunited.com/topic/9159-lego-worldbuilder-maps/) informed the progression from specialist introductions and narrow construction puzzles to mixed-unit islands, long supply routes and naval encounters. The user's supplied Ocean 12 screenshot also informs the last world's wider battles. Layouts, names, recipes, unit models and solutions here are original. Existing [play notes](references/play-notes-2026-09-28.md) distinguish observed reference controls from later recollection; no unverified original statistic is used as an asserted rule.
+## Meadow Isles
 
-| Order | Meadow Isles | Distinct challenge |
-| --- | --- | --- |
-| 1 | Hollow Reach | Independent rover movement; reserve battery delivery after arrival. |
-| 2 | Parts and Paths | Haul a colored kit, build Scout once and use its role at the flag. |
-| 3 | Siltwater Reach | Borrow two land tiles to construct a missing crossing. |
-| 4 | Stone Gate | Push the gate from the right side and park the worker outside the exit. |
-| 5 | Woodland Workshop | Replant two trees without sealing the corridor; open a loading pocket. |
-| 6 | Split Kit | Combine separated recipe colors and use a larger carrier for repeated deliveries. |
-| 7 | Flat Battery | Restore the original stranded Scout while keeping a separate power reserve. |
-| 8 | Switchback Stations | Build charging stops on a long route and fund the loaded return. |
-| 9 | Bramble Crossing | Construct a combat specialist and protect a crossing before proceeding. |
-| 10 | Forked Watch | Spend two tower plans at useful sites on separate hostile choke points. |
-| 11 | Orchard Convoy | Combine tree relocation, repeated rock pushes and an actual heavy shipment. |
-| 12 | Meadow Siege | Clear a tree gate, build a causeway, fight together and escort the original Snail. |
+| # | Mission | Main decision | Bonus twist |
+| --- | --- | --- | --- |
+| 1 | Hollow Reach | Duck finds Scout’s plan; build Scout for the land flag. | Duck reaches a shallow-water nest that Scout cannot enter. |
+| 2 | Parts and Paths | Build Trailbuggy to cross the rocky neck. | Find Dozer on the far side and reverse-push the lower rock gate for the original Scout. |
+| 3 | Siltwater Reach | Borrow land to bridge the channel for Snail. | Recycle Snail into Fish, then dig out the crossing to reopen the water route. |
+| 4 | Stone Gate | Build Dozer and push the gate clear from the useful side. | Recycle Dozer into Scoop; build a crossing to the isolated star. |
+| 5 | Tidal Workshop | Dismantle Duck for the yellow piece and battery needed by Trailbuggy. | Recycle Trailbuggy and construct Duck directly on the shallow star surrounded by deep water. |
+| 6 | Split Kit | Carry half a kit around the crescent; use diagonal construction to combine it with inaccessible island pieces. | Recycle Forklift with green stock into Arborbot; lift the tree gate and carry it to the garden. |
+| 7 | Flat Battery | Donate Hauler’s used battery to the original stranded Scout. | Recycle Scout into Warden and clear the Crab before reaching the bay star. |
+| 8 | Switchback Stations | Place two charging stops along a route the starting battery cannot cover. | Return with the far battery, restore the original empty Scout and guide it back to the start. |
+| 9 | Bramble Crossing | Find a finite Warden plan and defend the narrow crossing. | Recycle Scout with camp colors into Arborbot; bring an eastern tree to the star. |
+| 10 | Forked Watch | Place two finite Sentries at separate hostile crossings. | Recycle the western tower into Duck for the inlet route. |
+| 11 | Orchard Convoy | Replant a tree, push the boulder along the causeway and bring the loaded Bulk hauler to Orchard. | Original Arborbot brings an eastern tree around the rock outcrop to the southern grove. |
+| 12 | Meadow Siege | Clear the tree gate, make a causeway, fight together and escort the original Snail. | Ferry a reserve to the river shore and build Frog for the water star. |
 
-| Order | Sunstone Range | Distinct challenge |
-| --- | --- | --- |
-| 13 | Rough Ridge | Send the rough specialist first; engineer a second route for a vulnerable unit. |
-| 14 | Ridge Post | Ferry a combat kit across terrain its finished unit cannot traverse. |
-| 15 | Mudline | Reject the shortest route when swamp energy costs make it unaffordable. |
-| 16 | Boulder Courtyard | Shift the captive inside a holding bay to permit reverse rock pushes. |
-| 17 | Repair Column | Keep mobile support close during two fights; recover power from field salvage. |
-| 18 | Ancient Valley | Pair combat and repair against different creatures, then conserve salvage. |
-| 19 | Forward Foundry | Ferry parts to build power beside an original depleted forward defender. |
-| 20 | Canyon Rescue | Work from opposite banks to reunite separated crews over a wider gap. |
-| 21 | Salvage Chain | Defeat a creature to obtain the otherwise missing construction colors. |
-| 22 | Two Fronts | Coordinate separated defenders while the support unit crosses the rough divide. |
-| 23 | Power Bridge | Relocate a workshop, carry a vehicle battery and clear the final rock gate. |
-| 24 | Sunstone Citadel | Engineer a heavy-transport route and sustain a squad through mixed predators. |
+## Sunstone Range
 
-| Order | Open Sea | Distinct challenge |
-| --- | --- | --- |
-| 25 | Tidepool Trail | Upgrade the existing shallows lesson into a boat-powered amphibious rescue. |
-| 26 | Reef Courier | Use small-boat shoreline transfer to supply a remote launch site. |
-| 27 | Deepwater Maze | Dig land barriers into connected water passages for an original Fish. |
-| 28 | Marina Relay | Bootstrap boat recharging from a kit larger than the first boat's hold. |
-| 29 | Harbor Run | Upgrade the harbor into a combined shore-defense and naval supply operation. |
-| 30 | Wreck Recovery | Deliver power to an original immobile ship while a patrol protects the recovery. |
-| 31 | Canal Foundry | Coordinate shore workers, canal access and forward naval construction. |
-| 32 | Gator Backwater | Draw amphibious pursuers toward shore defenses before opening a rescue passage. |
-| 33 | Island Handoffs | Transfer a shipment between ships and newly built inland carriers. |
-| 34 | Storm Line | Sustain a fleet through separate hostile choke points with limited repair positions. |
-| 35 | Last Reserves | Turn the sole starting power reserve into a chain of combat salvage and recovery. |
-| 36 | Three Tides | Combine fleet transport, land construction, terrain work, power and multiple live threats. |
+| # | Mission | Main decision | Bonus twist |
+| --- | --- | --- | --- |
+| 13 | Rough Ridge | Recycle Scout with loose red/blue into Trailbuggy for the rocky saddle. | Scoop makes a separate low crossing; Warden protects the original Snail’s route. |
+| 14 | Ridge Post | Ferry a Warden kit across rough terrain its finished model cannot cross. | Combine defeated Crab’s red pieces and battery with Warden’s blue kit to build Hauler. |
+| 15 | Mudline | Use dry waypoints; the shorter swamp route exhausts the starting battery. | Recharge and recycle Hauler with a green piece into Frog for the bog pool. |
+| 16 | Boulder Courtyard | Move Snail inside the holding bay to permit reverse pushes. | Combine Dozer and Hauler’s kits into Trailbuggy for the high rocky court. |
+| 17 | Repair Column | Keep Mender close through two Scorpion fights. | Use field salvage to restore the original Mender for the northern overlook. |
+| 18 | Ancient Valley | Coordinate Warden and Mender against Scorpion and Rex around rocky pockets. | Combine their different salvage colors into Arborbot and carry a valley tree around the rough ground. |
+| 19 | Forward Foundry | Ferry workshop parts to restore the original empty far-bank Warden. | Trailbuggy places a Frog kit on the rocky ridge for diagonal construction directly into the oasis. |
+| 20 | Canyon Rescue | Build Scoop on the far side and work from both banks to join the channel. | Recycle the far Scoop into Trailbuggy for the upper ridge. |
+| 21 | Salvage Chain | Scorpion supplies the missing yellow pieces and power for the gate-opening Dozer. | Bring green beside Dozer, recycle its battery into Frog and visit the eastern pool. |
+| 22 | Two Fronts | Move repair support across the rough divide while the two guards clear separate encounters. | Arborbot must open and replant both tree gates along the lower causeway. |
+| 23 | Power Bridge | Relocate a workshop; separately deliver a vehicle battery to Dozer for the rock gate. | Recycle Forklift into Trailbuggy to explore the rough northern return. |
+| 24 | Sunstone Citadel | Make a heavy crossing, establish a guard post, fight mixed predators and bring the loaded salvage convoy to Citadel. | Original Arborbot lifts the separate tree gate into a sheltered grove and brings it to the star. |
 
-## Verification contract
+## Open Sea
 
-Each authored addition has a mission-specific solution using public Simulation orders, builds, transfers, battery swaps and elapsed simulation time. Solutions must complete the main before the bonus without editing unit charge, enemy health, terrain, stocks or objective state. Resource and terrain changes must leave a fresh replay intact. Failure cases establish important gates, such as an unaffordable direct swamp route or an original rescue unit that cannot be replaced by a newly built copy.
+| # | Mission | Main decision | Bonus twist |
+| --- | --- | --- | --- |
+| 25 | Tidepool Trail | Protect a boat transfer that restores the original Frog; use the shallow route. | Return through the shallows, recycle Duck’s battery with a shore blue piece and build Fish directly into the enclosed western tidepool. |
+| 26 | Reef Courier | Use Tugboat’s small hold to assemble a remote Freighter. | Ship a Snail kit ashore; the garden star lies inland. |
+| 27 | Deepwater Maze | Dig three canal plugs and dispose of each dirt load without sealing Fish’s escape. | Recycle Scoop into Duck to cross land to a disconnected waste pond. |
+| 28 | Marina Relay | Ferry a kit larger than Tugboat’s hold and build a berth beside the empty Freighter. | Build Frog directly inside a deep-water island using a diagonal shoreline kit. |
+| 29 | Harbor Run | Coordinate land and sea defense; Freighter must reach its berth with camp stores aboard. | Bring blue salvage to the sealed quay pond and build Fish directly into it. |
+| 30 | Wreck Recovery | Recover power beyond a hostile reef and restore the original stranded ship. | Dismantle Patrol boat in the northern shallows to build Duck on the island shore. |
+| 31 | Canal Foundry | Open the land plugs, ferry a Patrol boat kit and build beyond the canal barrier. | Recycle the patrol into Snail on the shore for an inland garden. |
+| 32 | Gator Backwater | Lure amphibious threats into shore towers before excavating Fish’s escape. | Restore the original bait Frog from Gator salvage; reach the far shore with at least 60 power. |
+| 33 | Island Handoffs | Ship a Bulk hauler kit first, then hand the green reserve to a land convoy around the rock spine. | Recycle the loaded carrier into Arborbot and bring the southern tree to the garden. |
+| 34 | Storm Line | Restore and fight with separate patrols in two channels. | Ferry blue salvage to the divider and construct Fish in the pond disconnected from both channels. |
+| 35 | Last Reserves | Turn the sole starting charged battery into combat salvage that restores the original Freighter. | Collect green, donate Freighter’s installed battery and build Frog on the northwest shore with at least 50 power. |
+| 36 | Three Tides | Move the tree and rock, excavate the dock, join the causeway, protect both shores, replace a lost berth if necessary and assemble an inland salvage convoy. | Original Arborbot retrieves the replanted camp tree and carries it across the restored causeway. |
 
-The core/content checkpoint passed 259 tests in 24 files and the production build on September 30. `meadow-campaign`, `sunstone-campaign` and `open-sea-campaign` exercise 30 canonical main/bonus solutions. `campaign-content` adds real Hollow and Bramble solves; `terrain-work` completes Siltwater; `roster-missions` completes Rough Ridge, Woodland Workshop and Ancient Valley. Together they cover the 36 distinct canonical missions, not an alternate test-only registry. Cargo, terrain work, construction, support, combat and battery changes occur through public Simulation commands and elapsed time; solution tests never write health, charge, terrain or objective state.
+## Verification
 
-`campaign-content` also verifies three exact ordered groups of twelve, 36 distinct tile layouts and challenge descriptions, every main prerequisite, both world boundaries, saved stars, reset of all 36 awards and preservation of known older awards without bypassing newly inserted prerequisites. Map path and resident tests verify all locations and patrols against the corresponding authored landscape. Delivery-goal tests reject empty carriers and empty batteries, bind original rescue identities, and delay predeposited shipments until the last hostile is defeated.
+`opening`, `meadow-campaign`, `sunstone-campaign`, `open-sea-campaign`, `roster-missions` and `campaign-content` demonstrate all 36 canonical mains and bonuses through public movement, work, construction, dismantling, battery replacement and elapsed time. They do not edit charge, enemy health, terrain, supplies or completion state to solve a mission. A fresh replay must retain the authored board and resources.
 
-Native desktop inspection used actual 885×901 captures of all three landscapes and representative mission visits. Populated maps and later replays used known synthetic awards on isolated origin 5190, from an ephemeral fixture outside the repository and absent from production. Actual Parts and Paths controls transported the Scout kit, built one Scout with plan stock reduced to zero, reached its main, resumed through Try bonus, delivered the blue shipment and opened the final popup. The fixture's earlier awards are not native-earned completion.
+Focused objective tests reject the wrong species, replacement copies of original rescue targets, insufficient remaining charge, missing carried trees, ground shipments and uncharged cargo batteries. Blueprint tests cover collection, delayed discovery, consumption and replay isolation. Map tests preserve the ordered 36 IDs and saved awards. Simulation solutions establish solvability; they do not establish that the campaign is fun. Difficulty and pacing need human playtesting across all three worlds.
 
-Ordinary origin 5189 had a pre-existing Hollow main/star award: Parts was available, ten later Meadow levels were locked and all twelve Sunstone buttons were disabled after browsing forward. This is an existing one-award save, not a native fresh-save/reset claim. A fresh Three Tides visit without Overview confirmed the corrected initial full-board fit; the independent reviewer reopened it and closed the camera gap. The Pages-base build passed after that fix.
-
-The [five-section finish review](../.impeccable/review/campaign-expansion/finish-review.md) returns **fix** solely for stale current-scope documentation and the required final recording pass, with no extension UI repair remaining. The current records and sidecar have been reconciled; the [scoped verdict](../.impeccable/review/campaign-expansion/finish-verdict.md) marks that fix resolved, without whole-game approval. [Evidence](../.impeccable/review/campaign-expansion/evidence.md) is authoritative about fixture and native states. No all-36 native completion, additional 1280 capture, mobile behavior, audio listening, benchmark, exact-original-stat fidelity or player-calibrated balance is claimed. The single detector pass reports advisory palette/radius/type documentation mismatches, with no clean-zero claim. No new raster assets ship; the retained 34-PNG provenance manifest is unchanged.
+The reference [play notes](references/play-notes-2026-09-28.md) separate directly observed controls from recollection. These layouts, recipes, units and objectives are original. Earlier expansion screenshots and finish reviews describe the previous campaign and are historical evidence, not visual approval of this redesign.

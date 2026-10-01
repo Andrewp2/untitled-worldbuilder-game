@@ -35,13 +35,27 @@ export function deliver(s: Simulation, id: string, source: Cell, target: Cell): 
 }
 /** Issue ordinary movement commands toward visible enemies; all combat remains automatic. */
 export function clearEnemies(s: Simulation, guards: string[], seconds = 120, supports: string[] = [], together = false): void {
+  const recovering = new Set<string>();
   for (let t = 0; t < seconds * 10 && s.enemies.length; t++) {
-    expect(s.units.some(u => u.id === guards[0]), JSON.stringify({t, units: s.units.map(u => ({id:u.id,cell:u.cell,battery:u.battery,goal:u.goal,status:u.status})),enemies:s.enemies.map(e=>({id:e.id,cell:e.cell,health:e.health})), piles:s.piles})).toBe(true);
-    const leader = s.unit(guards[0]);
+    const survivors = guards.filter(id => s.units.some(u => u.id === id));
+    expect(survivors.length, JSON.stringify({t,units:s.units,enemies:s.enemies})).toBeGreaterThan(0);
+    const leader = s.unit(survivors[0]);
     const enemies = together ? [...s.enemies].sort((a, b) => Math.abs(a.cell.x - leader.cell.x) + Math.abs(a.cell.y - leader.cell.y)
       - Math.abs(b.cell.x - leader.cell.x) - Math.abs(b.cell.y - leader.cell.y)).slice(0, 1) : s.enemies;
-    if (t % 10 === 0) for (const id of guards) {
+    if (t % 10 === 0) for (const id of survivors) {
       const unit = s.unit(id);
+      const helperId = supports.length === guards.length ? supports[guards.indexOf(id)] : supports[0];
+      const helper = s.units.find(u => u.id === helperId);
+      if (helper && unit.battery < 60) recovering.add(id);
+      if (unit.battery >= 90) recovering.delete(id);
+      if (helper && (recovering.has(id) || Math.abs(helper.cell.x-unit.cell.x)+Math.abs(helper.cell.y-unit.cell.y) > 1)) {
+        s.stop(id); continue;
+      }
+      // Hold a fighting position so the repair unit can catch up, rather than
+      // spending power chasing the other side of an already adjacent enemy.
+      if (s.enemies.some(enemy => Math.abs(enemy.cell.x-unit.cell.x)+Math.abs(enemy.cell.y-unit.cell.y) <= 1)) {
+        s.stop(id); continue;
+      }
       if (unit.next || unit.goal && unit.status !== 'waiting') continue;
       const approaches = enemies.flatMap(enemy => neighbors(enemy.next ?? enemy.cell))
         .map(cell => ({ cell, route: s.preview(id, cell) })).filter(candidate => candidate.route)
@@ -50,9 +64,11 @@ export function clearEnemies(s: Simulation, guards: string[], seconds = 120, sup
       if (best && !sameCell(unit.cell, best.cell)) s.move(id, best.cell);
     }
     if (t % 5 === 0) for (const [index, id] of supports.entries()) {
-      const helper = s.unit(id);
+      const helper = s.units.find(u => u.id === id);
+      if (!helper) continue;
       if (helper.next || helper.goal && helper.status !== 'waiting') continue;
-      const leader = guards.length === supports.length ? s.unit(guards[index]) : guards.map(id => s.unit(id)).sort((a, b) => a.battery - b.battery)[0];
+      const assigned = guards.length === supports.length ? s.units.find(u => u.id === guards[index]) : undefined;
+      const leader = assigned ?? survivors.map(id => s.unit(id)).sort((a,b)=>a.battery-b.battery)[0];
       const positions = neighbors(leader.cell).filter(cell => !leader.route.some(point => sameCell(point, cell)))
         .map(cell => ({ cell, route: s.preview(id, cell) }))
         .filter(candidate => candidate.route).sort((a, b) => a.route!.length - b.route!.length);
@@ -61,7 +77,7 @@ export function clearEnemies(s: Simulation, guards: string[], seconds = 120, sup
     s.step(.1);
   }
   expect(s.enemies.map(enemy => ({id: enemy.id, cell: enemy.cell, target: enemy.target, health: enemy.health}))).toEqual([]);
-  for (const id of guards) { s.stop(id); settled(s, id); }
+  for (const id of guards) if (s.units.some(u=>u.id===id)) { s.stop(id); settled(s, id); }
 }
 
 /** Focus movement on one visible threat while the rest of the world keeps running. */

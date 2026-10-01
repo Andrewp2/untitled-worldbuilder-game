@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { Box3, Mesh, Vector3 } from 'three';
-import { MODEL_ORIGIN, MODEL_SIZE, modelCamera, toyModel } from '../src/view/toy-models';
+import { MODEL_ORIGIN, MODEL_SIZE, modelCamera, toyModel, addModelCargo } from '../src/view/toy-models';
 import { groundOrigin } from '../src/view/grounding';
 import { toWorld } from '../src/core/projection';
-import { unitKinds, enemyKinds } from '../src/core/catalog';
+import { unitKinds, enemyKinds, emptySupplies } from '../src/core/catalog';
 
 const camera = modelCamera();
 const project = (p: Vector3) => {
@@ -35,6 +35,28 @@ describe('model support plane matches the game grid', () => {
         expect(maxX, kind).toBeLessThan(MODEL_SIZE); expect(maxY, kind).toBeLessThan(MODEL_SIZE);
       }
       model.traverse(mesh => { if (mesh instanceof Mesh) { mesh.geometry.dispose(); } });
+    }
+  });
+  it('keeps loaded models inside the atlas in every heading', () => {
+    for (const kind of ['hauler','dumptruck','forklift','freighter','tug','scoop','arborbot'] as const) {
+      const model=toyModel(kind);
+      addModelCargo(model,kind,{...emptySupplies(),red:kind==='scoop'||kind==='arborbot'?0:4,blue:kind==='scoop'||kind==='arborbot'?0:4,
+        batteries:kind==='scoop'||kind==='arborbot'?[]:[100,50],soil:kind==='scoop'?1:0},kind==='arborbot');
+      for(const angle of [0,Math.PI/2,Math.PI,-Math.PI/2]) {
+        model.rotation.y=angle; model.updateMatrixWorld(true);
+        const silhouette={left:Infinity,right:-Infinity,top:Infinity,bottom:-Infinity};
+        model.traverse(mesh=>{
+          if(!(mesh instanceof Mesh))return;
+          const vertices=mesh.geometry.getAttribute('position');
+          for(let i=0;i<vertices.count;i++) {
+            const pixel=project(new Vector3().fromBufferAttribute(vertices,i).applyMatrix4(mesh.matrixWorld));
+            silhouette.left=Math.min(silhouette.left,pixel.x); silhouette.right=Math.max(silhouette.right,pixel.x);
+            silhouette.top=Math.min(silhouette.top,pixel.y); silhouette.bottom=Math.max(silhouette.bottom,pixel.y);
+          }
+        });
+        expect(silhouette.left,kind).toBeGreaterThan(0); expect(silhouette.right,kind).toBeLessThan(MODEL_SIZE);
+        expect(silhouette.top,kind).toBeGreaterThan(0); expect(silhouette.bottom,kind).toBeLessThan(MODEL_SIZE);
+      }
     }
   });
   it('projects the origin and all four ground headings onto the tile axes', () => {

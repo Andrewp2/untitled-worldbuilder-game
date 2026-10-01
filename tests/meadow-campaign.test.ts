@@ -5,34 +5,6 @@ import type { Simulation } from '../src/core/simulation';
 import { build, clearEnemies, deliver, go, refuel, until, work } from './helpers/campaign-play';
 
 const solutions: Record<string, (s: Simulation) => void> = {
-  'parts-and-paths': s => {
-    work(s, 'carrier', 'pickup', { x: 4, y: 4 }); work(s, 'carrier', 'drop', { x: 13, y: 4 });
-    go(s, 'carrier', { x: 11, y: 5 });
-    const scout = build(s, 'scout', { x: 12, y: 4 }); go(s, scout, s.setup.goals![0].cell);
-    expect(s.mainComplete).toBe(true);
-    deliver(s, 'carrier', { x: 4, y: 8 }, s.setup.bonus!.cell);
-  },
-  'stone-gate': s => {
-    expect(s.preview('snail', s.setup.goals![0].cell)).toBeNull();
-    work(s, 'dozer', 'push', { x: 8, y: 5 }); work(s, 'dozer', 'push', { x: 9, y: 5 });
-    go(s, 'dozer', { x: 11, y: 8 }); go(s, 'snail', s.setup.goals![0].cell);
-    expect(s.mainComplete).toBe(true);
-    deliver(s, 'carrier', { x: 4, y: 8 }, s.setup.bonus!.cell);
-  },
-  'split-kit': s => {
-    expect(s.buildPreview('forklift', { x: 12, y: 4 }).ok).toBe(false);
-    work(s, 'carrier', 'pickup', { x: 3, y: 4 }); work(s, 'carrier', 'drop', { x: 11, y: 4 });
-    const forklift = build(s, 'forklift', { x: 12, y: 4 }); go(s, forklift, s.setup.goals![0].cell);
-    expect(s.mainComplete).toBe(true);
-    deliver(s, forklift, { x: 13, y: 8 }, s.setup.bonus!.cell);
-  },
-  'flat-battery': s => {
-    expect(s.move('stranded', s.setup.goals![0].cell).ok).toBe(false);
-    work(s, 'carrier', 'pickup', { x: 4, y: 3 }); work(s, 'carrier', 'drop', { x: 13, y: 8 });
-    expect(s.replaceBattery('stranded').ok).toBe(true); go(s, 'stranded', s.setup.goals![0].cell);
-    expect(s.mainComplete).toBe(true);
-    deliver(s, 'carrier', { x: 6, y: 10 }, s.setup.bonus!.cell);
-  },
   'switchback-stations': s => {
     go(s, 'carrier', { x: 13, y: 1 }); build(s, 'pump', { x: 14, y: 2 });
     go(s, 'carrier', { x: 14, y: 1 }); refuel(s, 'carrier');
@@ -41,23 +13,29 @@ const solutions: Record<string, (s: Simulation) => void> = {
     go(s, 'carrier', s.setup.goals![0].cell); expect(s.mainComplete).toBe(true);
     work(s, 'carrier', 'pickup', { x: 2, y: 10 });
     go(s, 'carrier', { x: 14, y: 7 }); refuel(s, 'carrier');
-    go(s, 'carrier', { x: 14, y: 3 }); refuel(s, 'carrier');
-    work(s, 'carrier', 'drop', s.setup.bonus!.cell);
+    work(s, 'carrier', 'drop', { x: 15, y: 1 });
+    expect(s.replaceBattery('reserve-scout').ok).toBe(true); go(s, 'reserve-scout', s.setup.bonus!.cell);
+
   },
   'forked-watch': s => {
     build(s, 'sentry', { x: 7, y: 5 }); build(s, 'sentry', { x: 13, y: 11 });
     until(s, () => !s.enemies.length); go(s, 'carrier', s.setup.goals![0].cell);
     expect(s.mainComplete).toBe(true);
-    deliver(s, 'carrier', { x: 4, y: 9 }, s.setup.bonus!.cell);
+    go(s, 'carrier', { x: 14, y: 11 });
+    const tower = s.units.find(u => u.kind === 'sentry' && u.cell.x === 7)!;
+    expect(s.dismantle(tower.id).ok).toBe(true); const duck = build(s, 'duck', { x: 8, y: 5 });
+    go(s, duck, s.setup.bonus!.cell);
+
   },
   'orchard-convoy': s => {
     expect(s.preview('bulk', s.setup.goals![0].cell)).toBeNull();
     work(s, 'arborbot', 'uproot', { x: 9, y: 7 }); work(s, 'arborbot', 'plant', { x: 8, y: 6 });
     go(s, 'arborbot', { x: 7, y: 8 });
     for (const x of [10, 11, 12]) work(s, 'dozer', 'push', { x, y: 7 });
-    go(s, 'dozer', { x: 13, y: 8 });
-    deliver(s, 'bulk', { x: 5, y: 9 }, s.setup.goals![0].cell); expect(s.mainComplete).toBe(true);
-    go(s, 'arborbot', s.setup.bonus!.cell);
+    go(s, 'dozer', { x: 16, y: 7 });
+    work(s, 'bulk', 'pickup', { x: 5, y: 9 }); go(s, 'bulk', s.setup.goals![0].cell); expect(s.mainComplete).toBe(true);
+    work(s, 'arborbot', 'uproot', { x: 14, y: 9 }); go(s, 'arborbot', s.setup.bonus!.cell);
+
   },
   'meadow-siege': s => {
     expect(s.preview('snail', s.setup.goals![0].cell)).toBeNull();
@@ -67,9 +45,12 @@ const solutions: Record<string, (s: Simulation) => void> = {
       work(s, 'scoop', 'dig', source); work(s, 'scoop', 'fill', { x, y: 6 });
     }
     go(s, 'scoop', { x: 8, y: 8 }); clearEnemies(s, ['guard-a', 'guard-b']);
-    go(s, 'guard-a', { x: 13, y: 3 }); go(s, 'guard-b', { x: 13, y: 10 });
+    go(s, 'guard-a', { x: 13, y: 3 }); go(s, 'guard-b', { x: 14, y: 9 });
     go(s, 'snail', s.setup.goals![0].cell); expect(s.mainComplete).toBe(true);
-    deliver(s, 'carrier', { x: 6, y: 10 }, s.setup.bonus!.cell);
+    go(s, 'snail', { x: 16, y: 4 });
+    deliver(s, 'carrier', { x: 6, y: 10 }, { x: 12, y: 10 });
+    const frog = build(s, 'frog', { x: 11, y: 10 }); go(s, frog, s.setup.bonus!.cell);
+
   },
 };
 

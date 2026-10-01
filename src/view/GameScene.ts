@@ -7,14 +7,15 @@ import { createMission, missions, type Mission } from '../levels/missions';
 import { diamond, drawParts, drawRelay, drawTerrain, partsBadge, polygon } from './art';
 import { TOY_BACKGROUND, drawStar, groundShadow, poseToy, preloadToyArt, toyActor, toyFlag, toyImage, waveFlag, type ToyActor, type ToyFlag } from './toy-art';
 import { rewardPose } from './motion';
-import { prepareToyModels, modelCargoAnchor } from './toy-models';
+import { prepareToyModels, cargoModel, pruneCargoModels } from './toy-models';
+import { facingPicture } from './facing';
 import { GROUND_MARK_DEPTH, STATUS_DEPTH, worldDepth } from './grounding';
 import { pickObject, pictureContains } from './picking';
 import type { SoundCue } from '../audio/score';
 
 export type Mode = 'move' | WorkAction | 'build' | 'dismantle';
 export type ViewState = {
-  mission: Pick<Mission, 'id' | 'name' | 'goal' | 'brief' | 'blueprints'> & { goals: Pick<Goal, 'id' | 'name' | 'delivery'>[] };
+  mission: Pick<Mission, 'id' | 'name' | 'goal' | 'brief' | 'blueprints'> & { goals: Pick<Goal, 'id' | 'name' | 'cargo'>[] };
   complete: boolean;
   celebrating: boolean;
   bonus: { name: string; description: string; reached: boolean; unlocked: boolean };
@@ -30,14 +31,13 @@ export type GameBridge = { state: (state: ViewState) => void; message: (text: st
 export class GameScene extends Phaser.Scene {
   private mission = missions[0];
   simulation = createMission(this.mission);
-  private selected: string | null = 'hauler';
+  private selected: string | null = this.simulation.units[0]?.id ?? null;
   private mode: Mode = 'move';
   private blueprint: Blueprint = 'relay';
   private objects: Phaser.GameObjects.GameObject[] = [];
   private terrainObjects: Phaser.GameObjects.GameObject[] = [];
   private workBeats = new Map<string, { cell: Cell; elapsed: number }>();
   private objectsSignature = '';
-  private cargoGraphics = new Map<string, Phaser.GameObjects.Container>();
   private pileBadges = new Map<string, Phaser.GameObjects.Container>();
   private hover: Cell | null = null;
   private routes!: Phaser.GameObjects.Graphics;
@@ -128,7 +128,7 @@ export class GameScene extends Phaser.Scene {
 
   private drawWorld(): void {
     this.children.removeAll(true);
-    this.objects = []; this.objectsSignature = ''; this.rovers.clear(); this.creatures.clear(); this.cargoGraphics.clear(); this.pileBadges.clear(); this.flashes = []; this.puffs = []; this.pilePictures.clear(); this.flags = []; this.rewards = [];
+    this.objects = []; this.objectsSignature = ''; this.rovers.clear(); this.creatures.clear(); this.pileBadges.clear(); this.flashes = []; this.puffs = []; this.pilePictures.clear(); this.flags = []; this.rewards = [];
     this.workBeats.clear();
     this.terrainObjects = drawTerrain(this, this.simulation.grid);
     this.water = this.add.graphics().setDepth(-1000.5);
@@ -169,6 +169,8 @@ export class GameScene extends Phaser.Scene {
     const pile = this.simulation.piles.find(r => {
       const w = this.point(r.cell); return Math.hypot(p.x - w.x, p.y - (w.y - 10)) < 23;
     });
+    const plan = this.simulation.visibleBlueprints.find(plan => { const at = this.point(plan.cell); return Math.hypot(p.x - at.x, (p.y - at.y) * 2) < 28; });
+    if (plan) return plan.cell;
     const lower = toCell({ x: p.x, y: p.y - WATER_DROP });
     return pile?.cell ?? (isWater(terrainAt(this.simulation.grid, lower)) ? lower : toCell(p));
   }
@@ -286,6 +288,8 @@ export class GameScene extends Phaser.Scene {
       return preview.ok ? this.mode === 'push' ? 'Push one tile away · keep the tile beyond clear' : this.mode === 'uproot' ? 'Lift this tree' : 'Plant this tree' : preview.reason;
     }
     if (this.simulation.bonusUnlocked && key(this.hover) === key(this.mission.bonus.cell)) return `${this.mission.bonus.name} · ${this.simulation.bonusReached ? 'Bonus star earned' : this.mission.bonus.description}`;
+    const plan = this.simulation.visibleBlueprints.find(plan => key(plan.cell) === key(this.hover!));
+    if (plan) return `${blueprintNames[plan.blueprint]} blueprint · move a creature here to collect`;
     if (this.simulation.relayAt(this.hover)) return `Signal relay · take apart for ${describeCost(recipes.relay)}`;
     const enemy = this.simulation.enemies.find(enemy => key(enemy.cell) === key(this.hover!));
     if (enemy) return `${enemy.name} · ${enemy.health}/${enemy.maxHealth} health${enemy.kind === 'crab' ? ' · cannot cross rough ground' : ''}`;
@@ -294,18 +298,17 @@ export class GameScene extends Phaser.Scene {
     return '';
   }
   private syncObjects(): void {
-    const signature = JSON.stringify({ piles: this.simulation.piles, trees: this.simulation.looseTrees, relays: this.simulation.relays, units: this.simulation.units.map(u => [u.id, u.cargo, u.carryingTree]), enemies: this.simulation.enemies.map(enemy => enemy.id) });
+    const signature = JSON.stringify({ piles: this.simulation.piles, plans: this.simulation.visibleBlueprints, trees: this.simulation.looseTrees, relays: this.simulation.relays, units: this.simulation.units.map(u => [u.id, u.cargo, u.carryingTree]), enemies: this.simulation.enemies.map(enemy => enemy.id) });
     if (signature === this.objectsSignature) return;
     this.objectsSignature = signature;
     for (const object of this.objects) object.destroy();
     for (const [id, rover] of this.rovers) if (!this.simulation.units.some(unit => unit.id === id)) {
       rover.root.destroy(); this.rovers.delete(id);
     }
-    for (const cargo of this.cargoGraphics.values()) cargo.destroy();
     for (const [id, creature] of this.creatures) if (!this.simulation.enemies.some(enemy => enemy.id === id)) {
       creature.root.destroy(); this.creatures.delete(id);
     }
-    this.objects = []; this.cargoGraphics.clear(); this.pileBadges.clear(); this.pilePictures.clear(); this.relayPictures.clear();
+    this.objects = []; this.pileBadges.clear(); this.pilePictures.clear(); this.relayPictures.clear();
     for (const pile of this.simulation.piles) {
       const p = this.point(pile.cell);
       this.objects.push(groundShadow(this, 52, 18).setPosition(p.x, p.y));
@@ -314,6 +317,17 @@ export class GameScene extends Phaser.Scene {
       const badge = partsBadge(this, pile.supplies).setPosition(p.x, p.y - 33).setDepth(STATUS_DEPTH).setVisible(false);
       this.pileBadges.set(key(pile.cell), badge);
       this.objects.push(badge);
+    }
+    for (const plan of this.simulation.visibleBlueprints) {
+      const p = this.point(plan.cell), paper = this.add.container(p.x, p.y).setDepth(worldDepth(p, 'parts'));
+      const drawing = this.add.graphics();
+      drawing.fillStyle(0x297ab3); diamond(drawing, 0, 0, 54, 27); drawing.fillPath();
+      drawing.lineStyle(1.5, 0xe1f6ff); diamond(drawing, 0, 0, 50, 25); drawing.strokePath();
+      drawing.lineStyle(.65, 0xe1f6ff, .55);
+      for (const d of [-1, 1]) { drawing.lineBetween(-17, d * 4, 8, d * 9); drawing.lineBetween(17, d * 4, -8, d * 9); }
+      paper.add(drawing);
+      if (plan.blueprint !== 'relay') paper.add(toyImage(this, plan.blueprint + '-se', 38).setPosition(0, 4));
+      this.objects.push(paper);
     }
     for (const cell of this.simulation.looseTrees) {
       const p = this.point(cell);
@@ -328,11 +342,10 @@ export class GameScene extends Phaser.Scene {
     }
     for (const u of this.simulation.units) {
       if (!this.rovers.has(u.id)) this.rovers.set(u.id, toyActor(this, u.kind));
-      const cargo = drawParts(this, u.cargo, true);
-      if (u.carryingTree) cargo.add(toyImage(this, 'tree-small', 55));
-      this.rovers.get(u.id)!.root.add(cargo);
-      this.cargoGraphics.set(u.id, cargo);
+      this.rovers.get(u.id)!.picture = cargoModel(this, u.kind, u.cargo, u.carryingTree);
+      this.rovers.get(u.id)!.body.setTexture('toy-' + this.rovers.get(u.id)!.picture + '-' + facingPicture(u.facing));
     }
+    pruneCargoModels(this, new Set([...this.rovers.values()].map(actor => actor.picture!)));
     for (const enemy of this.simulation.enemies) if (!this.creatures.has(enemy.id)) this.creatures.set(enemy.id, toyActor(this, enemy.kind));
   }
   select(id: string | null): void {
@@ -438,7 +451,7 @@ export class GameScene extends Phaser.Scene {
   private emitState(): void {
     const relay = this.selectedRelay();
     this.bridge.state({
-      mission: { id: this.mission.id, name: this.mission.name, goal: this.mission.goal, brief: this.mission.brief, goals: this.mission.goals.map(({ id, name, delivery }) => ({ id, name, delivery })), blueprints: this.mission.blueprints },
+      mission: { id: this.mission.id, name: this.mission.name, goal: this.mission.goal, brief: this.mission.brief, goals: this.mission.goals.map(({ id, name, cargo }) => ({ id, name, cargo })), blueprints: this.mission.blueprints },
       complete: this.complete(),
       celebrating: this.simulation.bonusReached ? !this.bonusCelebrationComplete : this.complete() && !this.celebrationComplete,
       bonus: { name: this.mission.bonus.name, description: this.mission.bonus.description, reached: this.simulation.bonusReached, unlocked: this.simulation.bonusUnlocked },
@@ -486,6 +499,7 @@ export class GameScene extends Phaser.Scene {
           this.bridge.sound(event.kind === 'hit' ? 'hit' : 'wreck');
           if (event.kind === 'hit') continue;
         }
+        if (event.kind === 'blueprint-found') { this.bridge.sound('signal'); this.bridge.message(`${blueprintNames[event.blueprint]} blueprint found.`); continue; }
         if (event.kind === 'recharge') { this.workBeats.set(event.targetId, { cell: event.cell, elapsed: 0 }); continue; }
         if (event.kind === 'cargo' && !event.error) this.bridge.sound(event.action);
         if ((event.kind === 'terrain' || event.kind === 'obstacle') && !event.error) {
@@ -503,16 +517,10 @@ export class GameScene extends Phaser.Scene {
     for (const u of this.simulation.units) {
       const p = this.point(this.simulation.position(u));
       const sprite = this.rovers.get(u.id)!;
-      const lift = poseToy(sprite, p, u.facing, !!u.next, usesBattery(u.kind) ? u.battery : u.integrity, u.progress, this.reducedMotion);
-      const cargo = this.cargoGraphics.get(u.id)!;
-      const anchor = modelCargoAnchor(u.kind, u.facing);
+      poseToy(sprite, p, u.facing, !!u.next, usesBattery(u.kind) ? u.battery : u.integrity, u.progress, this.reducedMotion);
       const beat = this.workBeats.get(u.id);
       const dip = beat && !this.reducedMotion ? Math.sin(Math.PI * beat.elapsed / .4) * 3 : 0;
       sprite.body.y += dip;
-      cargo.setPosition(anchor.x, anchor.y - lift + dip);
-      if (u.kind === 'scoop' && (u.facing.x < 0 || u.facing.y < 0)) sprite.root.moveTo(cargo, 0);
-      else sprite.root.bringToTop(cargo);
-      cargo.setRotation(sprite.body.rotation * 1.3);
     }
     for (const [id, beat] of this.workBeats) {
       if (!this.paused && !this.completionPending) beat.elapsed += dt;

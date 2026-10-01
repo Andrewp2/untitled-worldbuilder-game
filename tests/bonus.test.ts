@@ -1,96 +1,58 @@
 import { describe, expect, it } from 'vitest';
-import { unitDefinition, type Supplies } from '../src/core/catalog';
-import { unitSpecs } from '../src/core/catalog';
-import { type Cell, type Grid, walkable, terrainAt } from '../src/core/grid';
-import { Simulation, type DeliveryObjective } from '../src/core/simulation';
+import { unitDefinition, unitSpecs } from '../src/core/catalog';
+import { terrainAt, walkable } from '../src/core/grid';
+import { Simulation } from '../src/core/simulation';
+import { board } from '../src/levels/authored';
 import { missions } from '../src/levels/missions';
+import { go } from './helpers/campaign-play';
 
-const grid: Grid = { width: 5, height: 3, tiles: Array.from({ length: 3 }, () => Array(5).fill('grass')) };
-const batteryBonus: DeliveryObjective = { kind: 'delivery', name: 'Power', description: 'Deliver a charged battery.', cell: { x: 3, y: 1 }, red: 0, blue: 0, chargedBatteries: 1 , yellow: 0, green: 0};
-function delivery(supplies: Supplies, bonus = batteryBonus, target: Cell = bonus.cell) {
-  const simulation = new Simulation(grid, [unitDefinition('hauler', 'h', { x: 1, y: 1 })], {
-    bonus, goals: [{ id: 'main', name: 'Main', cell: { x: 1, y: 1 } }], piles: [{ cell: { x: 1, y: 0 }, supplies }],
+const grid = board(['......', '......', '......']);
+describe('creature bonuses', () => {
+  it('keeps a pre-positioned creature dormant until the main flag, then awards its star once', () => {
+    const s = new Simulation(grid, [unitDefinition('scout', 'main', {x:0,y:0}), unitDefinition('duck', 'duck', {x:3,y:1})], {
+      goals: [{id:'main',name:'Flag',cell:{x:5,y:0},unitId:'main'}],
+      bonus: {kind:'arrival',name:'Nest',description:'',cell:{x:3,y:1},kinds:['duck']},
+    });
+    s.step(2); expect(s.bonusReached).toBe(false);
+    go(s,'main',{x:5,y:0}); expect(s.bonusReached).toBe(true);
+    expect(s.drainEvents().filter(e=>e.kind==='bonus-reached')).toHaveLength(1);
+    go(s,'duck',{x:4,y:1}); go(s,'duck',{x:3,y:1});
+    expect(s.drainEvents().filter(e=>e.kind==='bonus-reached')).toHaveLength(0);
   });
-  simulation.drainEvents();
-  expect(simulation.transfer('h', 'pickup', { x: 1, y: 0 }).ok).toBe(true);
-  expect(simulation.move('h', { x: 2, y: 1 }).ok).toBe(true); simulation.step(2);
-  expect(simulation.transfer('h', 'drop', target).ok).toBe(true);
-  return simulation;
-}
-
-describe('authored delivery bonuses', () => {
-  it.each([
-    [{ red: 0, blue: 0, batteries: [0] , yellow: 0, green: 0}, batteryBonus.cell],
-    [{ red: 0, blue: 0, batteries: [100] , yellow: 0, green: 0}, { x: 2, y: 2 }],
-  ])('does not reward dead batteries or deliveries to other tiles', (supplies, target) => {
-    const simulation = delivery(supplies, batteryBonus, target);
-    expect(simulation.bonusReached).toBe(false); expect(simulation.drainEvents()).toHaveLength(0);
+  it('does not let a substitute creature satisfy an original-unit rescue', () => {
+    const s = new Simulation(grid, [unitDefinition('snail','original',{x:0,y:1}),unitDefinition('snail','copy',{x:5,y:1})], {
+      goals:[{id:'main',name:'Main',cell:{x:5,y:1}}],
+      bonus:{kind:'arrival',name:'Rescue',description:'',unitId:'original',cell:{x:3,y:1}},
+    });
+    go(s,'copy',{x:3,y:1}); expect(s.bonusReached).toBe(false);
+    go(s,'copy',{x:5,y:0}); go(s,'original',{x:3,y:1}); expect(s.bonusReached).toBe(true);
   });
-  it('rewards a charged battery once and preserves its charge through delivery and retrieval', () => {
-    const simulation = delivery({ red: 0, blue: 0, batteries: [0, 87] , yellow: 0, green: 0});
-    expect(simulation.bonusReached).toBe(true);
-    expect(simulation.pileAt(batteryBonus.cell)?.supplies.batteries).toEqual([0, 87]);
-    expect(simulation.drainEvents().filter(event => event.kind === 'bonus-reached')).toHaveLength(1);
-    expect(simulation.transfer('h', 'pickup', batteryBonus.cell).ok).toBe(true);
-    expect(simulation.bonusReached).toBe(true); expect(simulation.unit('h').cargo.batteries).toEqual([0, 87]);
-    simulation.transfer('h', 'drop', batteryBonus.cell);
-    expect(simulation.drainEvents()).toHaveLength(0);
+  it('requires the named species and enough remaining power', () => {
+    const s = new Simulation(grid,[unitDefinition('duck','duck',{x:0,y:0}),unitDefinition('frog','frog',{x:0,y:2},50)],{
+      goals:[{id:'main',name:'Main',cell:{x:0,y:0}}],
+      bonus:{kind:'arrival',name:'Reserve',description:'',cell:{x:3,y:1},kinds:['frog'],minimumCharge:50},
+    });
+    go(s,'duck',{x:3,y:1}); expect(s.bonusReached).toBe(false); go(s,'duck',{x:5,y:0});
+    go(s,'frog',{x:3,y:1}); expect(s.bonusReached).toBe(false);
   });
-  it('waits for all required materials across separate deliveries', () => {
-    const bonus = { ...batteryBonus, red: 3, blue: 1, chargedBatteries: 0 , yellow: 0, green: 0};
-    const simulation = delivery({ red: 3, blue: 0, batteries: [] , yellow: 0, green: 0}, bonus);
-    expect(simulation.bonusReached).toBe(false);
-    simulation.piles.push({ cell: { x: 2, y: 0 }, supplies: { red: 0, blue: 1, batteries: [] , yellow: 0, green: 0} });
-    simulation.transfer('h', 'pickup', { x: 2, y: 0 });
-    simulation.transfer('h', 'drop', bonus.cell);
-    expect(simulation.bonusReached).toBe(true);
-    expect(simulation.pileAt(bonus.cell)?.supplies).toEqual({ red: 3, blue: 1, batteries: [] , yellow: 0, green: 0});
-    expect(simulation.drainEvents()).toHaveLength(1);
+  it('requires a living tree to reach a garden star', () => {
+    const map=board(['..T...', '......', '......']);
+    const s=new Simulation(map,[unitDefinition('arborbot','a',{x:1,y:1})],{
+      goals:[{id:'main',name:'Main',cell:{x:1,y:1}}],
+      bonus:{kind:'arrival',name:'Garden',description:'',cell:{x:4,y:1},kinds:['arborbot'],carryingTree:true},
+    });
+    go(s,'a',{x:4,y:1}); expect(s.bonusReached).toBe(false);
+    expect(s.orderObstacle('a','uproot',{x:2,y:0}).ok).toBe(true); s.step(5);
+    go(s,'a',{x:4,y:1}); expect(s.bonusReached).toBe(true);
   });
-  it('places separate bonus targets with real delivery requirements or a traversable original-unit arrival', () => {
-    for (const mission of missions) {
-      const bonus = mission.bonus;
-      expect(terrainAt(mission.grid, bonus.cell), mission.name).not.toBeUndefined();
-      expect(['tree','rock'].includes(terrainAt(mission.grid, bonus.cell)!), mission.name).toBe(false);
-      expect(mission.goals.some(goal => goal.cell.x === bonus.cell.x && goal.cell.y === bonus.cell.y)).toBe(false);
-      if (bonus.kind === 'delivery') expect(bonus.red + bonus.blue + bonus.yellow + bonus.green + bonus.chargedBatteries).toBeGreaterThan(0);
-      else {
-        const original = mission.rovers.find(unit => unit.id === bonus.unitId);
-        expect(original, mission.name).toBeDefined();
-        expect(walkable(mission.grid, bonus.cell, unitSpecs[original!.kind].mobility), mission.name).toBe(true);
-      }
+  it('authors distinct creature targets for all 36 mains and bonuses', () => {
+    for(const mission of missions){
+      const bonus=mission.bonus;
+      expect(bonus.kind).toBe('arrival');
+      expect(terrainAt(mission.grid,bonus.cell),mission.name).not.toBeUndefined();
+      expect(mission.goals.some(g=>g.cell.x===bonus.cell.x&&g.cell.y===bonus.cell.y)).toBe(false);
+      const kinds=bonus.unitId?[mission.rovers.find(u=>u.id===bonus.unitId)!.kind]:[...bonus.kinds!];
+      expect(kinds.some(kind=>walkable(mission.grid,bonus.cell,unitSpecs[kind].mobility)),mission.name).toBe(true);
     }
   });
-});
-
-
-it('checks every authored bonus color and does not substitute an equal total of parts', () => {
-  const bonus = { ...batteryBonus, red: 1, blue: 1, yellow: 1, green: 1, chargedBatteries: 0 };
-  const s = delivery({ red: 2, blue: 1, yellow: 1, green: 0, batteries: [] }, bonus);
-  expect(s.bonusReached).toBe(false);
-  s.piles.push({ cell: { x: 2, y: 0 }, supplies: { red: 0, blue: 0, yellow: 0, green: 1, batteries: [] } });
-  s.transfer('h', 'pickup', { x: 2, y: 0 }); s.transfer('h', 'drop', bonus.cell);
-  expect(s.bonusReached).toBe(true);
-});
-
-
-it('keeps a pre-positioned delivery dormant until the main goal and a later delivery action', () => {
-  const s=new Simulation(grid,[unitDefinition('hauler','h',{x:1,y:1})],{
-    goals:[{id:'main',name:'Main',cell:{x:4,y:1}}], bonus:batteryBonus,
-    piles:[{cell:{x:1,y:0},supplies:{red:0,blue:0,yellow:0,green:0,batteries:[87]}}],
-  });
-  s.transfer('h','pickup',{x:1,y:0}); s.move('h',{x:2,y:1}); s.step(2); s.transfer('h','drop',batteryBonus.cell);
-  expect(s.bonusUnlocked).toBe(false); expect(s.bonusReached).toBe(false);
-  s.move('h',{x:4,y:1}); s.step(2);
-  expect(s.bonusUnlocked).toBe(true); expect(s.bonusReached).toBe(false);
-  s.transfer('h','pickup',batteryBonus.cell); s.transfer('h','drop',batteryBonus.cell);
-  expect(s.bonusReached).toBe(true);
-});
-it('does not let a substitute creature satisfy an original-unit rescue', () => {
-  const s=new Simulation(grid,[unitDefinition('snail','original',{x:0,y:1}),unitDefinition('snail','copy',{x:4,y:1})],{
-    goals:[{id:'main',name:'Main',cell:{x:4,y:1}}], bonus:{kind:'arrival',name:'Rescue',description:'',unitId:'original',cell:{x:3,y:1}},
-  });
-  s.move('copy',{x:3,y:1}); s.step(2); expect(s.bonusReached).toBe(false);
-  s.move('copy',{x:4,y:0}); s.step(3); s.move('original',{x:3,y:1}); s.step(6);
-  expect(s.bonusReached).toBe(true);
 });

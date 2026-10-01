@@ -8,7 +8,7 @@ import { stepPose } from './motion';
 export const TOY_BACKGROUND = '#063361';
 export const artUrl = (name: string) => `${import.meta.env.BASE_URL}art/toy-world/${name}.png`;
 type ToyKind = UnitKind | EnemyKind;
-const objects = ['flag', 'soil', 'relay', 'connector'];
+const objects = ['flag', 'relay', 'connector'];
 
 /** Both scenes use the same texture cache, including after a mission replay. */
 export function preloadToyArt(scene: Phaser.Scene): void {
@@ -38,6 +38,7 @@ export type ToyActor = {
   shadow: Phaser.GameObjects.Graphics;
   size: number;
   kind: ToyKind;
+  picture?: string;
 };
 export function toyActor(scene: Phaser.Scene, kind: ToyKind, size = 96): ToyActor {
   const root = scene.add.container();
@@ -51,9 +52,9 @@ export function toyActor(scene: Phaser.Scene, kind: ToyKind, size = 96): ToyActo
 /** Motion is presentation only: destinations, energy and collision remain in the simulation. */
 export function poseToy(actor: ToyActor, position: Cell, facing: Cell, moving: boolean, charge: number, progress: number, reducedMotion: boolean): number {
   const { body, root, kind, size } = actor;
-  const picture = `${kind}-${facingPicture(facing)}`;
+  const picture = `${actor.picture ?? kind}-${facingPicture(facing)}`;
   body.setTexture(`toy-${picture}`).setDisplaySize(size, size);
-  const origin = groundOrigin(picture);
+  const origin = groundOrigin(`${kind}-${facingPicture(facing)}`);
   body.setOrigin(origin.x, origin.y);
   root.setPosition(position.x, position.y).setDepth(worldDepth(position, enemyKinds.includes(kind as EnemyKind) ? 'enemy' : 'rover'));
   const pose = stepPose(kind, moving, progress, reducedMotion);

@@ -22,6 +22,8 @@ export const MOVE_ENERGY = 1;
 export const TRANSFER_ENERGY = 2;
 export const TERRAIN_ENERGY = 3;
 export const ATTACK_ENERGY = 1;
+/** Heavy defensive hits should consume enough power to make support matter. */
+export const attackEnergy = (kind: UnitKind): number => kind === 'warden' ? 2 : ATTACK_ENERGY;
 export type UnitDefinition = {
   id: string; kind: UnitKind; name: string; description: string;
   color: number; speed: number; capacity: number; start: Cell; battery: number;

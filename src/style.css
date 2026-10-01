@@ -36,7 +36,7 @@ main { position:relative; }
 .goal-marker { display:flex; color:#b8d5ef; width:20px; height:22px; }
 .goal-marker svg { width:20px; height:20px; }
 .goal-marker.complete { color:#c9ec65; }
-.goal-shipment { display:flex; align-items:center; gap:7px; }
+.goal-manifest { display:flex; align-items:center; gap:7px; }
 #mission-brief { margin-top:14px; }
 .bonus-marker { color:#ffdc59; }
 .bonus-marker.complete svg { fill:#ffdc59; }

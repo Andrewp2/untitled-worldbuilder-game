@@ -42,15 +42,11 @@ describe('complete 36-mission campaign', () => {
     expect(c.completed.size).toBe(4); expect(c.bonuses.size).toBe(2);
     expect(c.isUnlocked('parts-and-paths')).toBe(true); expect(c.isUnlocked('rough-ridge')).toBe(false); expect(c.isUnlocked('harbor-run')).toBe(false);
   });
-  it('completes Hollow main and bonus using the actual loose charged battery', () => {
-    const m=find('hollow-reach'), s=createMission(m);
-    go(s,'scout',m.goals[0].cell); expect(s.mainComplete).toBe(true);
-    deliver(s,'hauler',{x:7,y:4},m.bonus.cell); expect(s.bonusReached).toBe(true);
-  });
   it('completes Bramble main and bonus from its finite defender kit and camp supplies', () => {
-    const m=find('bramble-crossing'), s=createMission(m), guard=build(s,'warden',{x:5,y:5});
+    const m=find('bramble-crossing'), s=createMission(m); go(s,'scout',{x:3,y:6}); const guard=build(s,'warden',{x:5,y:5});
     clearEnemies(s,[guard]); go(s,guard,{x:15,y:9}); go(s,'scout',m.goals[0].cell); expect(s.mainComplete).toBe(true);
-    work(s,'hauler','pickup',{x:3,y:8}); work(s,'hauler','pickup',{x:4,y:9}); work(s,'hauler','drop',m.bonus.cell);
+    go(s,'scout',{x:16,y:9}); go(s,'scout',{x:4,y:8}); expect(s.dismantle('scout').ok).toBe(true);
+    const arbor=build(s,'arborbot',{x:4,y:8}); work(s,arbor,'uproot',{x:15,y:7}); go(s,arbor,m.bonus.cell);
     expect(s.bonusReached).toBe(true);
   });
 });

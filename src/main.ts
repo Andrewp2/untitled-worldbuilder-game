@@ -3,7 +3,7 @@ import '@fontsource-variable/nunito-sans';
 import './style.css';
 import { GameScene, type Mode, type ViewState } from './view/GameScene';
 import { icon, mapFlag, blueprintIcon, resourceIcon, cargoSlots, costIcons, actionArt, treeCargoIcon } from './view/hud-art';
-import { ATTACK_ENERGY, BATTERY_CAPACITY, MOVE_ENERGY, TRANSFER_ENERGY, TERRAIN_ENERGY, blueprintNames, supportsCargo, supportsAction, isMobile, usesBattery, unitKinds, describeCost, describeSupplies, load, recipes, type Blueprint } from './core/catalog';
+import { attackEnergy, BATTERY_CAPACITY, MOVE_ENERGY, TRANSFER_ENERGY, TERRAIN_ENERGY, blueprintNames, supportsCargo, supportsAction, isMobile, usesBattery, unitKinds, describeCost, describeSupplies, load, recipes, type Blueprint } from './core/catalog';
 import { GameAudio, type AudioState } from './audio/GameAudio';
 import { missions, type WorldId } from './levels/missions';
 import { Campaign, PROGRESS_KEY, type ProgressStorage } from './core/campaign';
@@ -123,8 +123,8 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       <div><dt>Pick up / Drop off</dt><dd>Choose an action, then a pile or drop-off tile. The rover drives beside it to transfer cargo. Space chooses Pick up when empty or Drop off when loaded.</dd></div>
       <div><dt>Cargo</dt><dd>Hauler carries 4 parts; Scout carries 2. Pick up fills free space, taking red, blue, yellow and green parts, then batteries. Drop off unloads everything.</dd></div>
       <div><dt>Scoop</dt><dd>Dig clear grass or sand to collect 1 dirt and leave water. Fill water to turn it into land. Scoop drives beside the target first; each action costs ${TERRAIN_ENERGY} charge. Space chooses Dig when empty or Fill when loaded. Its bucket is for terrain work; use a Hauler for cargo.</dd></div>
-      <div><dt>Build</dt><dd>Choose a blueprint, then a clear tile the model can use. Build boats and Fish in water; Marina needs shallow water. Parts must be on the ground within the 3×3 square centered on the site, including diagonals. No unit is needed nearby. Each successful build uses one blueprint; taking it apart does not restore that blueprint.</dd></div>
-      <div><dt>Combat</dt><dd>Move Warden beside a creature: it attacks automatically, spending ${ATTACK_ENERGY} charge per hit. Creatures wander, then chase nearby rovers. Scout and Hauler cannot fight. Enemy hits drain the rover’s battery. A hit that empties it destroys the rover, leaving its parts, cargo, and an empty installed battery. Batteries carried as cargo keep their charge.</dd></div>
+      <div><dt>Build</dt><dd>Walk a mobile model onto a blue ground plan to collect a blueprint. Choose its picture in the toolbox, then a clear tile the model can use. Build boats and Fish in water; Marina needs shallow water. Parts must be on the ground within the 3×3 square centered on the site, including diagonals. No unit is needed nearby. Each successful build uses one blueprint; taking it apart does not restore that blueprint.</dd></div>
+      <div><dt>Combat</dt><dd>Move Warden beside a creature: it attacks automatically, spending ${attackEnergy('warden')} charge per hit. Creatures wander, then chase nearby rovers. Scout and Hauler cannot fight. Enemy hits drain the rover’s battery. A hit that empties it destroys the rover, leaving its parts, cargo, and an empty installed battery. Batteries carried as cargo keep their charge.</dd></div>
       <div><dt>Missions</dt><dd>Choose a location on the world map, then complete its main objective. Finishing pauses the mission: return to the world map or try the bonus. Each level has one main flag. Only after reaching it does the bonus star and its objective appear. Choose Try bonus to continue. Beat missions in map order to unlock the next one. Completed locations and earned stars are saved in this browser. Revisiting or restarting begins a fresh mission.</dd></div>
       <div><dt>Batteries</dt><dd>Charge powers movement and absorbs damage. Each rover needs a battery. Empty batteries work for building, but cannot power movement or actions. Full charge is ${BATTERY_CAPACITY}; moving costs ${MOVE_ENERGY} per tile, and each pickup or drop-off costs ${TRANSFER_ENERGY}. Using the last charge leaves an intact, powerless rover.</dd></div>
       <div><dt>Replace battery</dt><dd>Drop a battery with more charge within the rover’s 3×3 area. Stop the rover, then choose Replace battery. The old battery returns to the ground. Carried batteries keep their charge; rebuilding a rover does not refill its battery.</dd></div>
@@ -221,7 +221,7 @@ function updateHud(state: ViewState): void {
     el('mission-name').textContent = state.mission.name;
     el('mission-goal').textContent = state.mission.goal;
     el('mission-brief').textContent = state.mission.brief;
-    el('objective-progress').innerHTML = state.mission.goals.map(goal => `<span id="goal-${goal.id}" class="goal-marker" role="img" aria-label="${goal.name}: not reached" title="${goal.name}">${icon('flag')}</span>${goal.delivery ? `<span class="goal-shipment" role="img" aria-label="Deliver ${describeCost({ ...goal.delivery, battery: goal.delivery.chargedBatteries })}${goal.delivery.chargedBatteries ? ' with charge remaining' : ''}">${costIcons({ ...goal.delivery, battery: goal.delivery.chargedBatteries })}</span>` : ''}`).join('') + `<span id="bonus-marker" class="goal-marker bonus-marker" role="img">${icon('star')}</span><span id="progress"></span>`;
+    el('objective-progress').innerHTML = state.mission.goals.map(goal => `<span id="goal-${goal.id}" class="goal-marker" role="img" aria-label="${goal.name}: not reached" title="${goal.name}">${icon('flag')}</span>${goal.cargo ? `<span class="goal-manifest" role="img" aria-label="Arrive carrying ${describeCost({ ...goal.cargo, battery: goal.cargo.chargedBatteries })}${goal.cargo.chargedBatteries ? ' with charge remaining' : ''}">${costIcons({ ...goal.cargo, battery: goal.cargo.chargedBatteries })}</span>` : ''}`).join('') + `<span id="bonus-marker" class="goal-marker bonus-marker" role="img">${icon('star')}</span><span id="progress"></span>`;
     for (const plan of plans) el(`build-${plan}`).hidden = state.mission.blueprints[plan] === undefined;
   }
   const u = state.units.find(u => u.id === state.selected), relay = state.selectedRelay;
@@ -278,6 +278,7 @@ function updateHud(state: ViewState): void {
   for (const mode of ['move', 'pickup', 'drop', 'dig', 'fill', 'push', 'uproot', 'plant', 'dismantle']) el(`mode-${mode}`).setAttribute('aria-pressed', String(state.mode === mode));
   for (const plan of plans) {
     const button = el<HTMLButtonElement>(`build-${plan}`), left = state.blueprints[plan] ?? 0;
+    button.hidden = state.blueprints[plan] === undefined;
     button.disabled = left === 0;
     button.querySelector('.plan-stock')!.textContent = String(left);
     button.title = `${blueprintNames[plan]} · ${left} left · ${describeCost(recipes[plan])}`;
@@ -290,7 +291,7 @@ function updateHud(state: ViewState): void {
   el('tile-info').hidden = !state.context;
   el('tile-info').textContent = state.context;
   el('mission-goal').textContent = state.bonus.unlocked ? state.bonus.reached ? 'Bonus star earned' : state.bonus.description : state.mission.goal;
-  document.querySelectorAll<HTMLElement>('.goal-shipment').forEach(shipment => { shipment.hidden = state.complete; });
+  document.querySelectorAll<HTMLElement>('.goal-manifest').forEach(manifest => { manifest.hidden = state.complete; });
   el('bonus-marker').hidden = !state.bonus.unlocked;
   el('bonus-marker').classList.toggle('complete', state.bonus.reached);
   el('bonus-marker').title = `${state.bonus.name}: ${state.bonus.reached ? 'bonus star earned' : state.bonus.description}`;

@@ -1,6 +1,6 @@
 import { partCounts, type Supplies } from '../core/catalog';
 import type { Grid, Terrain } from '../core/grid';
-import type { Pile, DeliveryRequirements } from '../core/simulation';
+import type { Pile, CargoRequirements } from '../core/simulation';
 import type { Mission } from './missions';
 
 export type AuthoredMission = Mission & { challenge: string };
@@ -14,4 +14,4 @@ export function board(rows: readonly string[], ground: 'grass' | 'sand' = 'grass
 }
 export const stock = (red = 0, blue = 0, yellow = 0, green = 0, batteries: number[] = []): Supplies => ({ ...partCounts(red, blue, yellow, green), batteries });
 export const pile = (x: number, y: number, supplies: Supplies): Pile => ({ cell: { x, y }, supplies });
-export const shipment = (red = 0, blue = 0, yellow = 0, green = 0, chargedBatteries = 0): DeliveryRequirements => ({ ...partCounts(red, blue, yellow, green), chargedBatteries });
+export const manifest = (red = 0, blue = 0, yellow = 0, green = 0, chargedBatteries = 0): CargoRequirements => ({ ...partCounts(red, blue, yellow, green), chargedBatteries });

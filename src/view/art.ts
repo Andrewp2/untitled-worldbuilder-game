@@ -17,12 +17,19 @@ export function diamond(g: Graphics, x: number, y: number, width = TILE_WIDTH, h
 
 function terrainTextures(scene: Phaser.Scene): void {
   if (scene.textures.exists('toy-ground-grass-0')) return;
-  const colors = { grass: ['#a7ce58', '#a5cc56', '#a8cf59', '#a6cd57'], sand: ['#f0d493', '#efd392', '#f1d594', '#f0d392'], water: ['#48b7d3', '#49b8d4', '#48b7d3', '#49b8d4'], 'deep-water': ['#328dab', '#348fab', '#328daa', '#338eaa'], rough: ['#a5ab84', '#a4aa83', '#a6ac85', '#a5ab84'], swamp: ['#7f9f6c', '#81a16e', '#80a06d', '#7f9f6c'] };
+  const colors = { grass: ['#a7ce58', '#a5cc56', '#a8cf59', '#a6cd57'], sand: ['#f0d493', '#efd392', '#f1d594', '#f0d392'], water: ['#48b7d3', '#49b8d4', '#48b7d3', '#49b8d4'], 'deep-water': ['#328dab', '#348fab', '#328daa', '#338eaa'], rough: ['#b8ad99', '#b7ac98', '#b9ae9a', '#b8ad99'], swamp: ['#7f9f6c', '#81a16e', '#80a06d', '#7f9f6c'] };
   for (const [name, variations] of Object.entries(colors)) variations.forEach((color, variation) => {
     const texture = scene.textures.createCanvas('toy-ground-' + name + '-' + variation, 160, 80)!;
     const c = texture.context;
     c.beginPath(); c.moveTo(80, 0); c.lineTo(160, 40); c.lineTo(80, 80); c.lineTo(0, 40); c.closePath();
     c.fillStyle = color; c.fill();
+    if (name === 'rough') {
+      // Low faceted stones signal an impassable rocky surface at overview scale.
+      for (const [x, y] of [[60, 24], [99, 36], [63, 53]]) {
+        c.fillStyle = '#918b7c'; c.beginPath(); c.moveTo(x - 8, y); c.lineTo(x, y - 4); c.lineTo(x + 8, y); c.lineTo(x, y + 4); c.closePath(); c.fill();
+        c.fillStyle = '#d0c6b2'; c.beginPath(); c.moveTo(x - 8, y); c.lineTo(x, y - 5); c.lineTo(x + 5, y - 1); c.lineTo(x, y + 1); c.closePath(); c.fill();
+      }
+    }
     texture.refresh();
   });
 }
@@ -66,11 +73,11 @@ export function drawTerrain(scene: Phaser.Scene, grid: Grid): Phaser.GameObjects
       }
     }
     if (exposed(0, 1)) {
-      polygon(coasts, [[p.x-40,top],[p.x,top+20],[p.x,top+20+height],[p.x-40,top+height]], water ? 0x0588c6 : bridge ? 0xa66323 : 0xa66b31);
+      polygon(coasts, [[p.x-40,top],[p.x,top+20],[p.x,top+20+height],[p.x-40,top+height]], water ? 0x0588c6 : bridge ? 0xa66323 : 0xc5a477);
       if (!water && !bridge) polygon(coasts, [[p.x-40,top],[p.x,top+20],[p.x,top+24],[p.x-40,top+4]], terrain === 'sand' ? 0xd0b273 : 0x7aa243);
     }
     if (exposed(1, 0)) {
-      polygon(coasts, [[p.x,top+20],[p.x+40,top],[p.x+40,top+height],[p.x,top+20+height]], water ? 0x036da9 : bridge ? 0x80501f : 0x835128);
+      polygon(coasts, [[p.x,top+20],[p.x+40,top],[p.x+40,top+height],[p.x,top+20+height]], water ? 0x036da9 : bridge ? 0x80501f : 0xad8d60);
       if (!water && !bridge) polygon(coasts, [[p.x,top+20],[p.x+40,top],[p.x+40,top+4],[p.x,top+24]], terrain === 'sand' ? 0xb49a64 : 0x5e8833);
     }
     if (bridge) {

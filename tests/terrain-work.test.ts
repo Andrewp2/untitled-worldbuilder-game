@@ -2,14 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { emptySupplies, unitDefinition, TERRAIN_ENERGY, recipeSupplies, load } from '../src/core/catalog';
 import { adjacent, findPath, type Grid, type Cell } from '../src/core/grid';
 import { Simulation } from '../src/core/simulation';
-import { createMission, missions } from '../src/levels/missions';
 
 const board = (): Grid => ({ width: 10, height: 5, tiles: Array.from({ length: 5 }, () => Array(10).fill('grass')) });
 const run = (s: Simulation) => { for (let i = 0; i < 1200; i++) s.step(1 / 60); };
 const snapshot = (s: Simulation) => JSON.stringify({ grid: s.grid, units: s.units, piles: s.piles });
 const dirtTotal = (s: Simulation) => s.grid.tiles.flat().filter(tile => tile === 'grass' || tile === 'sand').length
   + s.units.reduce((n, unit) => n + (unit.cargo.soil ?? 0), 0) + s.piles.reduce((n, pile) => n + (pile.supplies.soil ?? 0), 0);
-const mission = missions.find(m => m.id === 'siltwater-reach')!;
 
 describe('Scoop terrain work', () => {
   it('conserves land plus dirt through repeated dig/fill cycles and keeps authored grids pristine', () => {
@@ -31,7 +29,7 @@ describe('Scoop terrain work', () => {
     const s = new Simulation(board(), [unitDefinition('scoop', 's', { x: 2, y: 2 }), unitDefinition('scout', 'r', { x: 0, y: 0 })], {
       goals: [{ id: 'flag', name: 'Flag', cell: { x: 2, y: 1 } }],
       piles: [{ cell: { x: 1, y: 2 }, supplies: { red: 1, blue: 0, batteries: [] , yellow: 0, green: 0} }],
-      bonus: { kind: 'delivery', name: 'Bonus', description: '', cell: { x: 2, y: 3 }, red: 1, blue: 0, chargedBatteries: 0 , yellow: 0, green: 0},
+      bonus: { kind: 'arrival', name: 'Bonus', description: '', cell: { x: 2, y: 3 }, kinds: ['snail'] },
     });
     const initial = snapshot(s);
     for (const target of [{ x: 2, y: 2 }, { x: 2, y: 1 }, { x: 1, y: 2 }, { x: 2, y: 3 }, { x: -1, y: 2 }]) {
@@ -109,31 +107,5 @@ describe('Scoop terrain work', () => {
     s.unit('s').battery = 2; before = snapshot(s);
     expect(s.shapeTerrain('s', 'fill', { x: 3, y: 2 }).ok).toBe(false); expect(snapshot(s)).toBe(before);
     expect(s.orderTerrain('r', 'dig', { x: 6, y: 2 }).ok).toBe(false);
-  });
-});
-
-describe('Siltwater Reach', () => {
-  it('requires a crossing, supports travel-and-work on both banks, and allows the flag and optional delivery to be completed', () => {
-    const s = createMission(mission), authored = JSON.stringify(mission.grid);
-    const work = (action: 'dig' | 'fill', target: Cell) => {
-      expect(s.orderTerrain('scoop', action, target).ok).toBe(true); run(s);
-      expect(adjacent(s.unit('scoop').cell, target)).toBe(true);
-      expect(s.grid.tiles[target.y][target.x]).toBe(action === 'dig' ? 'water' : 'grass');
-    };
-    expect(findPath(s.grid, s.unit('scout').cell, mission.goals[0].cell)).toBeNull();
-    work('dig', { x: 7, y: 5 }); work('fill', { x: 8, y: 6 });
-    expect(findPath(s.grid, s.unit('scout').cell, mission.goals[0].cell)).toBeNull();
-    work('dig', { x: 7, y: 7 }); work('fill', { x: 9, y: 6 });
-    expect(s.unit('scoop').battery).toBeGreaterThan(60);
-    expect(s.move('scoop', { x: 10, y: 5 }).ok).toBe(true); run(s);
-    expect(s.move('scout', mission.goals[0].cell).ok).toBe(true); run(s);
-    expect(s.reached.has('far-bank')).toBe(true);
-    const built = s.build('hauler', { x: 5, y: 9 }); expect(built.ok).toBe(true);
-    if (!built.ok) throw new Error(built.reason);
-    expect(s.orderCargo(built.id!, 'pickup', { x: 4, y: 9 }).ok).toBe(true); run(s);
-    expect(s.orderCargo(built.id!, 'drop', mission.bonus.cell).ok).toBe(true); run(s);
-    expect(s.bonusReached, JSON.stringify(s.piles)).toBe(true);
-    expect(JSON.stringify(mission.grid)).toBe(authored);
-    expect(createMission(mission).grid.tiles[6][8]).toBe('water');
   });
 });

@@ -1,5 +1,5 @@
 import { adjacent, constructionArea, findPath, key, neighbors, sameCell, terrainAt, walkable, type Cell, type Grid, type Terrain } from './grid';
-import { ATTACK_ENERGY, BATTERY_CAPACITY, MOVE_ENERGY, TRANSFER_ENERGY, TERRAIN_ENERGY, cloneSupplies, costTotal, emptyCost, emptySupplies, load, materials, recipes, recipeSupplies, supportsCargo, supportsAction, isMobile, usesBattery, unitSpecs, enemySpecs, unitDefinition, type Blueprint, type Cost, type Supplies, type PartCounts, type UnitDefinition, type UnitKind, type EnemyKind } from './catalog';
+import { attackEnergy, BATTERY_CAPACITY, MOVE_ENERGY, TRANSFER_ENERGY, TERRAIN_ENERGY, cloneSupplies, costTotal, emptyCost, emptySupplies, load, materials, recipes, recipeSupplies, supportsCargo, supportsAction, isMobile, usesBattery, unitSpecs, enemySpecs, unitDefinition, type Blueprint, type Cost, type Supplies, type PartCounts, type UnitDefinition, type UnitKind, type EnemyKind } from './catalog';
 
 export type CargoAction = 'pickup' | 'drop';
 export type TerrainAction = 'dig' | 'fill';
@@ -18,11 +18,11 @@ export type OrderResult = { ok: true } | { ok: false; reason: 'terrain' | 'occup
 export type ActionResult = { ok: true; id?: string; queued?: boolean } | { ok: false; reason: string };
 export type Pile = { cell: Cell; supplies: Supplies };
 export type Relay = { id: string; cell: Cell };
-export type DeliveryRequirements = PartCounts & { chargedBatteries: number };
-export type Goal = { id: string; name: string; cell: Cell; kinds?: readonly UnitKind[]; unitId?: string; clearEnemies?: boolean; delivery?: DeliveryRequirements };
-export type DeliveryObjective = PartCounts & { kind: 'delivery'; name: string; description: string; cell: Cell; chargedBatteries: number };
-export type ArrivalObjective = { kind: 'arrival'; name: string; description: string; cell: Cell; unitId: string };
-export type BonusObjective = DeliveryObjective | ArrivalObjective;
+export type CargoRequirements = PartCounts & { chargedBatteries: number };
+export type Goal = { id: string; name: string; cell: Cell; kinds?: readonly UnitKind[]; unitId?: string; clearEnemies?: boolean; cargo?: CargoRequirements };
+export type ArrivalObjective = { kind: 'arrival'; name: string; description: string; cell: Cell; unitId?: string; kinds?: readonly UnitKind[]; carryingTree?: boolean; minimumCharge?: number; clearEnemies?: boolean };
+export type BonusObjective = ArrivalObjective;
+export type BlueprintPickup = { cell: Cell; blueprint: Blueprint; afterMain?: boolean };
 export type BlueprintStock = Partial<Record<Blueprint, number>>;
 export type BuildPreview = { ok: boolean; reason: string; available: Supplies; missing: Cost; batteryCharge: number | null };
 export type SimulationEvent = { unitId: string; text: string; error: boolean } &
@@ -31,6 +31,7 @@ export type SimulationEvent = { unitId: string; text: string; error: boolean } &
     { kind: 'recharge'; targetId: string; cell: Cell; charge: number } | { kind: 'battery-empty' } |
     { kind: 'goal-reached'; goalId: string; complete: boolean } |
     { kind: 'bonus-reached'; cell: Cell } |
+    { kind: 'blueprint-found'; blueprint: Blueprint; cell: Cell } |
     { kind: 'hit'; attackerId: string; targetId: string; cell: Cell; damage: number } |
     { kind: 'destroyed'; faction: 'friendly' | 'enemy'; cell: Cell });
 type Approach = { goal: Cell; route: Cell[] };
@@ -46,16 +47,19 @@ export class Simulation {
   readonly reached = new Set<string>();
   bonusReached = false;
   readonly blueprints: BlueprintStock;
+  readonly blueprintPickups: BlueprintPickup[];
+  get visibleBlueprints(): BlueprintPickup[] { return this.blueprintPickups.filter(plan => !plan.afterMain || this.mainComplete); }
   get mainComplete(): boolean { return !!this.setup.goals?.length && this.setup.goals.every(goal => this.reached.has(goal.id)); }
   get bonusUnlocked(): boolean { return this.mainComplete; }
   private events: SimulationEvent[] = [];
   private nextId = 1;
   private randomState: number;
   private underObstacles = new Map<string, Terrain>();
-  constructor(grid: Grid, definitions: UnitDefinition[], readonly setup: { piles?: Pile[]; goals?: Goal[]; bonus?: BonusObjective; blueprints?: BlueprintStock; enemies?: EnemyDefinition[]; seed?: number } = {}) {
+  constructor(grid: Grid, definitions: UnitDefinition[], readonly setup: { piles?: Pile[]; goals?: Goal[]; bonus?: BonusObjective; blueprints?: BlueprintStock; blueprintPickups?: BlueprintPickup[]; enemies?: EnemyDefinition[]; seed?: number } = {}) {
     // Terrain belongs to this run. Digging must never rewrite the authored level.
     this.grid = { ...grid, tiles: grid.tiles.map(row => [...row]) };
     this.blueprints = { ...(setup.blueprints ?? Object.fromEntries(Object.keys(recipes).map(kind => [kind, 1]))) };
+    this.blueprintPickups = (setup.blueprintPickups ?? []).map(plan => ({ ...plan, cell: { ...plan.cell } }));
     grid.tiles.forEach((row, y) => row.forEach((tile, x) => {
       if (tile === 'tree' || tile === 'rock') this.underObstacles.set(key({ x, y }), 'grass');
     }));
@@ -80,25 +84,28 @@ export class Simulation {
   }
   private recordGoals(unit: Unit): void {
     if (!isMobile(unit.kind)) return;
+    for (const plan of this.visibleBlueprints) if (sameCell(unit.cell, plan.cell)) {
+      this.blueprints[plan.blueprint] = (this.blueprints[plan.blueprint] ?? 0) + 1;
+      this.blueprintPickups.splice(this.blueprintPickups.indexOf(plan), 1);
+      this.events.push({ kind: 'blueprint-found', unitId: unit.id, blueprint: plan.blueprint, cell: { ...plan.cell }, text: `${unitSpecs[unit.kind].name} found a blueprint.`, error: false });
+    }
     for (const goal of this.setup.goals ?? []) {
-      if (goal.delivery || !sameCell(unit.cell, goal.cell) || goal.kinds && !goal.kinds.includes(unit.kind) || goal.unitId && goal.unitId !== unit.id || goal.clearEnemies && this.enemies.length) continue;
+      if (!sameCell(unit.cell, goal.cell) || goal.kinds && !goal.kinds.includes(unit.kind) || goal.unitId && goal.unitId !== unit.id || goal.clearEnemies && this.enemies.length) continue;
+      if (goal.cargo && (!materials.every(color => unit.cargo[color] >= goal.cargo![color])
+        || unit.cargo.batteries.filter(charge => charge > 0).length < goal.cargo.chargedBatteries)) continue;
       this.reachGoal(goal, unit.id);
     }
     const bonus = this.setup.bonus;
-    if (this.bonusUnlocked && !this.bonusReached && bonus?.kind === 'arrival' && unit.id === bonus.unitId && sameCell(unit.cell, bonus.cell)) this.awardBonus(bonus.cell);
+    if (this.bonusUnlocked && !this.bonusReached && bonus?.kind === 'arrival' && sameCell(unit.cell, bonus.cell)
+      && (!bonus.unitId || unit.id === bonus.unitId) && (!bonus.kinds || bonus.kinds.includes(unit.kind))
+      && (!bonus.carryingTree || unit.carryingTree) && unit.battery >= (bonus.minimumCharge ?? 0)
+      && (!bonus.clearEnemies || !this.enemies.length)) this.awardBonus(bonus.cell);
   }
   private reachGoal(goal: Goal, unitId: string): void {
     if (this.reached.has(goal.id)) return;
     this.reached.add(goal.id);
     this.events.push({ kind: 'goal-reached', unitId, goalId: goal.id,
       complete: this.mainComplete, text: `${goal.name} reached.`, error: false });
-  }
-  private recordDeliveries(unitId = ''): void {
-    for (const goal of this.setup.goals ?? []) {
-      if (!goal.delivery || goal.clearEnemies && this.enemies.length) continue;
-      const pile = this.pileAt(goal.cell), required = goal.delivery;
-      if (pile && materials.every(color => pile.supplies[color] >= required[color]) && pile.supplies.batteries.filter(charge => charge > 0).length >= required.chargedBatteries) this.reachGoal(goal, unitId);
-    }
   }
   private awardBonus(cell: Cell): void {
     this.bonusReached = true;
@@ -126,9 +133,6 @@ export class Simulation {
     for (const m of materials) pile.supplies[m] += supplies[m];
     pile.supplies.batteries.push(...supplies.batteries);
     if (supplies.soil) pile.supplies.soil = (pile.supplies.soil ?? 0) + supplies.soil;
-    this.recordDeliveries();
-    const bonus = this.setup.bonus;
-    if (this.bonusUnlocked && bonus?.kind === 'delivery' && !this.bonusReached && sameCell(cell, bonus.cell) && materials.every(color => pile!.supplies[color] >= bonus[color]) && pile.supplies.batteries.filter(charge => charge > 0).length >= bonus.chargedBatteries) this.awardBonus(cell);
   }
   private prunePiles(): void {
     for (let i = this.piles.length - 1; i >= 0; i--) if (load(this.piles[i].supplies) === 0) this.piles.splice(i, 1);
@@ -554,10 +558,10 @@ export class Simulation {
     const destroyed = new Set<string>();
     for (const unit of this.units) {
       unit.attackCooldown = Math.max(0, unit.attackCooldown - seconds);
-      if (!unit.damage || unit.battery < ATTACK_ENERGY || unit.attackCooldown > 1e-9) continue;
+      if (!unit.damage || unit.battery < attackEnergy(unit.kind) || unit.attackCooldown > 1e-9) continue;
       const target = this.enemies.find(enemy => this.distance(this.position(unit), this.position(enemy)) <= 1.05);
       if (target) {
-        unit.battery -= ATTACK_ENERGY; unit.attackCooldown = unit.attackInterval;
+        unit.battery -= attackEnergy(unit.kind); unit.attackCooldown = unit.attackInterval;
         if (!unit.battery && !unit.next) unit.status = 'depleted';
         hits.push({ attacker: unit, target, friendly: true });
       }
@@ -600,7 +604,6 @@ export class Simulation {
       this.events.push({ kind: 'destroyed', unitId: enemy.id, faction: 'enemy', cell, text: `${enemy.name} defeated.`, error: false });
     }
     for (const unit of this.units) this.recordGoals(unit);
-    this.recordDeliveries();
   }
   private stepSupport(seconds: number): void {
     for (const source of this.units) {

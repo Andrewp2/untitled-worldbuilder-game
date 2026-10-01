@@ -1,8 +1,7 @@
 import type Phaser from 'phaser';
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import type { Cell } from '../core/grid';
-import { unitKinds, enemyKinds, type UnitKind } from '../core/catalog';
+import { unitKinds, enemyKinds, materials, load, type Supplies, type UnitKind } from '../core/catalog';
 import { directions } from './facing';
 
 // One model, camera and planted origin for every view. The camera elevation is
@@ -10,7 +9,7 @@ import { directions } from './facing';
 export const MODEL_SIZE = 384;
 export const MODEL_ORIGIN = { x: 192, y: 280 };
 export const MODEL_TILE_WIDTH = 320;
-export const modelKinds = [...unitKinds, ...enemyKinds, 'battery', 'rocks', 'tree', 'tree-small', 'red', 'blue', 'yellow', 'green'] as const;
+export const modelKinds = [...unitKinds, ...enemyKinds, 'battery', 'soil', 'rocks', 'tree', 'tree-small', 'red', 'blue', 'yellow', 'green'] as const;
 export type ModelKind = typeof modelKinds[number];
 const portraits = new Map<string, string>();
 export const modelPortrait = (name: string): string | undefined => portraits.get(name);
@@ -27,15 +26,29 @@ export function modelCamera(): THREE.OrthographicCamera {
   return camera;
 }
 
-const cargoCamera = modelCamera();
-/** Cargo is planted inside the rendered bed/bucket using the very same camera. */
-export function modelCargoAnchor(kind: UnitKind, facing: Cell): Cell {
-  const [forward, height] = kind === 'scoop' ? [.50, .15] : kind === 'hauler' || kind === 'dumptruck' ? [-.14, .43]
-    : kind === 'scout' || kind === 'trailbuggy' ? [-.25, .44] : kind === 'forklift' ? [.43, .18]
-    : kind === 'tug' ? [.17, .23] : kind === 'freighter' ? [-.15, .24] : kind === 'arborbot' ? [.29, .48] : [0, .57];
-  const projected = new THREE.Vector3(facing.x * forward, height, facing.y * forward).project(cargoCamera);
-  return { x: ((projected.x + 1) * MODEL_SIZE / 2 - MODEL_ORIGIN.x) / 4,
-    y: ((1 - projected.y) * MODEL_SIZE / 2 - MODEL_ORIGIN.y) / 4 };
+export function addModelCargo(model: THREE.Group, kind: UnitKind, supplies: Supplies, carryingTree = false): void {
+  const [x, floor, width] = kind === 'hauler' ? [-.14, .44, .31] : kind === 'dumptruck' ? [-.15, .45, .30]
+    : kind === 'forklift' ? [.40, .18, .25] : kind === 'freighter' ? [-.14, .25, .31]
+    : kind === 'tug' ? [.17, .24, .24] : kind === 'warden' ? [-.12, .55, .18] : [-.17, .37, .24];
+  let index = 0;
+  const cargo = new THREE.Group(); cargo.name = 'cargo'; model.add(cargo);
+  const slot = () => {
+    const i = index++, columns = 2, row = Math.floor(i / columns) % 2, tier = Math.floor(i / 4);
+    return [x + (row - .5) * width / 2, floor + .045 + tier * .085, (i % columns - .5) * width / 2] as [number, number, number];
+  };
+  for (const color of materials) for (let i = 0; i < Math.min(supplies[color], 12 - index); i++) {
+    const at = slot(); box(cargo, partColors[color], [.13, .075, .12], at, .013);
+    cylinder(cargo, partColors[color], .026, .012, [at[0], at[1] + .043, at[2]]);
+  }
+  for (const _charge of supplies.batteries.slice(0, Math.max(0, 12 - index))) {
+    const at = slot(); const cell = new THREE.Group(); battery(cell, 0, 0, .32); cell.position.set(...at); cargo.add(cell);
+  }
+  if (supplies.soil) {
+    const dirt = toyModel('soil'); dirt.scale.setScalar(.60); dirt.position.set(.5, .13, 0); cargo.add(dirt);
+  }
+  if (carryingTree) {
+    const tree = toyModel('tree-small'); tree.scale.setScalar(.46); tree.position.set(.37, .28, 0); cargo.add(tree);
+  }
 }
 
 function material(color: number, roughness = .38): THREE.MeshStandardMaterial {
@@ -254,6 +267,14 @@ export function toyModel(kind: ModelKind): THREE.Group {
   const roster = rosterModel(kind);
   if (roster) return roster;
   const group = new THREE.Group();
+  if (kind === 'soil') {
+    const group = new THREE.Group();
+    for (const [x, y, z, radius] of [[0, .07, 0, .16], [-.17, .045, .03, .11], [.15, .045, .035, .11], [0, .035, -.15, .10]]) {
+      const lump = ball(group, 0xb88e58, radius, [x, y, z]); lump.scale.y = .5;
+    }
+    group.position.y = .005;
+    return group;
+  }
   if (kind === 'battery') {
     // The cap rings support the cell, matching the installed rover batteries.
     battery(group, 0, .078 * 1.8, 1.8);
@@ -380,9 +401,10 @@ export function toyModel(kind: ModelKind): THREE.Group {
   return group;
 }
 
-/** Generate a small shared atlas once. Phaser retains only the resulting canvases. */
-export function prepareToyModels(scene: Phaser.Scene): void {
-  if (scene.textures.exists('toy-scout-se')) return;
+type Studio = { renderer: THREE.WebGLRenderer; stage: THREE.Scene; camera: THREE.OrthographicCamera };
+let studio: Studio | undefined;
+function modelStudio(scene: Phaser.Scene): Studio {
+  if (studio) return studio;
   const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, preserveDrawingBuffer: true });
   renderer.setSize(MODEL_SIZE, MODEL_SIZE); renderer.setClearColor(0x000000, 0);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -391,32 +413,57 @@ export function prepareToyModels(scene: Phaser.Scene): void {
   stage.add(new THREE.HemisphereLight(0xffffff, 0xc3d8a3, .7));
   const sun = new THREE.DirectionalLight(0xffffff, 1.8); sun.position.set(-3, 6, 4); stage.add(sun);
   const fill = new THREE.DirectionalLight(0xd5ecff, .3); fill.position.set(4, 3, -2); stage.add(fill);
-  const camera = modelCamera();
-  for (const kind of modelKinds) {
-    const model = toyModel(kind); stage.add(model);
-    const directional = [...unitKinds, ...enemyKinds].includes(kind as UnitKind);
-    for (const direction of directional ? directions : [''] as const) {
-      // The two rear names retain the incumbent facingPicture contract.
-      model.rotation.y = ({ se: 0, sw: -Math.PI / 2, ne: Math.PI, nw: Math.PI / 2, '': 0 })[direction];
-      renderer.render(stage, camera);
-      const canvas = document.createElement('canvas'); canvas.width = canvas.height = MODEL_SIZE;
-      canvas.getContext('2d')!.drawImage(renderer.domElement, 0, 0);
-      const name = kind + (direction ? '-' + direction : '');
-      scene.textures.addCanvas('toy-' + name, canvas);
-      // HUD portraits frame the object itself; world sprites keep the shared planted origin.
-      const pixels = canvas.getContext('2d')!.getImageData(0, 0, MODEL_SIZE, MODEL_SIZE).data;
-      let left = MODEL_SIZE, top = MODEL_SIZE, right = 0, bottom = 0;
-      for (let y = 0; y < MODEL_SIZE; y++) for (let x = 0; x < MODEL_SIZE; x++) if (pixels[(y * MODEL_SIZE + x) * 4 + 3] > 8) {
-        left = Math.min(left, x); right = Math.max(right, x); top = Math.min(top, y); bottom = Math.max(bottom, y);
-      }
-      const portrait = document.createElement('canvas'); portrait.width = right - left + 17; portrait.height = bottom - top + 17;
-      portrait.getContext('2d')!.drawImage(canvas, left, top, right - left + 1, bottom - top + 1, 8, 8, right - left + 1, bottom - top + 1);
-      portraits.set(name, portrait.toDataURL('image/png'));
-      if (kind in partColors || kind === 'battery') scene.textures.addCanvas('toy-icon-' + name, portrait);
+  studio = { renderer, stage, camera: modelCamera() };
+  scene.game.events.once('destroy', () => { renderer.dispose(); renderer.forceContextLoss(); studio = undefined; });
+  return studio;
+}
+function renderModel(scene: Phaser.Scene, model: THREE.Group, name: string, directional: boolean, portraitsNeeded: boolean): void {
+  const { renderer, stage, camera } = modelStudio(scene); stage.add(model);
+  for (const direction of directional ? directions : [''] as const) {
+    model.rotation.y = ({ se: 0, sw: -Math.PI / 2, ne: Math.PI, nw: Math.PI / 2, '': 0 })[direction];
+    renderer.render(stage, camera);
+    const canvas = document.createElement('canvas'); canvas.width = canvas.height = MODEL_SIZE;
+    canvas.getContext('2d')!.drawImage(renderer.domElement, 0, 0);
+    const frame = name + (direction ? '-' + direction : '');
+    scene.textures.addCanvas('toy-' + frame, canvas);
+    if (!portraitsNeeded) continue;
+    const pixels = canvas.getContext('2d')!.getImageData(0, 0, MODEL_SIZE, MODEL_SIZE).data;
+    let left = MODEL_SIZE, top = MODEL_SIZE, right = 0, bottom = 0;
+    for (let y = 0; y < MODEL_SIZE; y++) for (let x = 0; x < MODEL_SIZE; x++) if (pixels[(y * MODEL_SIZE + x) * 4 + 3] > 8) {
+      left = Math.min(left, x); right = Math.max(right, x); top = Math.min(top, y); bottom = Math.max(bottom, y);
     }
-    stage.remove(model);
-    model.traverse(child => { if (child instanceof THREE.Mesh) { child.geometry.dispose(); (child.material as THREE.Material).dispose(); } });
+    const portrait = document.createElement('canvas'); portrait.width = right - left + 17; portrait.height = bottom - top + 17;
+    portrait.getContext('2d')!.drawImage(canvas, left, top, right - left + 1, bottom - top + 1, 8, 8, right - left + 1, bottom - top + 1);
+    portraits.set(frame, portrait.toDataURL('image/png'));
+    if (name in partColors || name === 'battery' || name === 'soil') scene.textures.addCanvas('toy-icon-' + frame, portrait);
   }
-  renderer.dispose(); renderer.forceContextLoss();
+  stage.remove(model);
+  model.traverse(child => { if (child instanceof THREE.Mesh) { child.geometry.dispose(); (child.material as THREE.Material).dispose(); } });
+}
+
+/** Cache all four loaded views together. Cargo shares the model's depth buffer. */
+export function cargoModel(scene: Phaser.Scene, kind: UnitKind, supplies: Supplies, carryingTree: boolean): string {
+  if (!load(supplies) && !carryingTree) return kind;
+  const name = kind + '-load-' + [...materials.map(color => Math.min(supplies[color], 12)), supplies.batteries.length, supplies.soil ?? 0, Number(carryingTree)].join('-');
+  if (!scene.textures.exists('toy-' + name + '-se')) {
+    const model = toyModel(kind); addModelCargo(model, kind, supplies, carryingTree);
+    renderModel(scene, model, name, true, false);
+    loadedModels.add(name);
+  }
+  return name;
+}
+const loadedModels = new Set<string>();
+/** Keep only live cargo views, so repeated transport and replays cannot grow the atlas. */
+export function pruneCargoModels(scene: Phaser.Scene, live: ReadonlySet<string>): void {
+  for (const name of loadedModels) if (!live.has(name)) {
+    for (const heading of directions) scene.textures.remove('toy-' + name + '-' + heading);
+    loadedModels.delete(name);
+  }
+}
+
+/** Empty roster portraits and world views share one planted atlas. */
+export function prepareToyModels(scene: Phaser.Scene): void {
+  if (scene.textures.exists('toy-scout-se')) return;
+  for (const kind of modelKinds) renderModel(scene, toyModel(kind), kind, [...unitKinds, ...enemyKinds].includes(kind as UnitKind), true);
   scene.game.events.emit('toy-art-ready');
 }

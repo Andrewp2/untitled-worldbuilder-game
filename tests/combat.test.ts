@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { ATTACK_ENERGY, recipeSupplies, unitDefinition } from '../src/core/catalog';
+import { attackEnergy, recipeSupplies, unitDefinition } from '../src/core/catalog';
 import { key, walkable, type Grid } from '../src/core/grid';
 import { Simulation, type EnemyDefinition } from '../src/core/simulation';
 import { createBrambleCrossing, crossingGoals } from '../src/levels/bramble-crossing';
 import { createMission, missions } from '../src/levels/missions';
 
+const WARDEN_HIT_COST = attackEnergy('warden');
 const grid: Grid = { width: 9, height: 9, tiles: Array.from({ length: 9 }, () => Array(9).fill('grass')) };
 const creature = (overrides: Partial<EnemyDefinition> = {}): EnemyDefinition => ({
   id: 'enemy', kind: 'bristleback', name: 'Bristleback', start: { x: 4, y: 3 }, speed: 1.5, maxHealth: 20,
@@ -20,13 +21,13 @@ describe('automatic adjacent combat', () => {
   it('fights without an attack order, observes cooldowns, and spends charge per successful hit', () => {
     const simulation = arena(); simulation.step(.01);
     expect(simulation.unit('rover').goal).toBeNull();
-    expect(simulation.unit('rover').battery).toBe(100 - ATTACK_ENERGY - 4);
+    expect(simulation.unit('rover').battery).toBe(100 - WARDEN_HIT_COST - 4);
     expect(simulation.enemies[0].health).toBe(16);
     simulation.step(.65);
     expect(simulation.enemies[0].health).toBe(16);
     simulation.step(.1);
     expect(simulation.enemies[0].health).toBe(12);
-    expect(simulation.unit('rover').battery).toBe(100 - 2 * ATTACK_ENERGY - 4);
+    expect(simulation.unit('rover').battery).toBe(100 - 2 * WARDEN_HIT_COST - 4);
     expect(simulation.drainEvents().filter(event => event.kind === 'hit')).toHaveLength(3);
   });
   it('does not attack diagonally, at range, or with an empty battery', () => {
@@ -36,7 +37,7 @@ describe('automatic adjacent combat', () => {
     const unpowered = arena('warden', creature({ damage: 0 }));
     unpowered.unit('rover').battery = 0; run(unpowered, 2);
     expect(unpowered.enemies[0].health).toBe(20);
-    unpowered.unit('rover').battery = 2 * ATTACK_ENERGY; run(unpowered, 3);
+    unpowered.unit('rover').battery = 2 * WARDEN_HIT_COST; run(unpowered, 3);
     expect(unpowered.enemies[0].health).toBe(12); expect(unpowered.unit('rover').battery).toBe(0);
     expect(unpowered.units).toHaveLength(1); expect(unpowered.unit('rover').status).toBe('depleted');
   });
@@ -45,10 +46,10 @@ describe('automatic adjacent combat', () => {
     expect(transport.enemies[0].health).toBe(20); expect(transport.unit('rover').battery).toBeLessThan(100);
     const defender = arena(); run(defender, 4);
     expect(defender.enemies).toHaveLength(0);
-    expect(defender.unit('rover').battery).toBe(100 - 5 * ATTACK_ENERGY - 4 * 4);
+    expect(defender.unit('rover').battery).toBe(100 - 5 * WARDEN_HIT_COST - 4 * 4);
   });
   it('resolves simultaneous lethal hits for both sides rather than favoring update order', () => {
-    const simulation = arena('warden', creature({ maxHealth: 4 })); simulation.unit('rover').battery = ATTACK_ENERGY + 4;
+    const simulation = arena('warden', creature({ maxHealth: 4 })); simulation.unit('rover').battery = WARDEN_HIT_COST + 4;
     simulation.step(.01);
     expect(simulation.units).toHaveLength(0); expect(simulation.enemies).toHaveLength(0);
     expect(simulation.drainEvents().filter(event => event.kind === 'destroyed')).toHaveLength(2);

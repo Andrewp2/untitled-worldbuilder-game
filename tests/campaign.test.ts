@@ -161,8 +161,12 @@ describe('world map and mission completion', () => {
     const mission = missions[0], storage = memoryStorage(), campaign = new Campaign(ids, storage);
     campaign.start(mission.id);
     const simulation = createMission(mission);
+    expect(simulation.move('duck',{x:4,y:3}).ok).toBe(true); simulation.step(3);
+    simulation.move('duck',{x:4,y:2}); simulation.step(3);
+    const scout=simulation.build('scout',{x:4,y:4}); expect(scout.ok).toBe(true);
+    if(!scout.ok)throw new Error('Scout kit must build.');
     for (const goal of mission.goals) {
-      expect(simulation.move('hauler', goal.cell).ok).toBe(true); simulation.step(40);
+      expect(simulation.move(scout.id!, goal.cell).ok).toBe(true); simulation.step(40);
       const complete = mission.goals.every(goal => simulation.reached.has(goal.id));
       if (complete) campaign.finish(mission.id);
     }
