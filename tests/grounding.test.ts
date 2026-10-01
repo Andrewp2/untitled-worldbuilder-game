@@ -11,11 +11,11 @@ describe('world occlusion follows the ground footprint', () => {
     }
   });
   it('picks the foreground object while a rover moves past a relay', () => {
-    const relay = { id: 'relay', kind: 'relay' as const, cell: { x: 4, y: 4 } };
+    const relay = { id: 'relay', kind: 'relay' as const, cell: { x: 4, y: 4 }, contains: () => true };
     const center = toWorld(relay.cell);
     // A fractional cell describes the rover's interpolated movement position.
     for (const offset of [-.002, .002]) {
-      const rover = { id: 'rover', kind: 'rover' as const, cell: { x: 4 + offset, y: 4 } };
+      const rover = { id: 'rover', kind: 'rover' as const, cell: { x: 4 + offset, y: 4 }, contains: () => true };
       expect(pickObject({ x: center.x, y: center.y - 20 }, [relay, rover])?.id).toBe(offset > 0 ? 'rover' : 'relay');
     }
   });

@@ -20,9 +20,8 @@ describe('physical water surface', () => {
       expect(surfacePoint(grid,back).y - reversed.y).toBeCloseTo((1-t) * WATER_DROP);
     }
   });
-  it('picks a boat at its rendered anchor and respects the same foreground ordering', () => {
+  it('orders overlapping boat pictures by their rendered water-surface anchors', () => {
     const cell = { x:1,y:0 }, anchor = surfacePoint(grid,cell);
-    expect(pickObject({x:anchor.x,y:anchor.y+15}, [{id:'boat',kind:'rover',cell,anchor}])?.id).toBe('boat');
-    expect(pickObject(anchor,[{id:'back',kind:'rover',cell,anchor:{x:anchor.x,y:anchor.y-5}},{id:'front',kind:'rover',cell,anchor}])?.id).toBe('front');
+    expect(pickObject(anchor,[{id:'back',kind:'rover',cell,anchor:{x:anchor.x,y:anchor.y-5},contains: () => true},{id:'front',kind:'rover',cell,anchor,contains: () => true}])?.id).toBe('front');
   });
 });

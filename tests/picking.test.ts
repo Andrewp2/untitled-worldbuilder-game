@@ -1,34 +1,66 @@
 import { describe, expect, it } from 'vitest';
 import { toWorld } from '../src/core/projection';
-import { pickObject } from '../src/view/picking';
+import { pickObject, pictureContains } from '../src/view/picking';
 
-const relay = { id: 'relay', kind: 'relay' as const, cell: { x: 1, y: 1 } };
-const at = (x: number, y: number) => { const p = toWorld(relay.cell); return { x: p.x + x, y: p.y + y }; };
+// Small source alpha masks model a body and a narrow upright station. The
+// world transform includes the planted origin, current size and animated pose.
+function picture(anchor: { x: number; y: number }, opaque: (x: number, y: number) => number) {
+  const pose = { scale: 1, angle: 0, lift: 0 };
+  const image = {
+    visible: true, alpha: 1, texture: { key: 'body' }, frame: { name: 'se' },
+    getLocalPoint(x: number, y: number) {
+      const dx = x - anchor.x, dy = y - anchor.y + pose.lift;
+      return { x: 48 + (dx * Math.cos(pose.angle) + dy * Math.sin(pose.angle)) / pose.scale,
+        y: 70 + (-dx * Math.sin(pose.angle) + dy * Math.cos(pose.angle)) / pose.scale };
+    },
+    scene: { textures: { getPixelAlpha(x: number, y: number, key: string, frame: string | number) {
+      if (x < 0 || y < 0 || x >= 96 || y >= 96) return null;
+      // Switching heading must sample the displayed frame, not an earlier one.
+      return key === 'body' && frame === 'se' ? opaque(x, y) : 0;
+    } } },
+  };
+  return { image, pose, contains: (point: { x: number; y: number }) => pictureContains(point, image) };
+}
+
+const haulerCell = { x: 13, y: 1 }, stationCell = { x: 14, y: 2 };
+const stationAnchor = toWorld(stationCell);
+const body = picture(toWorld(haulerCell), (x, y) => x >= 26 && x <= 70 && y >= 40 && y <= 75 ? 255 : 0);
+const station = picture(stationAnchor, (x, y) => x >= 40 && x <= 55 && y >= 26 && y <= 74 ? 255 : 0);
+const hauler = { id: 'hauler', kind: 'rover' as const, cell: haulerCell, contains: body.contains };
+const charger = { id: 'station', kind: 'rover' as const, cell: stationCell, contains: station.contains };
 
 describe('selecting visible map objects', () => {
-  it('selects the taller toy rover from its antenna and either side of its body', () => {
-    const rover = { id: 'scout', kind: 'rover' as const, cell: relay.cell };
-    for (const [x, y] of [[0, -55], [31, -20], [-31, -20], [0, 8]]) {
-      expect(pickObject(at(x, y), [rover])?.id).toBe('scout');
-    }
-    for (const [x, y] of [[50, -20], [0, -75], [0, 35]]) {
-      expect(pickObject(at(x, y), [rover])).toBeUndefined();
+  it('selects the hauler through the transparent top of a foreground charging station', () => {
+    const point = { x: stationAnchor.x, y: stationAnchor.y - 52 };
+    expect(pickObject(point, [hauler, charger])?.id).toBe('hauler');
+    expect(pickObject(point, [charger, hauler])?.id).toBe('hauler');
+  });
+  it('selects the foreground station where its visible pixels cover the hauler', () => {
+    const point = { x: stationAnchor.x, y: stationAnchor.y - 42 };
+    expect(pickObject(point, [hauler, charger])?.id).toBe('station');
+    expect(pickObject(point, [charger, hauler])?.id).toBe('station');
+  });
+  it('does not turn transparent padding or empty ground into a selectable object', () => {
+    for (const point of [{ x: stationAnchor.x + 33, y: stationAnchor.y - 30 }, { x: stationAnchor.x, y: stationAnchor.y + 30 }]) {
+      expect(pickObject(point, [hauler, charger])).toBeUndefined();
     }
   });
-  it('picks the whole relay from antenna to base, including the previously missed top', () => {
-    for (const [x, y] of [[0, -58], [-21, -50], [0, -26], [0, 0], [0, 17]]) {
-      expect(pickObject(at(x, y), [relay])?.id).toBe('relay');
+  it('samples the current picture after scale, rotation and hopping transforms', () => {
+    const source = picture({ x: 100, y: 200 }, (x, y) => x === 50 && y === 60 ? 255 : 0);
+    source.pose.scale = .5; source.pose.angle = Math.PI / 2; source.pose.lift = 6;
+    expect(source.contains({ x: 105, y: 195 })).toBe(true);
+    expect(source.contains({ x: 101, y: 195 })).toBe(false);
+    source.image.frame.name = 'nw';
+    expect(source.contains({ x: 105, y: 195 })).toBe(false);
+  });
+  it('ignores nearly transparent edges and hidden pictures', () => {
+    for (const alpha of [0, 8, 9, 255]) {
+      const source = picture({ x: 0, y: 0 }, () => alpha);
+      expect(source.contains({ x: 0, y: 0 })).toBe(alpha > 8);
+      source.image.visible = false;
+      expect(source.contains({ x: 0, y: 0 })).toBe(false);
+      source.image.visible = true; source.image.alpha = 0;
+      expect(source.contains({ x: 0, y: 0 })).toBe(false);
     }
-    expect(pickObject(at(60, 0), [relay])).toBeUndefined();
-  });
-  it('lets the visible relay win when its mast overlaps a rover behind it', () => {
-    const rover = { id: 'rover', kind: 'rover' as const, cell: { x: 0, y: 0 } };
-    // This overlap is common when a rover delivers parts, then a relay is built beside it.
-    expect(pickObject(at(0, -45), [rover, relay])?.id).toBe('relay');
-    expect(pickObject(at(0, -45), [relay, rover])?.id).toBe('relay');
-  });
-  it('keeps the rover selectable when it is drawn in front of a relay', () => {
-    const rover = { id: 'rover', kind: 'rover' as const, cell: { x: 2, y: 1 } };
-    expect(pickObject(at(21, -7), [relay, rover])?.id).toBe('rover');
   });
 });

@@ -9,7 +9,7 @@ import { TOY_BACKGROUND, drawStar, groundShadow, poseToy, preloadToyArt, toyActo
 import { rewardPose } from './motion';
 import { prepareToyModels, modelCargoAnchor } from './toy-models';
 import { GROUND_MARK_DEPTH, STATUS_DEPTH, worldDepth } from './grounding';
-import { pickObject } from './picking';
+import { pickObject, pictureContains } from './picking';
 import type { SoundCue } from '../audio/score';
 
 export type Mode = 'move' | WorkAction | 'build' | 'dismantle';
@@ -45,6 +45,7 @@ export class GameScene extends Phaser.Scene {
   private markers!: Phaser.GameObjects.Graphics;
   private rovers = new Map<string, ToyActor>();
   private creatures = new Map<string, ToyActor>();
+  private relayPictures = new Map<string, Phaser.GameObjects.Image>();
   private puffs: { cell: Cell; elapsed: number }[] = [];
   private pilePictures = new Map<string, Phaser.GameObjects.Container>();
   private flashes: { cell: Cell; until: number }[] = [];
@@ -155,13 +156,14 @@ export class GameScene extends Phaser.Scene {
   private point(cell: Cell): Cell { return surfacePoint(this.simulation.grid, cell); }
   private hitObject(p: Cell) {
     return pickObject(p, [
-      ...this.simulation.units.map(u => ({ id: u.id, kind: 'rover' as const, cell: this.simulation.position(u), anchor: this.point(this.simulation.position(u)) })),
-      ...this.simulation.relays.map(r => ({ id: r.id, kind: 'relay' as const, cell: r.cell })),
-      ...this.simulation.enemies.map(enemy => ({ id: enemy.id, kind: 'enemy' as const, cell: this.simulation.position(enemy), anchor: this.point(this.simulation.position(enemy)) })),
+      ...this.simulation.units.map(u => ({ id: u.id, kind: 'rover' as const, cell: this.simulation.position(u), anchor: this.point(this.simulation.position(u)), contains: (point: Cell) => pictureContains(point, this.rovers.get(u.id)!.body) })),
+      ...this.simulation.relays.map(r => ({ id: r.id, kind: 'relay' as const, cell: r.cell, contains: (point: Cell) => pictureContains(point, this.relayPictures.get(r.id)!) })),
+      ...this.simulation.enemies.map(enemy => ({ id: enemy.id, kind: 'enemy' as const, cell: this.simulation.position(enemy), anchor: this.point(this.simulation.position(enemy)), contains: (point: Cell) => pictureContains(point, this.creatures.get(enemy.id)!.body) })),
     ]);
   }
   private targetCell(p: Cell): Cell {
     const object = this.hitObject(p);
+    if (object?.kind === 'rover') return this.simulation.unit(object.id).cell;
     if (object?.kind === 'relay') return object.cell;
     if (object?.kind === 'enemy') return this.simulation.enemies.find(enemy => enemy.id === object.id)!.cell;
     const pile = this.simulation.piles.find(r => {
@@ -303,7 +305,7 @@ export class GameScene extends Phaser.Scene {
     for (const [id, creature] of this.creatures) if (!this.simulation.enemies.some(enemy => enemy.id === id)) {
       creature.root.destroy(); this.creatures.delete(id);
     }
-    this.objects = []; this.cargoGraphics.clear(); this.pileBadges.clear(); this.pilePictures.clear();
+    this.objects = []; this.cargoGraphics.clear(); this.pileBadges.clear(); this.pilePictures.clear(); this.relayPictures.clear();
     for (const pile of this.simulation.piles) {
       const p = this.point(pile.cell);
       this.objects.push(groundShadow(this, 52, 18).setPosition(p.x, p.y));
@@ -320,7 +322,9 @@ export class GameScene extends Phaser.Scene {
     for (const relay of this.simulation.relays) {
       const p = this.point(relay.cell);
       this.objects.push(groundShadow(this, 46, 18).setPosition(p.x, p.y));
-      this.objects.push(drawRelay(this).setPosition(p.x, p.y).setDepth(worldDepth(p, 'relay')));
+      const picture = drawRelay(this).setPosition(p.x, p.y).setDepth(worldDepth(p, 'relay'));
+      this.relayPictures.set(relay.id, picture.getAt<Phaser.GameObjects.Image>(0));
+      this.objects.push(picture);
     }
     for (const u of this.simulation.units) {
       if (!this.rovers.has(u.id)) this.rovers.set(u.id, toyActor(this, u.kind));
