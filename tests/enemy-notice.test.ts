@@ -17,14 +17,18 @@ describe('enemy notice and authored patrols', () => {
     s.step(.05); expect(s.enemies[0].next).not.toBeNull();
     expect(s.drainEvents().filter(e => e.kind === 'enemy-alert')).toHaveLength(0);
   });
-  it('does not restart the notice timer when a second unit becomes the nearer target', () => {
+  it('keeps chasing the bait when another unit is closer, then reacquires after escape without another warning delay', () => {
     const s = new Simulation(grid, [unitDefinition('scout', 'bait', { x: 3, y: 2 }), unitDefinition('scout', 'second', { x: 4, y: 3 })], {
       enemies: [{ ...enemy(), speed: 0 }],
     });
     s.step(.01); expect(s.enemies[0].target).toBe('bait'); s.drainEvents();
     expect(s.move('bait', { x: 0, y: 2 }).ok).toBe(true); s.step(.12);
-    expect(s.enemies[0].target).toBe('second');
+    expect(s.enemies[0].target).toBe('bait');
     expect(s.enemies[0].alertRemaining).toBeLessThan(ENEMY_NOTICE_SECONDS - .1);
+    expect(s.drainEvents().filter(e => e.kind === 'enemy-alert')).toHaveLength(0);
+    s.step(2);
+    expect(s.enemies[0].target).toBe('second');
+    expect(s.enemies[0].alertRemaining).toBe(0);
     expect(s.drainEvents().filter(e => e.kind === 'enemy-alert')).toHaveLength(0);
   });
   it('still resolves the automatic first volley for already adjacent combatants', () => {
@@ -32,6 +36,15 @@ describe('enemy notice and authored patrols', () => {
     s.step(.01);
     expect(s.unit('guard').battery).toBe(94);
     expect(s.enemies[0].health).toBe(12);
+  });
+  it('reacquires a nearby unit when the chased unit is dismantled', () => {
+    const s = new Simulation(grid, [unitDefinition('scout', 'bait', { x: 3, y: 2 }), unitDefinition('scout', 'second', { x: 4, y: 3 })], {
+      enemies: [{ ...enemy(), speed: 0 }],
+    });
+    s.step(1); expect(s.enemies[0].target).toBe('bait');
+    expect(s.dismantle('bait').ok).toBe(true);
+    s.step(.01);
+    expect(s.enemies[0]).toMatchObject({ target: 'second', status: 'chasing', alertRemaining: 0 });
   });
   it('abandons the notice if its target escapes, and warns again on a fresh encounter', () => {
     const s = new Simulation(grid, [unitDefinition('scout', 'bait', { x: 3, y: 2 })], { enemies: [{ ...enemy(), speed: 0 }] });

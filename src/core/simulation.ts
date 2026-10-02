@@ -540,7 +540,9 @@ export class Simulation {
         .filter(candidate => candidate.distance <= enemy.detectionRange)
         .sort((a, b) => a.distance - b.distance || a.unit.id.localeCompare(b.unit.id))[0]?.unit;
       const previous = this.units.find(unit => unit.id === enemy.target);
-      const target = nearby ?? (previous && this.distance(position, this.position(previous)) <= enemy.loseRange ? previous : null);
+      // A chase is a commitment: a passing courier should not steal a patrol
+      // from the unit deliberately drawing it away. Reacquire after escape.
+      const target = previous && this.distance(position, this.position(previous)) <= enemy.loseRange ? previous : nearby;
       if (target && !enemy.target) {
         // Already adjacent opponents still trade their automatic first volley.
         // The notice beat gives warning before a distant predator begins a chase.
