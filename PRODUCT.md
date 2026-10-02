@@ -40,6 +40,8 @@ Game menu has one contextual reset control. Inside a mission, **Restart level** 
 
 Music and sound effects both start off on every load, including when old saved preferences say enabled. Each channel can be enabled separately for the current tab's session; audio preferences are not persisted. Activating Web Audio alone keeps both channels muted.
 
+The active objective pictures its required creature, alternative species, original rescue target and carried resources. Minimum remaining power and enemy-clearance requirements are included when authored. After the main, the same row switches to the newly revealed bonus; action feedback flows underneath long objective text. This replaces the numeric single-goal counter without adding another information panel.
+
 ## Brand Commitments
 
 Original identity, art, units, and levels. World Builder supplies specialist-role and mechanical references; recipes, statistics, maps, and rules are authored adaptations. The final name and broader setting remain open; `Untitled` is an honest working title. Meadow Isles, Sunstone Range and Open Sea and their 36 named missions are the current campaign locations.

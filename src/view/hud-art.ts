@@ -1,5 +1,6 @@
 import { BATTERY_CAPACITY, materials, partKinds, type Cost, type Material, type Supplies, type Blueprint } from '../core/catalog';
 import { modelPortrait, partColors } from './toy-models';
+import type { ObjectiveDisplay } from './objectives';
 
 const icons: Record<string, string> = {
   left: '<path d="m15 5-7 7 7 7"/>',
@@ -50,6 +51,18 @@ export const relayIcon = () => modelImage('relay', 'relay-icon');
 export const wardenIcon = () => modelImage('warden-se', 'rover-icon');
 export const blueprintIcon = (kind: Blueprint) => kind === 'relay' ? relayIcon() : modelImage(`${kind}-se`, 'rover-icon');
 export const treeCargoIcon = () => `<span class="resource-icon" aria-hidden="true">${modelImage('tree-small', 'resource-picture')}</span>`;
+
+export function objectiveArt(objective: ObjectiveDisplay): string {
+  const label = objective.label.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+  const pictures = objective.models.map(kind => blueprintIcon(kind)).join('<small class="objective-or">or</small>');
+  return `<span class="objective-target" role="img" aria-label="${label}" title="${label}">
+    <span class="goal-marker ${objective.marker === 'star' ? 'bonus-marker' : ''} ${objective.complete ? 'complete' : ''}">${icon(objective.complete && objective.marker === 'flag' ? 'check' : objective.marker)}</span>
+    ${objective.original ? '<small class="objective-original">original</small>' : ''}${pictures}
+    ${objective.carryingTree ? treeCargoIcon() : ''}${objective.cargo ? costIcons(objective.cargo) : ''}
+    ${objective.minimumCharge ? `<span class="resource-count">${resourceIcon('battery', objective.minimumCharge)}<b>${objective.minimumCharge}+</b></span>` : ''}
+    ${objective.clearEnemies ? `<span class="objective-combat">${icon('shield')}</span>` : ''}
+  </span>`;
+}
 
 export function actionArt(action: string): string {
   if (action === 'move') return '<svg class="action-pointer" viewBox="0 0 32 32" aria-hidden="true"><path d="m8 3 19 16-10 2-5 9z" fill="#ffe36a" stroke="#173558" stroke-width="2" stroke-linejoin="round"/></svg>';

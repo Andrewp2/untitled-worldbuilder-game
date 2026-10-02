@@ -281,6 +281,12 @@ Scoop exposes Move / Dig / Fill in the compact command strip. Pickup/Drop are hi
 
 Dozer adds Push and Arborbot adds Uproot/Plant to the same legal command strip; Space chooses the catalog default according to carried state. Unsupported cargo commands stay hidden for non-carriers. Support and automatic combat need no new action button; stationary structures omit Move/Stop. Pictured blueprints remain in the dock across selection and construction, and carried trees use a contained tree portrait.
 
+### Pictured Objectives
+
+The active goal uses the existing flag/star with shared (34px) creature portraits instead of a numeric single-goal counter. `or` separates alternative kinds; `original` identifies an authored rescue target, independent of which creatures are currently alive. Cargo, carried trees and minimum remaining charge reuse resource pictures, and the shield marks an enemy-clearance requirement. A title and accessible label spell out the complete requirement, including charged cargo batteries. The bonus replaces the main requirement only after the main is complete.
+
+The action strip and hovered-tile information flow below this objective with (12px) gaps, so wrapped bonus descriptions cannot overlap the build controls. This refinement preserves the sparse desktop composition and introduces no extra panel. [The October 2 evidence](.impeccable/review/objective-clarity/evidence.md) records the native checks and their limits.
+
 ### Construction Preview and Feedback
 
 Selecting a blueprint shows its shared toy picture at the hovered terrain tile, using the calibrated support origin and world depth. The ghost is translucent (alpha .55), with a neutral tint when ready and a warm coral tint otherwise; units use the existing (96px) picture size and Signal relay uses (76px). The surrounding tile outlines mark the same 3×3 supply area used by construction.

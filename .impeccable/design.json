@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-02T01:15:31+00:00",
+  "generatedAt": "2026-10-02T16:48:07.560253+00:00",
   "title": "Design System: Untitled",
   "extensions": {
     "colorMeta": {
@@ -728,6 +728,11 @@
       "description": "Source-derived pattern only: the selected shared model uses its planted origin/depth at alpha .55 within the 3×3 supply area (96px units/76px relay). Feedback uses a lime ready check, pictured missing counts or coral site cross; site problems outrank ingredient deficits, and a legal empty battery adds its gray empty-cell picture. Titles/accessible labels carry details. The snippet extracts only the ready/site symbols with the final 20px source sizing; no browser recapture, model ghost or ingredient preview is implied.",
       "html": "<div class=\"ds-build-readout\"><span class=\"ds-build-feedback ds-ready\" role=\"img\" aria-label=\"Ready to build\" title=\"Ready to build\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m5 12 4 4L19 6\"/></svg></span></div><div class=\"ds-build-readout\"><span class=\"ds-build-feedback\" role=\"img\" aria-label=\"That tile is in use. Choose an empty site.\" title=\"That tile is in use. Choose an empty site.\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m6 6 12 12M6 18 18 6\"/></svg></span></div>",
       "css": ".ds-build-readout {display:flex;align-items:center;gap:9px;padding:6px 10px;background:#123b61;border-radius:8px;font-family:'Nunito Sans Variable',sans-serif;font-size:12px;color:#f5f9ff;} .ds-build-feedback {display:flex;align-items:center;gap:5px;color:#ff947b;} .ds-build-feedback > svg {width:20px;height:20px;flex-shrink:0;} .ds-build-feedback.ds-ready {color:#c5f331;}"
+    },
+    {
+      "name": "Pictured mission objectives",
+      "kind": "custom",
+      "description": "The current goal uses its flag/star and 34px shared creature portraits; or separates alternatives and original identifies the authored rescue target. Shared resources show cargo, a carried tree or minimum remaining charge; the shield means clear enemies. Complete labels live in title/ARIA text. The bonus is hidden until the main, then replaces it. Action and hover feedback flow beneath with 12px gaps. Native 650×562 choice, rescue, convoy and bonus states are recorded in .impeccable/review/objective-clarity/evidence.md; no standalone component preview is synthesized."
     }
   ],
   "narrative": {

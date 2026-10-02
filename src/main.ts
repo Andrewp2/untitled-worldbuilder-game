@@ -2,7 +2,8 @@ import Phaser from 'phaser';
 import '@fontsource-variable/nunito-sans';
 import './style.css';
 import { GameScene, type Mode, type ViewState } from './view/GameScene';
-import { icon, mapFlag, blueprintIcon, resourceIcon, cargoSlots, costIcons, actionArt, treeCargoIcon } from './view/hud-art';
+import { icon, mapFlag, blueprintIcon, resourceIcon, cargoSlots, costIcons, actionArt, treeCargoIcon, objectiveArt } from './view/hud-art';
+import { objectiveDisplays } from './view/objectives';
 import { attackEnergy, BATTERY_CAPACITY, MOVE_ENERGY, TRANSFER_ENERGY, TERRAIN_ENERGY, blueprintNames, supportsCargo, supportsAction, isMobile, usesBattery, unitKinds, describeCost, describeSupplies, load, recipes, type Blueprint } from './core/catalog';
 import { GameAudio, type AudioState } from './audio/GameAudio';
 import { missions, type WorldId } from './levels/missions';
@@ -60,6 +61,8 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
         <h1 id="mission-name">Hollow Reach</h1>
         <p id="mission-goal" class="mission-objective" aria-live="polite">Reach the Shore flag</p>
         <div id="objective-progress" class="objective-progress" aria-label="Goal progress"></div>
+        <div class="mode-readout" id="mode-readout" hidden><span id="mode-symbol"></span><strong id="mode-name"></strong><span id="build-feedback" class="build-feedback" role="img" hidden></span><button id="cancel-mode" class="icon-button" aria-label="Cancel action" title="Cancel (Esc)">${icon('close')}</button></div>
+        <p id="tile-info" hidden></p>
       </section>
       <div class="control-dock">
       <section id="blueprint-drawer" class="build-tray" aria-label="Blueprints">
@@ -98,8 +101,6 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
           <button id="zoom-out" aria-label="Zoom out" title="Zoom out">${icon('minus')}</button><output id="zoom-level" aria-label="Zoom level">100%</output><button id="zoom-in" aria-label="Zoom in" title="Zoom in">${icon('plus')}</button>
           <span class="control-divider"></span><button id="camera-focus" aria-label="Center selected rover" title="Center selection (F)">${icon('focus')}</button><button id="overview" aria-label="Show whole island" title="Show whole island (Home)">${icon('overview')}</button>
         </div>
-        <div class="mode-readout" id="mode-readout" hidden><span id="mode-symbol"></span><strong id="mode-name"></strong><span id="build-feedback" class="build-feedback" role="img" hidden></span><button id="cancel-mode" class="icon-button" aria-label="Cancel action" title="Cancel (Esc)">${icon('close')}</button></div>
-        <p id="tile-info" hidden></p>
         <div class="message-wrap"><p id="message" role="status" aria-live="polite" hidden></p></div>
       </div>
     </section>
@@ -185,7 +186,7 @@ el('menu-toggle').addEventListener('click', () => {
 const labels: Record<string, string> = { idle: 'Ready', moving: 'Moving', waiting: 'Waiting for a route', fighting: 'Fighting', depleted: 'Empty battery', paused: 'Paused' };
 const statusIcons: Record<string, string> = { idle:'check', moving:'move', waiting:'wait', fighting:'shield', depleted:'emptyBattery', paused:'pause' };
 const displayStatus = (state: ViewState, unit: ViewState['units'][number]) => state.paused && ['moving','waiting','fighting'].includes(unit.status) ? 'paused' : unit.status;
-let lastState = '', missionSignature = '';
+let lastState = '', missionSignature = '', objectiveSignature = '';
 let pausedBeforeCompletion = false;
 let changingScreen = false;
 let licensePromotion = '';
@@ -231,11 +232,11 @@ function updateHud(state: ViewState): void {
   lastState = signature;
   if (missionSignature !== state.mission.id) {
     missionSignature = state.mission.id;
+    objectiveSignature = '';
     document.title = `${state.mission.name} · Untitled`;
     el('mission-name').textContent = state.mission.name;
     el('mission-goal').textContent = state.mission.goal;
     el('mission-brief').textContent = state.mission.brief;
-    el('objective-progress').innerHTML = state.mission.goals.map(goal => `<span id="goal-${goal.id}" class="goal-marker" role="img" aria-label="${goal.name}: not reached" title="${goal.name}">${icon('flag')}</span>${goal.cargo ? `<span class="goal-manifest" role="img" aria-label="Arrive carrying ${describeCost({ ...goal.cargo, battery: goal.cargo.chargedBatteries })}${goal.cargo.chargedBatteries ? ' with charge remaining' : ''}">${costIcons({ ...goal.cargo, battery: goal.cargo.chargedBatteries })}</span>` : ''}`).join('') + `<span id="bonus-marker" class="goal-marker bonus-marker" role="img">${icon('star')}</span><span id="progress"></span>`;
     for (const plan of plans) el(`build-${plan}`).hidden = state.mission.blueprints[plan] === undefined;
   }
   const u = state.units.find(u => u.id === state.selected), relay = state.selectedRelay;
@@ -313,26 +314,18 @@ function updateHud(state: ViewState): void {
   el('tile-info').hidden = !state.context;
   el('tile-info').textContent = state.context;
   el('mission-goal').textContent = state.bonus.unlocked ? state.bonus.reached ? 'Bonus star earned' : state.bonus.description : state.mission.goal;
-  document.querySelectorAll<HTMLElement>('.goal-manifest').forEach(manifest => { manifest.hidden = state.complete; });
-  el('bonus-marker').hidden = !state.bonus.unlocked;
-  el('bonus-marker').classList.toggle('complete', state.bonus.reached);
-  el('bonus-marker').title = `${state.bonus.name}: ${state.bonus.reached ? 'bonus star earned' : state.bonus.description}`;
-  el('bonus-marker').setAttribute('aria-label', el('bonus-marker').title);
+  const nextObjective = JSON.stringify([state.mission.id, state.visited, state.bonus.unlocked, state.bonus.reached]);
+  if (objectiveSignature !== nextObjective) {
+    objectiveSignature = nextObjective;
+    const mission = missions.find(mission => mission.id === state.mission.id)!;
+    el('objective-progress').innerHTML = objectiveDisplays(mission, state.visited, state.bonus.unlocked, state.bonus.reached).map(objectiveArt).join('');
+  }
   el('zoom-level').textContent = `${state.zoom}%`;
   el('paused-label').hidden = !state.paused;
   el('pause').setAttribute('aria-pressed', String(state.paused));
   el('pause').setAttribute('aria-label', state.paused ? 'Resume' : 'Pause');
   el('pause').title = state.paused ? 'Resume' : 'Pause';
   el('pause').innerHTML = icon(state.paused ? 'play' : 'pause');
-  el('progress').textContent = `${state.visited.length} / ${state.mission.goals.length}`;
-  el('progress').setAttribute('aria-label', `${state.visited.length} of ${state.mission.goals.length} flags reached`);
-  for (const { id, name } of state.mission.goals) {
-    const done = state.visited.includes(id), marker = el(`goal-${id}`);
-    marker.classList.toggle('complete', done);
-    marker.innerHTML = icon(done ? 'check' : 'flag');
-    marker.setAttribute('aria-label', `${name}: ${done ? 'reached' : 'not reached'}`);
-    marker.title = marker.getAttribute('aria-label')!;
-  }
   if (state.ready) document.querySelector('.loading')?.remove();
   if (state.ready && state.complete && campaign.finish(state.mission.id)) {
     pausedBeforeCompletion = state.paused;

@@ -32,15 +32,18 @@ main { position:relative; }
 .mission { position:absolute; left:24px; top:23px; z-index:5; max-width:300px; }
 #mission-name { font-size:20px; font-weight:850; letter-spacing:-.025em; }
 .mission-objective { padding:6px 0; font-size:12px; line-height:1.45; color:var(--muted); }
-.objective-progress { display:flex; align-items:center; gap:8px; margin-top:4px; }
+.objective-progress { display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-top:4px; }
+.objective-target { display:flex; align-items:center; flex-wrap:wrap; gap:5px; min-height:34px; }
+.objective-target > .rover-icon { width:34px; height:34px; object-fit:contain; }
+.objective-original,.objective-or { font-size:11px; color:var(--muted); }
+.objective-combat { display:flex; color:#b8d5ef; }
+.objective-combat svg { width:20px; height:20px; }
 .goal-marker { display:flex; color:#b8d5ef; width:20px; height:22px; }
 .goal-marker svg { width:20px; height:20px; }
 .goal-marker.complete { color:#c9ec65; }
-.goal-manifest { display:flex; align-items:center; gap:7px; }
 #mission-brief { margin-top:14px; }
 .bonus-marker { color:#ffdc59; }
 .bonus-marker.complete svg { fill:#ffdc59; }
-#progress { font-size:11px; margin-left:4px; color:var(--muted); }
 .detail-panel { padding:16px; background:var(--paper); font-size:12px; line-height:1.5; border-radius:8px; box-shadow:0 6px 18px #001e4550; }
 .detail-panel p + p { margin-top:8px; }
 .detail-panel dl { margin:8px 0 0; }
@@ -104,14 +107,14 @@ main { position:relative; }
 .camera-controls button:hover { color:#ffdc59; background:#ffffff0c; }
 #zoom-out,#zoom-in,#zoom-level,.control-divider { display:none; }
 .camera-controls svg { width:19px; height:19px; }
-.mode-readout { position:absolute; top:133px; left:24px; display:flex; align-items:center; gap:9px; padding:6px 10px; background:#123b61; border-radius:8px; z-index:4; font-size:12px; }
-.build-feedback { display:flex; align-items:center; gap:5px; color:#ff947b; }
+.mode-readout { display:flex; align-items:center; flex-wrap:wrap; gap:9px; width:max-content; max-width:100%; margin-top:12px; padding:6px 10px; background:#123b61; border-radius:8px; font-size:12px; }
+.build-feedback { display:flex; align-items:center; flex-wrap:wrap; gap:5px; color:#ff947b; }
 .build-feedback > svg { width:20px; height:20px; flex-shrink:0; }
 .build-feedback.ready { color:#c5f331; }
 #mode-symbol img { width:35px; height:35px; object-fit:contain; }
 #mode-symbol svg { width:25px; height:25px; }
 #cancel-mode { width:24px; height:24px; }
-#tile-info { position:absolute; left:24px; top:188px; z-index:4; font-size:12px; max-width:350px; padding:8px 10px; border-radius:8px; background:#123b61; }
+#tile-info { width:max-content; max-width:100%; margin-top:12px; font-size:12px; padding:8px 10px; border-radius:8px; background:#123b61; }
 .message-wrap { position:absolute; left:20px; right:20px; bottom:124px; display:flex; justify-content:center; pointer-events:none; z-index:4; }
 #message { padding:8px 14px; max-width:450px; border-radius:7px; background:#123b61; box-shadow:0 5px 18px #001e4540; font-size:12px; }
 #paused-label { position:absolute; top:22px; left:50%; transform:translateX(-50%); z-index:5; font-size:15px; font-weight:800; color:#ffdc59; }
