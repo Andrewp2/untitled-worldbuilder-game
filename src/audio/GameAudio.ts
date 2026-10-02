@@ -1,5 +1,5 @@
 import { AUDIO_SAMPLE_RATE, makeEffect, makeMotor, type SoundCue } from './score';
-import musicUrl from './assets/little-expeditions.ogg?url';
+import musicUrl from './assets/tinker-tide.ogg?url';
 
 export type AudioState = { musicEnabled: boolean; effectsEnabled: boolean; started: boolean; available: boolean };
 // Prepare samples during startup, keeping synthesis work out of the first game click.
