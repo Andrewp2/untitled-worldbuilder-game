@@ -35,6 +35,7 @@ describe('enemy preference for units that can fight back', () => {
     });
     s.step(.01); expect(s.unit('carrier').battery).toBe(96); s.drainEvents();
     const tower = s.build('sentry', { x: 6, y: 3 }); expect(tower.ok).toBe(true);
+    if (!tower.ok) throw new Error(tower.reason);
     s.step(.01);
     expect(s.enemies[0]).toMatchObject({ target: tower.id, alertRemaining: 0 });
     expect(s.drainEvents().some(event => event.kind === 'hit' && event.attackerId === 'enemy')).toBe(false);
