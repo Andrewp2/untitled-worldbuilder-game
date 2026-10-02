@@ -98,7 +98,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
           <button id="zoom-out" aria-label="Zoom out" title="Zoom out">${icon('minus')}</button><output id="zoom-level" aria-label="Zoom level">100%</output><button id="zoom-in" aria-label="Zoom in" title="Zoom in">${icon('plus')}</button>
           <span class="control-divider"></span><button id="camera-focus" aria-label="Center selected rover" title="Center selection (F)">${icon('focus')}</button><button id="overview" aria-label="Show whole island" title="Show whole island (Home)">${icon('overview')}</button>
         </div>
-        <div class="mode-readout" id="mode-readout" hidden><span id="mode-symbol"></span><strong id="mode-name"></strong><button id="cancel-mode" class="icon-button" aria-label="Cancel action" title="Cancel (Esc)">${icon('close')}</button></div>
+        <div class="mode-readout" id="mode-readout" hidden><span id="mode-symbol"></span><strong id="mode-name"></strong><span id="build-feedback" class="build-feedback" role="img" hidden></span><button id="cancel-mode" class="icon-button" aria-label="Cancel action" title="Cancel (Esc)">${icon('close')}</button></div>
         <p id="tile-info" hidden></p>
         <div class="message-wrap"><p id="message" role="status" aria-live="polite" hidden></p></div>
       </div>
@@ -132,10 +132,10 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       <div><dt>Pick up / Drop off</dt><dd>Choose an action, then a pile or drop-off tile. The rover drives beside it to transfer cargo. Space chooses Pick up when empty or Drop off when loaded.</dd></div>
       <div><dt>Cargo</dt><dd>Hauler carries 4 parts; Scout carries 2. Pick up fills free space, taking red, blue, yellow and green parts, then tires and batteries. Each tire takes one cargo slot. Drop off unloads everything.</dd></div>
       <div><dt>Scoop</dt><dd>Dig clear grass or sand to collect 1 dirt and leave water. Fill water to turn it into land. Scoop drives beside the target first; each action costs ${TERRAIN_ENERGY} charge. Space chooses Dig when empty or Fill when loaded. Its bucket is for terrain work; use a Hauler for cargo.</dd></div>
-      <div><dt>Build</dt><dd>Walk a mobile model onto a blue ground plan to collect a blueprint. Choose its picture in the toolbox, then a clear tile the model can use. Build boats and Fish in water; Marina needs shallow water. Parts must be on the ground within the 3×3 square centered on the site, including diagonals. No unit is needed nearby. Wheeled vehicles also need four tires. Each successful build uses one blueprint; taking it apart does not restore that blueprint.</dd></div>
+      <div><dt>Build</dt><dd>Walk a mobile model onto a blue ground plan to collect a blueprint. Choose its picture in the toolbox, then hover a tile to see the model preview. A check means it is ready; ingredient pictures show what is missing, and a cross marks an unsuitable site. Build boats and Fish in water; Marina needs shallow water. Parts must be on the ground within the 3×3 square centered on the site, including diagonals. No unit is needed nearby. Wheeled vehicles also need four tires. Each successful build uses one blueprint; taking it apart does not restore that blueprint.</dd></div>
       <div><dt>Whirlpools</dt><dd>Swirls are shallow water. Enter one to jump to its linked exit with your cargo and battery intact. Moving into the entry costs one charge; the jump costs nothing extra. Leave the exit before entering it again to jump back. A blocked exit prevents entry.</dd></div>
       <div><dt>Licenses</dt><dd>Bonus stars earn builder classes: Class 2 at 12 stars, Class 3 at 24, and Class 4 at all 36. Open the yellow license beside Game menu to view or print it. Completed worlds stamp the license; resetting progress clears it too.</dd></div>
-      <div><dt>Combat</dt><dd>Move Warden beside a creature: it attacks automatically, spending ${attackEnergy('warden')} charge per hit. Creatures wander, then chase nearby rovers. Scout and Hauler cannot fight. Enemy hits drain the rover’s battery. A hit that empties it destroys the rover, leaving its parts, cargo, and an empty installed battery. Batteries carried as cargo keep their charge.</dd></div>
+      <div><dt>Combat</dt><dd>Move Warden beside a creature: it attacks automatically, spending ${attackEnergy('warden')} charge per hit. Creatures wander or follow a patrol; an exclamation warns when they notice a nearby unit before chasing. An enemy already beside a unit can attack immediately. Faster units can draw a patrol away from a crossing. Scout and Hauler cannot fight. Enemy hits drain the rover’s battery. A hit that empties it destroys the rover, leaving its parts, cargo, and an empty installed battery. Batteries carried as cargo keep their charge.</dd></div>
       <div><dt>Missions</dt><dd>Choose a location on the world map, then complete its main objective. Finishing pauses the mission: return to the world map or try the bonus. Each level has one main flag. Only after reaching it does the bonus star and its objective appear. Choose Try bonus to continue. Beat missions in map order to unlock the next one. Completed locations and earned stars are saved in this browser. Revisiting or restarting begins a fresh mission.</dd></div>
       <div><dt>Batteries</dt><dd>Charge powers movement and absorbs damage. Each rover needs a battery. Empty batteries work for building, but cannot power movement or actions. Full charge is ${BATTERY_CAPACITY}; moving costs ${MOVE_ENERGY} per tile, and each pickup or drop-off costs ${TRANSFER_ENERGY}. Using the last charge leaves an intact, powerless rover.</dd></div>
       <div><dt>Replace battery</dt><dd>Drop a battery with more charge within the rover’s 3×3 area. Stop the rover, then choose Replace battery. The old battery returns to the ground. Carried batteries keep their charge; rebuilding a rover does not refill its battery.</dd></div>
@@ -302,6 +302,14 @@ function updateHud(state: ViewState): void {
   el('mode-readout').hidden = state.mode === 'move';
   el('mode-symbol').innerHTML = state.mode === 'build' ? blueprintIcon(state.blueprint) : icon(state.mode);
   el('mode-name').textContent = ({ move:'Move', pickup:'Pick up', drop:'Drop off', dig:'Dig', fill:'Fill', push:'Push', uproot:'Uproot', plant:'Plant', build:blueprintNames[state.blueprint] })[state.mode];
+  const site = state.buildSite, feedback = el('build-feedback');
+  feedback.hidden = !site;
+  if (site) {
+    const label = site.ok ? `Ready to build${site.batteryCharge === 0 ? ' with an empty battery' : ''}` : site.problem === 'parts' ? `Missing: ${describeCost(site.missing)}` : site.reason;
+    feedback.innerHTML = site.ok ? icon('check') + (site.batteryCharge === 0 ? cargoSlots({ red: 0, blue: 0, yellow: 0, green: 0, tires: 0, batteries: [0] }, 1) : '') : site.problem === 'parts' ? costIcons(site.missing) : icon('close');
+    feedback.setAttribute('aria-label', label); feedback.title = label;
+    feedback.classList.toggle('ready', site.ok);
+  }
   el('tile-info').hidden = !state.context;
   el('tile-info').textContent = state.context;
   el('mission-goal').textContent = state.bonus.unlocked ? state.bonus.reached ? 'Bonus star earned' : state.bonus.description : state.mission.goal;

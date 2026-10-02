@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import type { Cell } from '../core/grid';
+import { isWater, terrainAt, type Cell } from '../core/grid';
 import { toWorld, surfacePoint, WATER_DROP } from '../core/projection';
 import { worlds } from '../levels/world-map';
 import type { WorldId } from '../levels/missions';
@@ -131,7 +131,7 @@ export class WorldMapScene extends Phaser.Scene {
       const index = Math.floor(step) % resident.route.length, progress = this.reducedMotion ? 0 : step % 1;
       const from = resident.route[index], to = resident.route[(index + 1) % resident.route.length];
       const position = surfacePoint(this.world.grid, { x: from.x + (to.x - from.x) * progress, y: from.y + (to.y - from.y) * progress });
-      poseToy(resident.actor, position, { x: to.x - from.x, y: to.y - from.y }, !this.reducedMotion, 100, progress, this.reducedMotion);
+      poseToy(resident.actor, position, { x: to.x - from.x, y: to.y - from.y }, !this.reducedMotion, 100, progress, this.reducedMotion, { clock: phase, wet: isWater(terrainAt(this.world.grid, from)) });
     }
     this.water.clear();
     for (let y = 0; y < this.world.grid.height; y++) for (let x = 0; x < this.world.grid.width; x++) {

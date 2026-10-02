@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-01T21:47:05.552384+00:00",
+  "generatedAt": "2026-10-02T01:15:31+00:00",
   "title": "Design System: Untitled",
   "extensions": {
     "colorMeta": {
@@ -576,13 +576,23 @@
       },
       {
         "name": "step-hop",
-        "value": "sin(pi * step progress) * height; 6/3.5/2.8/2/5 world pixels for Scout/Hauler/Warden/Scoop/Bristleback",
-        "purpose": "Each moving body takes off and lands; shadows and sorting origins stay on the ground; removed for reduced motion."
+        "value": "sin(pi * step progress) * height; 6/3.5/2.8/2/1.5 world pixels for Scout/Hauler/Warden/Scoop/Bristleback; Duck 1.8 on land/.35 in water, Frog 8, Snail .25, other water actors .7",
+        "purpose": "Step profiles follow actual simulation progress; Dozer and Bulk hauler share Scoop's 2px lift. Duck waddles/paddles, Frog hops and Snail glides. Shadows and sorting origins stay on the ground; reduced motion removes lift/rock/squash. New profiles have source/test evidence without a valid current native motion capture."
       },
       {
         "name": "terrain-work",
-        "value": "sin(pi * elapsed / .4s) * 3px body/cargo dip; three-particle dirt puff over .4s",
-        "purpose": "Successful Dig/Fill only; footprint and shadow stay planted. Pause freezes elapsed time; reduced motion removes dip and puff."
+        "value": "sin(pi * elapsed / .4s) * 5px Scoop/2px other-body dip; three-particle warm dust puff over .4s",
+        "purpose": "Successful terrain/obstacle work and recharge share the strain beat; Dozer leans into a push. Footprint and shadow stay planted. Pause freezes elapsed time; reduced motion removes dip and puff. New reactions have source/test evidence without a valid current native capture."
+      },
+      {
+        "name": "creature-personality",
+        "value": "8s idle cycle; Duck left/right head looks for .75s each; predator sniff dip 1.8px over 1s; Snail tucked head near threats",
+        "purpose": "Reusable head poses share the existing atlas, camera and support origin. Idle gestures use the frozen presentation clock and stop for reduced motion or depleted power; Snail's static threat pose remains. New poses have source/test evidence without a valid current native capture."
+      },
+      {
+        "name": "enemy-notice",
+        "value": ".45s distant detection notice; 9px exclamation pop; .75s ground-ring fade; body scale X -.04/Y +.07 at reaction peak",
+        "purpose": "One yellow notice cue precedes distant pursuit; already-adjacent opponents trade their first automatic volley immediately. Reduced motion retains a static exclamation/ring. Forked Watch's authored Bristleback/Crab circuits wait for blockers and resume after pursuit; ordinary creatures retain seeded wandering. New cue/patrol states have source/test evidence without a valid current native capture."
       },
       {
         "name": "goal-star",
@@ -606,8 +616,8 @@
       },
       {
         "name": "presentation-clock",
-        "value": "Mission loops, terrain-work beats and smoke puffs freeze on pause; world clock freezes while hidden/asleep.",
-        "purpose": "Preserve the current physical pose and gameplay state."
+        "value": "Mission idle loops freeze on pause, while hidden and for reduced motion; work/notice beats and smoke puffs freeze on pause; world clock freezes while hidden/asleep.",
+        "purpose": "Preserve the current physical pose and gameplay state. Reduced motion keeps static threat cues while suppressing idle looks/sniffs, step lift/rocking, work reactions and notice travel/stretch."
       },
       {
         "name": "construction-smoke",
@@ -711,6 +721,13 @@
       "kind": "card",
       "refersTo": "builder-license",
       "description": "Cream printable keepsake using the license corner radius (16px), shared rank portrait, saved bonus count and earned world stamps. Source-derived record only; no preview or current visual verification."
+    },
+    {
+      "name": "Construction Preview and Feedback",
+      "kind": "custom",
+      "description": "Source-derived pattern only: the selected shared model uses its planted origin/depth at alpha .55 within the 3×3 supply area (96px units/76px relay). Feedback uses a lime ready check, pictured missing counts or coral site cross; site problems outrank ingredient deficits, and a legal empty battery adds its gray empty-cell picture. Titles/accessible labels carry details. The snippet extracts only the ready/site symbols with the final 20px source sizing; no browser recapture, model ghost or ingredient preview is implied.",
+      "html": "<div class=\"ds-build-readout\"><span class=\"ds-build-feedback ds-ready\" role=\"img\" aria-label=\"Ready to build\" title=\"Ready to build\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m5 12 4 4L19 6\"/></svg></span></div><div class=\"ds-build-readout\"><span class=\"ds-build-feedback\" role=\"img\" aria-label=\"That tile is in use. Choose an empty site.\" title=\"That tile is in use. Choose an empty site.\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m6 6 12 12M6 18 18 6\"/></svg></span></div>",
+      "css": ".ds-build-readout {display:flex;align-items:center;gap:9px;padding:6px 10px;background:#123b61;border-radius:8px;font-family:'Nunito Sans Variable',sans-serif;font-size:12px;color:#f5f9ff;} .ds-build-feedback {display:flex;align-items:center;gap:5px;color:#ff947b;} .ds-build-feedback > svg {width:20px;height:20px;flex-shrink:0;} .ds-build-feedback.ds-ready {color:#c5f331;}"
     }
   ],
   "narrative": {

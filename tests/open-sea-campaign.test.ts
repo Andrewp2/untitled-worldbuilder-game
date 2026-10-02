@@ -1,3 +1,4 @@
+import { openThreeTides } from './helpers/three-tides-play';
 import { describe, expect, it } from 'vitest';
 import { seaMissions } from '../src/levels/open-sea';
 import { createMission, missions } from '../src/levels/missions';
@@ -134,18 +135,7 @@ const solutions: Record<string, (s: Simulation) => void> = {
 
   },
   'three-tides': s => {
-    const guard = build(s, 'warden', { x: 21, y: 2 });
-    // Clear shore first while patrols hold their starting channels.
-    defeat(s, guard, 'final-gator'); go(s, guard, { x: 21, y: 4 });
-    work(s, 'arborbot', 'uproot', { x: 10, y: 7 }); work(s, 'arborbot', 'plant', { x: 8, y: 6 });
-    go(s, 'arborbot', { x: 6, y: 6 }); go(s, 'dozer', { x: 10, y: 9 });
-    work(s, 'dozer', 'push', { x: 10, y: 8 }); work(s, 'dozer', 'push', { x: 10, y: 7 }); go(s, 'dozer', { x: 7, y: 9 });
-    work(s, 'scoop', 'dig', { x: 10, y: 7 }); work(s, 'scoop', 'fill', { x: 13, y: 16 });
-    work(s, 'scoop', 'dig', { x: 10, y: 8 }); work(s, 'scoop', 'fill', { x: 14, y: 16 }); go(s, 'scoop', { x: 9, y: 15 });
-    go(s, 'patrol-a', { x: 10, y: 10 }); refuel(s, 'patrol-a');
-    if(!s.units.some(u=>u.kind==='marina'&&u.cell.x===17&&u.cell.y===11)) build(s,'marina',{x:17,y:11});
-    go(s, 'patrol-b', { x: 16, y: 11 }); refuel(s, 'patrol-b');
-    clearEnemies(s, ['patrol-a', 'patrol-b']); go(s,'patrol-b',{x:16,y:13});
+    openThreeTides(s);
     work(s, 'ship', 'pickup', { x: 9, y: 7 }); work(s, 'ship', 'drop', { x: 18, y: 8 });
     const carrier = build(s, 'dumptruck', { x: 19, y: 8 });
     go(s, 'ship', { x: 16, y: 11 }); refuel(s, 'ship'); work(s, 'ship', 'pickup', { x: 9, y: 8 });

@@ -105,6 +105,9 @@ main { position:relative; }
 #zoom-out,#zoom-in,#zoom-level,.control-divider { display:none; }
 .camera-controls svg { width:19px; height:19px; }
 .mode-readout { position:absolute; top:133px; left:24px; display:flex; align-items:center; gap:9px; padding:6px 10px; background:#123b61; border-radius:8px; z-index:4; font-size:12px; }
+.build-feedback { display:flex; align-items:center; gap:5px; color:#ff947b; }
+.build-feedback > svg { width:20px; height:20px; flex-shrink:0; }
+.build-feedback.ready { color:#c5f331; }
 #mode-symbol img { width:35px; height:35px; object-fit:contain; }
 #mode-symbol svg { width:25px; height:25px; }
 #cancel-mode { width:24px; height:24px; }

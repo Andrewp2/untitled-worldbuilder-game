@@ -1,15 +1,15 @@
 import Phaser from 'phaser';
 import { constructionArea, key, neighbors, movementDestination, terrainAt, isWater, walkable, type Cell } from '../core/grid';
 import { toCell, toWorld, surfacePoint, WATER_DROP } from '../core/projection';
-import { BATTERY_CAPACITY, MOVE_ENERGY, blueprintNames, costTotal, describeCost, describeSupplies, recipes, load, defaultAction, supportsAction, isMobile, usesBattery, unitSpecs, type Blueprint, type UnitKind, type Supplies } from '../core/catalog';
-import type { WorkAction, BlueprintStock, Goal } from '../core/simulation';
+import { BATTERY_CAPACITY, MOVE_ENERGY, blueprintNames, describeCost, describeSupplies, recipes, load, defaultAction, supportsAction, isMobile, usesBattery, unitSpecs, type Blueprint, type UnitKind, type Supplies } from '../core/catalog';
+import { ENEMY_NOTICE_SECONDS, type WorkAction, type BlueprintStock, type Goal, type BuildPreview } from '../core/simulation';
 import { createMission, missions, type Mission } from '../levels/missions';
 import { diamond, drawParts, drawRelay, drawTerrain, partsBadge, polygon } from './art';
 import { TOY_BACKGROUND, drawStar, groundShadow, poseToy, preloadToyArt, toyActor, toyFlag, toyImage, waveFlag, type ToyActor, type ToyFlag } from './toy-art';
 import { rewardPose } from './motion';
 import { prepareToyModels, cargoModel, pruneCargoModels } from './toy-models';
 import { facingPicture } from './facing';
-import { GROUND_MARK_DEPTH, STATUS_DEPTH, worldDepth } from './grounding';
+import { groundOrigin, GROUND_MARK_DEPTH, STATUS_DEPTH, worldDepth } from './grounding';
 import { pickObject, pictureContains } from './picking';
 import type { SoundCue } from '../audio/score';
 
@@ -25,6 +25,7 @@ export type ViewState = {
   units: { id: string; kind: UnitKind; name: string; description: string; status: string; position: string; destination: string; cargo: Supplies; carryingTree: boolean; capacity: number; stationary: boolean; battery: number; replacementCharge: number | null; order: string }[];
   visited: string[]; paused: boolean; moving: number; zoom: number; ready: boolean;
   mode: Mode; blueprint: Blueprint; context: string;
+  buildSite: Pick<BuildPreview, 'ok' | 'problem' | 'reason' | 'missing' | 'batteryCharge'> | null;
 };
 export type GameBridge = { state: (state: ViewState) => void; message: (text: string, error?: boolean) => void; sound: (cue: SoundCue) => void };
 
@@ -43,6 +44,8 @@ export class GameScene extends Phaser.Scene {
   private routes!: Phaser.GameObjects.Graphics;
   private water!: Phaser.GameObjects.Graphics;
   private markers!: Phaser.GameObjects.Graphics;
+  private buildGhost!: Phaser.GameObjects.Image;
+  private alerts = new Map<string, number>();
   private rovers = new Map<string, ToyActor>();
   private creatures = new Map<string, ToyActor>();
   private relayPictures = new Map<string, Phaser.GameObjects.Image>();
@@ -54,6 +57,7 @@ export class GameScene extends Phaser.Scene {
   private accumulator = 0;
   private hudTimer = 0;
   private motionClock = 0;
+  private pageHidden = false;
   private flags: ToyFlag[] = [];
   private rewards: { picture: Phaser.GameObjects.Graphics; cell: Cell; elapsed: number }[] = [];
   private completionPending = false;
@@ -72,6 +76,9 @@ export class GameScene extends Phaser.Scene {
   preload(): void { preloadToyArt(this); }
 
   create(): void {
+    const visibility = () => { this.pageHidden = document.hidden; };
+    visibility(); document.addEventListener('visibilitychange', visibility);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => document.removeEventListener('visibilitychange', visibility));
     prepareToyModels(this);
     this.cameras.main.setBackgroundColor(TOY_BACKGROUND);
     this.drawWorld();
@@ -130,10 +137,12 @@ export class GameScene extends Phaser.Scene {
     this.children.removeAll(true);
     this.objects = []; this.objectsSignature = ''; this.rovers.clear(); this.creatures.clear(); this.pileBadges.clear(); this.flashes = []; this.puffs = []; this.pilePictures.clear(); this.flags = []; this.rewards = [];
     this.workBeats.clear();
+    this.alerts.clear();
     this.terrainObjects = drawTerrain(this, this.simulation.grid, 'bounded');
     this.water = this.add.graphics().setDepth(-1000.5);
     this.routes = this.add.graphics().setDepth(GROUND_MARK_DEPTH);
     this.markers = this.add.graphics().setDepth(STATUS_DEPTH);
+    this.buildGhost = toyImage(this, 'scout-se', 96).setVisible(false);
     for (const pad of this.mission.goals) {
       const p = this.point(pad.cell), g = this.add.graphics({ x: p.x, y: p.y }).setDepth(-850);
       g.fillStyle(0xffec86, .32); diamond(g, 0, 0, 65, 32); g.fillPath();
@@ -266,14 +275,8 @@ export class GameScene extends Phaser.Scene {
     this.bridge.message('Taken apart. All parts and cargo returned to the ground.');
     this.syncObjects(); this.emitState();
   }
-  private buildContext(cell: Cell): string {
-    const p = this.simulation.buildPreview(this.blueprint, cell);
-    const battery = p.batteryCharge === null ? '' : p.batteryCharge === 0 ? ' Battery empty—cannot move.' : ` Battery: ${p.batteryCharge}/${BATTERY_CAPACITY}.`;
-    return `Nearby: ${describeSupplies(p.available)}. ${p.ok ? 'Ready to build.' + battery : costTotal(p.missing) ? `Missing: ${describeCost(p.missing)}.` : p.reason}`;
-  }
   private context(): string {
-    if (!this.hover) return this.mode === 'build' ? 'Point at a tile to check available parts.' : '';
-    if (this.mode === 'build') return this.buildContext(this.hover);
+    if (!this.hover || this.mode === 'build') return '';
     if ((this.mode === 'dig' || this.mode === 'fill') && this.selectedRover()) {
       const preview = this.simulation.terrainOrderPreview(this.selected!, this.mode, this.hover);
       return preview.ok ? this.mode === 'dig' ? 'Dig land · collect 1 dirt' : 'Fill water · use 1 dirt' : preview.reason;
@@ -459,6 +462,7 @@ export class GameScene extends Phaser.Scene {
       ready: this.ready, selected: this.selected, paused: this.paused, zoom: Math.round(this.cameras.main.zoom * 100), visited: [...this.simulation.reached],
       moving: this.completionPending ? 0 : this.simulation.units.filter(u => u.next !== null).length,
       mode: this.mode, blueprint: this.blueprint, context: this.context(),
+      buildSite: this.mode === 'build' && this.hover && terrainAt(this.simulation.grid, this.hover) ? this.simulation.buildPreview(this.blueprint, this.hover) : null,
       units: this.simulation.units.map(u => ({ id: u.id, kind: u.kind, name: u.name, description: u.description, cargo: { ...u.cargo }, carryingTree: u.carryingTree, capacity: u.capacity, battery: u.battery, replacementCharge: this.simulation.replacementCharge(u.id), order: u.pending ? `${({ pickup: 'Pick up', drop: 'Drop off', dig: 'Dig', fill: 'Fill', push: 'Push', uproot: 'Uproot', plant: 'Plant' })[u.pending.action]} at ${u.pending.target.x + 1}, ${u.pending.target.y + 1}` : u.goal ? `Move to ${u.goal.x + 1}, ${u.goal.y + 1}` : 'None', stationary: !u.next && !u.goal && !u.pending, status: u.damage && u.battery && this.simulation.enemies.some(enemy => { const a = this.simulation.position(u), b = this.simulation.position(enemy); return Math.abs(a.x - b.x) + Math.abs(a.y - b.y) <= 1.05; }) ? 'fighting' : u.status, position: `${u.cell.x + 1}, ${u.cell.y + 1}`, destination: u.goal ? `${u.goal.x + 1}, ${u.goal.y + 1}` : '' })),
     });
   }
@@ -470,7 +474,7 @@ export class GameScene extends Phaser.Scene {
     const vertical = Number(this.keys.S.isDown || this.keys.DOWN.isDown) - Number(this.keys.W.isDown || this.keys.UP.isDown);
     if (horizontal || vertical) { c.scrollX += horizontal * dt * 520 / c.zoom; c.scrollY += vertical * dt * 520 / c.zoom; this.clampCamera(); this.hover = null; }
     if (!this.paused && !this.completionPending) {
-      if (!this.reducedMotion) this.motionClock += dt;
+      if (!this.reducedMotion && !this.pageHidden) this.motionClock += dt;
       this.accumulator += dt;
       while (this.accumulator >= 1 / 60) { this.simulation.step(1 / 60); this.accumulator -= 1 / 60; }
     }
@@ -478,6 +482,7 @@ export class GameScene extends Phaser.Scene {
     if (events.length) {
       this.syncObjects();
       for (const event of events) {
+        if (event.kind === 'enemy-alert') { this.alerts.set(event.unitId, 0); continue; }
         if (event.kind === 'goal-reached') {
           const complete = event.complete;
           const goal = this.mission.goals.find(goal => goal.id === event.goalId)!;
@@ -521,10 +526,12 @@ export class GameScene extends Phaser.Scene {
     for (const u of this.simulation.units) {
       const p = this.point(this.simulation.position(u));
       const sprite = this.rovers.get(u.id)!;
-      poseToy(sprite, p, u.facing, !!u.next, usesBattery(u.kind) ? u.battery : u.integrity, u.progress, this.reducedMotion);
       const beat = this.workBeats.get(u.id);
-      const dip = beat && !this.reducedMotion ? Math.sin(Math.PI * beat.elapsed / .4) * 3 : 0;
-      sprite.body.y += dip;
+      const threat = this.simulation.enemies.some(enemy => {
+        const at = this.simulation.position(enemy), here = this.simulation.position(u);
+        return Math.abs(at.x - here.x) + Math.abs(at.y - here.y) < 3;
+      });
+      poseToy(sprite, p, u.facing, !!u.next, usesBattery(u.kind) ? u.battery : u.integrity, u.progress, this.reducedMotion, { clock: this.motionClock, threat, wet: isWater(terrainAt(this.simulation.grid, u.cell)), work: beat ? beat.elapsed / .4 : undefined });
     }
     for (const [id, beat] of this.workBeats) {
       if (!this.paused && !this.completionPending) beat.elapsed += dt;
@@ -532,7 +539,12 @@ export class GameScene extends Phaser.Scene {
     }
     for (const enemy of this.simulation.enemies) {
       const p = this.point(this.simulation.position(enemy)), sprite = this.creatures.get(enemy.id)!;
-      poseToy(sprite, p, enemy.facing, !!enemy.next, enemy.health, enemy.progress, this.reducedMotion);
+      const alert = this.alerts.get(enemy.id);
+      poseToy(sprite, p, enemy.facing, !!enemy.next, enemy.health, enemy.progress, this.reducedMotion, { clock: this.motionClock, alert: alert === undefined ? 0 : Math.max(0, 1 - alert / ENEMY_NOTICE_SECONDS) });
+    }
+    for (const [id, elapsed] of this.alerts) {
+      if (!this.simulation.enemies.some(enemy => enemy.id === id) || elapsed >= .75) this.alerts.delete(id);
+      else if (!this.paused && !this.completionPending) this.alerts.set(id, elapsed + dt);
     }
     for (const [index, flag] of this.flags.entries()) waveFlag(flag, this.motionClock + index, this.reducedMotion);
     this.updateRewards(!this.paused || this.completionPending ? dt : 0);
@@ -601,6 +613,7 @@ export class GameScene extends Phaser.Scene {
       this.water.lineBetween(p.x - 10 + offset, p.y + WATER_DROP, p.x + 5 + offset, p.y + WATER_DROP);
     }
     this.routes.clear(); this.markers.clear();
+    this.buildGhost.setVisible(false);
     if (this.simulation.bonusUnlocked) {
     const bonusPoint = this.point(this.mission.bonus.cell);
     this.routes.fillStyle(0xffd455, .2); diamond(this.routes, bonusPoint.x, bonusPoint.y, 62, 31); this.routes.fillPath();
@@ -661,7 +674,16 @@ export class GameScene extends Phaser.Scene {
       const p = this.point(this.simulation.position(enemy));
       this.markers.fillStyle(0x392e49); this.markers.fillRoundedRect(p.x-20,p.y-61,40,7,2);
       this.markers.fillStyle(0xff947b); this.markers.fillRoundedRect(p.x-19,p.y-60,38*enemy.health/enemy.maxHealth,5,1);
-      if (enemy.target) { this.markers.fillStyle(0xffe45b); this.markers.fillRoundedRect(p.x-2,p.y-78,4,8,1); this.markers.fillCircle(p.x,p.y-66,2); }
+      if (enemy.target || this.alerts.has(enemy.id)) {
+        const elapsed = this.alerts.get(enemy.id), pop = elapsed === undefined || this.reducedMotion ? 0 : Math.sin(Math.min(1, elapsed / .45) * Math.PI);
+        const y = p.y - 78 - pop * 9;
+        this.markers.lineStyle(3, 0x392e49); this.markers.strokeRoundedRect(p.x-3,y-1,6,10,1);
+        this.markers.fillStyle(0xffe45b); this.markers.fillRoundedRect(p.x-2,y,4,8,1); this.markers.fillCircle(p.x,y+12,2);
+        if (elapsed !== undefined) {
+          this.markers.lineStyle(2, 0xffe45b, this.reducedMotion ? .7 : Math.max(0, 1 - elapsed / .75));
+          this.markers.strokeEllipse(p.x, p.y, 68 + pop * 8, 32 + pop * 4);
+        }
+      }
     }
     for (const beacon of this.mission.goals) {
       const p = this.point(beacon.cell); const visited = this.simulation.reached.has(beacon.id);
@@ -684,6 +706,11 @@ export class GameScene extends Phaser.Scene {
       }
     }
     if (this.mode === 'build' && this.hover) {
+      const p = this.point(this.hover), preview = this.simulation.buildPreview(this.blueprint, this.hover);
+      const name = this.blueprint === 'relay' ? 'relay' : this.blueprint + '-se', origin = groundOrigin(name);
+      const size = this.blueprint === 'relay' ? 76 : 96;
+      if (terrainAt(this.simulation.grid, this.hover)) this.buildGhost.setTexture('toy-' + name).setOrigin(origin.x, origin.y).setDisplaySize(size, size)
+        .setPosition(p.x, p.y).setDepth(worldDepth(p, 'rover')).setAlpha(.55).setTint(preview.ok ? 0xffffff : 0xffb4a0).setVisible(true);
       for (const target of constructionArea(this.hover).slice(1)) {
         if (!terrainAt(this.simulation.grid, target)) continue;
         const p = this.point(target);

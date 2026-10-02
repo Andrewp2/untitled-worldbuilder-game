@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Box3, Mesh, Vector3 } from 'three';
-import { MODEL_ORIGIN, MODEL_SIZE, modelCamera, toyModel, addModelCargo } from '../src/view/toy-models';
+import { MODEL_ORIGIN, MODEL_SIZE, modelCamera, toyModel, toyReactionModel, addModelCargo } from '../src/view/toy-models';
 import { groundOrigin } from '../src/view/grounding';
 import { toWorld } from '../src/core/projection';
 import { unitKinds, enemyKinds, emptySupplies } from '../src/core/catalog';
@@ -11,6 +11,25 @@ const project = (p: Vector3) => {
   return { x: (v.x + 1) * MODEL_SIZE / 2, y: (1 - v.y) * MODEL_SIZE / 2 };
 };
 describe('model support plane matches the game grid', () => {
+  it('keeps reacting creatures planted and their head silhouettes inside every heading', () => {
+    for (const reaction of ['look-left', 'look-right', 'tucked'] as const) {
+      const model = toyReactionModel(reaction);
+      for (const angle of [0, Math.PI / 2, Math.PI, -Math.PI / 2]) {
+        model.rotation.y = angle; model.updateMatrixWorld(true);
+        const bounds = new Box3().setFromObject(model);
+        expect(bounds.min.y).toBeGreaterThanOrEqual(-.006); expect(bounds.min.y).toBeLessThan(.01);
+        model.traverse(mesh => {
+          if (!(mesh instanceof Mesh)) return;
+          const vertices = mesh.geometry.getAttribute('position');
+          for (let i = 0; i < vertices.count; i++) {
+            const p = project(new Vector3().fromBufferAttribute(vertices, i).applyMatrix4(mesh.matrixWorld));
+            expect(p.x).toBeGreaterThan(0); expect(p.x).toBeLessThan(MODEL_SIZE);
+            expect(p.y).toBeGreaterThan(0); expect(p.y).toBeLessThan(MODEL_SIZE);
+          }
+        });
+      }
+    }
+  });
   it('renders every carried tire when mixed cargo fits the visible hold', () => {
     const model = toyModel('forklift');
     addModelCargo(model, 'forklift', { ...emptySupplies(), red: 4, tires: 6 });

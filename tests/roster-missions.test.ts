@@ -1,5 +1,5 @@
 import { build, clearEnemies, go, work } from './helpers/campaign-play';
-import { constructionArea } from '../src/core/grid';
+import { constructionArea, neighbors } from '../src/core/grid';
 import { describe, expect, it } from 'vitest';
 import { isMobile, unitKinds, unitSpecs, load, enemySpecs } from '../src/core/catalog';
 import { walkable, findPath } from '../src/core/grid';
@@ -58,6 +58,11 @@ describe('handcrafted campaign missions', () => {
   it('uses Mender through both valley encounters, then builds Arborbot from their different salvage colors', () => {
     const m=rosterMissions[1], s=createMission(m);
     clearEnemies(s,['warden'],120,['mender']);
+    // Repair after the final volley too; winning a fight need not leave enough
+    // power for the last climb, and Mender still has usable charge.
+    const repairSite = neighbors(s.unit('warden').cell).map(cell => ({ cell, route: s.preview('mender', cell) }))
+      .filter(site => site.route).sort((a, b) => a.route!.length - b.route!.length)[0].cell;
+    go(s, 'mender', repairSite); until(s, () => s.unit('warden').battery >= 40);
     expect(s.move('warden',m.goals[0].cell).ok).toBe(true); until(s,()=>s.mainComplete);
     go(s, 'warden', { x: 16, y: 3 });
     const yellow = s.piles.find(p => p.supplies.yellow === 4)!;

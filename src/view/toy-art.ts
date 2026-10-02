@@ -3,7 +3,7 @@ import type { Cell } from '../core/grid';
 import { enemyKinds, type UnitKind, type EnemyKind } from '../core/catalog';
 import { groundOrigin, GROUND_SHADOW_DEPTH, worldDepth } from './grounding';
 import { facingPicture } from './facing';
-import { stepPose } from './motion';
+import { stepPose, personalityPose, type PersonalityContext } from './motion';
 
 export const TOY_BACKGROUND = '#063361';
 export const artUrl = (name: string) => `${import.meta.env.BASE_URL}art/toy-world/${name}.png`;
@@ -38,6 +38,7 @@ export type ToyActor = {
   shadow: Phaser.GameObjects.Graphics;
   size: number;
   kind: ToyKind;
+  phase: number;
   picture?: string;
 };
 export function toyActor(scene: Phaser.Scene, kind: ToyKind, size = 96): ToyActor {
@@ -46,22 +47,23 @@ export function toyActor(scene: Phaser.Scene, kind: ToyKind, size = 96): ToyActo
   const body = toyImage(scene, `${kind}-se`, size);
   root.add(body);
   root.once(Phaser.GameObjects.Events.DESTROY, () => shadow.destroy());
-  return { root, body, shadow, size, kind };
+  return { root, body, shadow, size, kind, phase: scene.children.length * .73 };
 }
 
 /** Motion is presentation only: destinations, energy and collision remain in the simulation. */
-export function poseToy(actor: ToyActor, position: Cell, facing: Cell, moving: boolean, charge: number, progress: number, reducedMotion: boolean): number {
+export function poseToy(actor: ToyActor, position: Cell, facing: Cell, moving: boolean, charge: number, progress: number, reducedMotion: boolean, context: PersonalityContext & { wet?: boolean } = { clock: 0 }): number {
   const { body, root, kind, size } = actor;
-  const picture = `${actor.picture ?? kind}-${facingPicture(facing)}`;
+  const personality = personalityPose(kind, moving, reducedMotion || charge === 0, { ...context, phase: actor.phase });
+  const picture = `${personality.reaction ? kind + '-' + personality.reaction : actor.picture ?? kind}-${facingPicture(facing)}`;
   body.setTexture(`toy-${picture}`).setDisplaySize(size, size);
   const origin = groundOrigin(`${kind}-${facingPicture(facing)}`);
   body.setOrigin(origin.x, origin.y);
   root.setPosition(position.x, position.y).setDepth(worldDepth(position, enemyKinds.includes(kind as EnemyKind) ? 'enemy' : 'rover'));
-  const pose = stepPose(kind, moving, progress, reducedMotion);
+  const pose = stepPose(kind, moving, progress, reducedMotion, context.wet);
   actor.shadow.setPosition(position.x, position.y).setScale(pose.shadowScale).setAlpha(pose.shadowAlpha);
-  body.setPosition(0, -pose.lift);
-  body.setScale(size / 384, size / 384 * pose.squash);
-  body.setRotation(pose.rock);
+  body.setPosition(0, -pose.lift + personality.dip);
+  body.setScale(size / 384 * personality.scaleX, size / 384 * pose.squash * personality.scaleY);
+  body.setRotation(pose.rock + personality.rock);
   if (charge === 0) body.setTint(0xa8b2bc); else body.clearTint();
   return pose.lift;
 }

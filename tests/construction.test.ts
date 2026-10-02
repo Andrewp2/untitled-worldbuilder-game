@@ -55,6 +55,17 @@ describe('local cargo actions', () => {
 });
 
 describe('spatial construction and recovery', () => {
+  it('reports a site problem before missing ingredients, and distinguishes an empty battery from a missing one', () => {
+    const s = new Simulation(grid, [], { blueprints: { scout: 1 }, piles: [
+      { cell: { x: 2, y: 2 }, supplies: recipeSupplies('scout', 0) },
+    ] });
+    expect(s.buildPreview('scout', { x: 3, y: 2 })).toMatchObject({ ok: true, problem: null, batteryCharge: 0 });
+    expect(s.buildPreview('scout', { x: 6, y: 4 })).toMatchObject({ ok: false, problem: 'parts', batteryCharge: null });
+    s.grid.tiles[4][6] = 'water';
+    expect(s.buildPreview('scout', { x: 6, y: 4 }).problem).toBe('terrain');
+    s.build('scout', { x: 3, y: 2 });
+    expect(s.buildPreview('scout', { x: 3, y: 2 }).problem).toBe('blueprints');
+  });
   it('uses only ground materials within the site’s 3×3 area, with no builder requirement', () => {
     const s = new Simulation(grid, [], { piles: [
       { cell: { x: 4, y: 2 }, supplies: { ...partCounts(1), batteries: [] } },

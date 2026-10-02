@@ -31,7 +31,7 @@ const solutions: ((s: Simulation) => void)[] = [
     work(s, 'scoop', 'dig', { x: 7, y: 5 }); go(s, fish, s.setup.bonus!.cell);
   },
   s => {
-    go(s, 'scout', { x: 3, y: 4 }); const dozer = build(s, 'dozer', { x: 5, y: 4 });
+    go(s, 'scout', { x: 3, y: 4 }); go(s, 'scout', { x: 3, y: 5 }); const dozer = build(s, 'dozer', { x: 5, y: 4 });
     go(s, 'scout', { x: 2, y: 2 }); expect(s.preview(dozer, s.setup.goals![0].cell)).toBeNull();
     work(s, dozer, 'push', { x: 6, y: 4 }); work(s, dozer, 'push', { x: 7, y: 4 });
     go(s, dozer, s.setup.goals![0].cell); expect(s.mainComplete).toBe(true);
@@ -39,7 +39,9 @@ const solutions: ((s: Simulation) => void)[] = [
     expect(s.dismantle(dozer).ok).toBe(true); const scoop = build(s, 'scoop', { x: 10, y: 6 });
     expect(s.preview(scoop, s.setup.bonus!.cell)).toBeNull();
     work(s, scoop, 'dig', { x: 9, y: 6 }); work(s, scoop, 'fill', { x: 10, y: 8 });
-    go(s, scoop, s.setup.bonus!.cell);
+    go(s, scoop, { x: 10, y: 6 }); expect(s.dismantle(scoop).ok).toBe(true);
+    const arbor = build(s, 'arborbot', { x: 10, y: 6 });
+    work(s, arbor, 'uproot', { x: 6, y: 6 }); go(s, arbor, s.setup.bonus!.cell);
   },
   s => {
     go(s, 'duck', { x: 4, y: 4 }); go(s, 'duck', { x: 4, y: 5 });

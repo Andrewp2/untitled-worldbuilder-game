@@ -12,8 +12,9 @@ export type Unit = UnitDefinition & {
   cargo: Supplies; pending: WorkOrder | null;
   carryingTree: boolean; integrity: number; attackCooldown: number; supportCooldown: number;
 };
-export type EnemyDefinition = { id: string; kind: EnemyKind; name: string; start: Cell; speed: number; maxHealth: number; damage: number; attackInterval: number; detectionRange: number; loseRange: number; patrolRadius: number };
-export type Enemy = EnemyDefinition & { cell: Cell; next: Cell | null; progress: number; facing: Cell; health: number; target: string | null; status: 'wandering' | 'chasing' | 'attacking'; decisionTimer: number; attackCooldown: number };
+export const ENEMY_NOTICE_SECONDS = .45;
+export type EnemyDefinition = { id: string; kind: EnemyKind; name: string; start: Cell; speed: number; maxHealth: number; damage: number; attackInterval: number; detectionRange: number; loseRange: number; patrolRadius: number; patrol?: readonly Cell[] };
+export type Enemy = EnemyDefinition & { cell: Cell; next: Cell | null; progress: number; facing: Cell; health: number; target: string | null; status: 'wandering' | 'alerting' | 'chasing' | 'attacking'; decisionTimer: number; attackCooldown: number; alertRemaining: number; patrolIndex: number };
 export type OrderResult = { ok: true } | { ok: false; reason: 'terrain' | 'occupied' | 'unreachable' | 'energy' };
 export type ActionResult = { ok: true; id?: string; queued?: boolean } | { ok: false; reason: string };
 export type Pile = { cell: Cell; supplies: Supplies };
@@ -24,7 +25,7 @@ export type ArrivalObjective = { kind: 'arrival'; name: string; description: str
 export type BonusObjective = ArrivalObjective;
 export type BlueprintPickup = { cell: Cell; blueprint: Blueprint; afterMain?: boolean };
 export type BlueprintStock = Partial<Record<Blueprint, number>>;
-export type BuildPreview = { ok: boolean; reason: string; available: Supplies; missing: Cost; batteryCharge: number | null };
+export type BuildPreview = { ok: boolean; problem: 'blueprints' | 'terrain' | 'occupied' | 'tree' | 'parts' | null; reason: string; available: Supplies; missing: Cost; batteryCharge: number | null };
 export type SimulationEvent = { unitId: string; text: string; error: boolean } &
   ({ kind: 'whirlpool'; cell: Cell; destination: Cell } | { kind: 'cargo'; action: CargoAction } | { kind: 'terrain'; action: TerrainAction; cell: Cell } |
     { kind: 'obstacle'; action: ObstacleAction; cell: Cell; destination?: Cell } |
@@ -32,6 +33,7 @@ export type SimulationEvent = { unitId: string; text: string; error: boolean } &
     { kind: 'goal-reached'; goalId: string; complete: boolean } |
     { kind: 'bonus-reached'; cell: Cell } |
     { kind: 'blueprint-found'; blueprint: Blueprint; cell: Cell } |
+    { kind: 'enemy-alert'; targetId: string; cell: Cell } |
     { kind: 'hit'; attackerId: string; targetId: string; cell: Cell; damage: number } |
     { kind: 'destroyed'; faction: 'friendly' | 'enemy'; cell: Cell });
 type Approach = { goal: Cell; route: Cell[] };
@@ -75,7 +77,8 @@ export class Simulation {
     this.enemies = (setup.enemies ?? []).map(def => {
       if (!walkable(grid, def.start, enemySpecs[def.kind].mobility) || occupied.has(key(def.start))) throw new Error(`Invalid start for ${def.id}`);
       occupied.add(key(def.start));
-      return { ...def, start: { ...def.start }, cell: { ...def.start }, next: null, progress: 0, facing: { x: -1, y: 0 }, health: def.maxHealth, target: null, status: 'wandering', decisionTimer: 0, attackCooldown: 0 };
+      if (def.patrol && (def.patrol.length < 2 || def.patrol.some(cell => !walkable(grid, cell, enemySpecs[def.kind].mobility)))) throw new Error(`Invalid patrol for ${def.id}`);
+      return { ...def, patrol: def.patrol?.map(cell => ({ ...cell })), start: { ...def.start }, cell: { ...def.start }, next: null, progress: 0, facing: { x: -1, y: 0 }, health: def.maxHealth, target: null, status: 'wandering', decisionTimer: 0, attackCooldown: 0, alertRemaining: 0, patrolIndex: 0 };
     });
     for (const unit of this.units) this.recordGoals(unit);
   }
@@ -376,14 +379,13 @@ export class Simulation {
     missing.battery = Math.max(0, recipes[blueprint].battery - available.batteries.length);
     const batteryCharge = recipes[blueprint].battery && available.batteries.length ? Math.max(...available.batteries) : null;
     const t = terrainAt(this.grid, cell);
-    let reason = '';
-    if (!this.blueprints[blueprint]) reason = 'No blueprints left for this model.';
-    else if (blueprint === 'relay' ? t !== 'grass' && t !== 'sand' : !walkable(this.grid, cell, unitSpecs[blueprint].mobility)) reason = 'Choose a clear tile that this model can use.';
-    else if (t === 'whirlpool') reason = 'Keep whirlpools clear for travellers.';
-    else if (this.blockedFor('').has(key(cell))) reason = 'That tile is in use. Choose an empty site.';
-    else if (this.looseTrees.some(tree => sameCell(tree, cell))) reason = 'Move the loose tree before building here.';
-    else if (costTotal(missing)) reason = 'Drop the missing parts within this site’s 3×3 area.';
-    return { ok: !reason, reason, available, missing, batteryCharge };
+    const problem: BuildPreview['problem'] = !this.blueprints[blueprint] ? 'blueprints'
+      : (blueprint === 'relay' ? t !== 'grass' && t !== 'sand' : !walkable(this.grid, cell, unitSpecs[blueprint].mobility)) || t === 'whirlpool' ? 'terrain'
+      : this.blockedFor('').has(key(cell)) ? 'occupied'
+      : this.looseTrees.some(tree => sameCell(tree, cell)) ? 'tree'
+      : costTotal(missing) ? 'parts' : null;
+    const reason = problem === null ? '' : ({ blueprints: 'No blueprints left for this model.', terrain: t === 'whirlpool' ? 'Keep whirlpools clear for travellers.' : 'Choose a clear tile that this model can use.', occupied: 'That tile is in use. Choose an empty site.', tree: 'Move the loose tree before building here.', parts: 'Drop the missing parts within this site’s 3×3 area.' })[problem];
+    return { ok: !problem, problem, reason, available, missing, batteryCharge };
   }
   build(blueprint: Blueprint, cell: Cell): ActionResult {
     const preview = this.buildPreview(blueprint, cell);
@@ -539,13 +541,23 @@ export class Simulation {
         .sort((a, b) => a.distance - b.distance || a.unit.id.localeCompare(b.unit.id))[0]?.unit;
       const previous = this.units.find(unit => unit.id === enemy.target);
       const target = nearby ?? (previous && this.distance(position, this.position(previous)) <= enemy.loseRange ? previous : null);
+      if (target && !enemy.target) {
+        // Already adjacent opponents still trade their automatic first volley.
+        // The notice beat gives warning before a distant predator begins a chase.
+        enemy.alertRemaining = this.distance(position, this.position(target)) > 1.05 ? ENEMY_NOTICE_SECONDS : 0;
+        this.events.push({ kind: 'enemy-alert', unitId: enemy.id, targetId: target.id, cell: { ...enemy.cell }, text: '', error: false });
+      } else enemy.alertRemaining = target ? Math.max(0, enemy.alertRemaining - seconds) : 0;
       enemy.target = target?.id ?? null;
-      enemy.status = target ? this.distance(position, this.position(target)) <= 1.05 ? 'attacking' : 'chasing' : 'wandering';
+      enemy.status = target ? enemy.alertRemaining > 1e-9 ? 'alerting' : this.distance(position, this.position(target)) <= 1.05 ? 'attacking' : 'chasing' : 'wandering';
       enemy.decisionTimer -= seconds;
       if (!enemy.next) {
         const blocked = this.blockedFor(enemy.id);
         let next: Cell | undefined;
-        if (target && enemy.status !== 'attacking') {
+        if (target && enemy.status === 'alerting') {
+          const toward = this.position(target);
+          const dx = toward.x - position.x, dy = toward.y - position.y;
+          enemy.facing = Math.abs(dx) >= Math.abs(dy) ? { x: Math.sign(dx) || 1, y: 0 } : { x: 0, y: Math.sign(dy) };
+        } else if (target && enemy.status === 'chasing') {
           let best: Cell[] | null = null;
           for (const goal of neighbors(target.next ?? target.cell)) {
             const path = findPath(this.grid, enemy.cell, goal, blocked, enemySpecs[enemy.kind].mobility);
@@ -553,13 +565,18 @@ export class Simulation {
           }
           next = best?.[0];
         } else if (!target && enemy.decisionTimer <= 0) {
-          if (this.distance(enemy.cell, enemy.start) > enemy.patrolRadius) next = findPath(this.grid, enemy.cell, enemy.start, blocked, enemySpecs[enemy.kind].mobility)?.[0];
+          if (enemy.patrol) {
+            // Resume the authored circuit after a chase. Blocked patrols wait;
+            // they never turn into a teleport or walk through another actor.
+            for (let i = 0; i < enemy.patrol.length && sameCell(enemy.cell, enemy.patrol[enemy.patrolIndex]); i++) enemy.patrolIndex = (enemy.patrolIndex + 1) % enemy.patrol.length;
+            next = findPath(this.grid, enemy.cell, enemy.patrol[enemy.patrolIndex], blocked, enemySpecs[enemy.kind].mobility)?.[0];
+          } else if (this.distance(enemy.cell, enemy.start) > enemy.patrolRadius) next = findPath(this.grid, enemy.cell, enemy.start, blocked, enemySpecs[enemy.kind].mobility)?.[0];
           else {
             const choices = neighbors(enemy.cell).filter(cell => canEnter(this.grid, cell, blocked, enemySpecs[enemy.kind].mobility) && this.distance(cell, enemy.start) <= enemy.patrolRadius);
             // Include staying still so wandering has pauses rather than constant pacing.
             next = choices[Math.floor(this.random() * (choices.length + 1))];
           }
-          enemy.decisionTimer = .7 + this.random() * .9;
+          enemy.decisionTimer = enemy.patrol ? .15 : .7 + this.random() * .9;
         }
         if (next) { enemy.next = next; enemy.progress = 0; enemy.facing = { x: next.x - enemy.cell.x, y: next.y - enemy.cell.y }; }
       }
@@ -585,7 +602,7 @@ export class Simulation {
     for (const enemy of this.enemies) {
       enemy.attackCooldown = Math.max(0, enemy.attackCooldown - seconds);
       const target = this.units.find(unit => unit.id === enemy.target);
-      if (target && enemy.attackCooldown <= 1e-9 && this.distance(this.position(enemy), this.position(target)) <= 1.05) {
+      if (target && enemy.alertRemaining <= 1e-9 && enemy.attackCooldown <= 1e-9 && this.distance(this.position(enemy), this.position(target)) <= 1.05) {
         enemy.attackCooldown = enemy.attackInterval; hits.push({ attacker: enemy, target, friendly: false });
       }
     }

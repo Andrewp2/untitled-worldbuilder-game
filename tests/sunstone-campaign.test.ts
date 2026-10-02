@@ -126,18 +126,19 @@ const solutions: Record<string, (s: Simulation) => void> = {
     build(s, 'workshop', { x: 8, y: 11 }); go(s, 'bulk', { x: 6, y: 10 });
     go(s, 'guard-a', { x: 8, y: 12 }); go(s, 'guard-b', { x: 8, y: 10 });
     go(s, 'mender-a', { x: 7, y: 12 }); go(s, 'mender-b', { x: 7, y: 10 });
-    // Lure each predator back to the supplied guard post; do not charge a whole pack alone.
+    // Use the faster repair bot as bait; the guards hold their supplied post.
+    // A slower Warden can be trapped during the enemy's notice beat.
     for (let t = 0; t < 2400 && s.enemies.length; t++) {
       if (t % 10 === 0) {
-        const guard = s.unit('guard-a');
-        if (!guard.next && !guard.goal) {
-          if (s.enemies.some(e => Math.abs(e.cell.x - guard.cell.x) + Math.abs(e.cell.y - guard.cell.y) < 5)) s.move('guard-a', { x: 8, y: 12 });
-          else if (guard.battery > 75) s.move('guard-a', { x: 13, y: 12 });
+        const bait = s.unit('mender-a');
+        if (!bait.next && !bait.goal) {
+          if (s.enemies.some(e => Math.abs(e.cell.x - bait.cell.x) + Math.abs(e.cell.y - bait.cell.y) < 5)) s.move('mender-a', { x: 7, y: 12 });
+          else if (bait.battery > 75) s.move('mender-a', { x: 13, y: 12 });
         }
       }
       s.step(.1);
     }
-    s.stop('guard-a'); settled(s, 'guard-a'); go(s, 'guard-a', { x: 8, y: 12 });
+    s.stop('mender-a'); settled(s, 'mender-a'); go(s, 'mender-a', { x: 7, y: 12 });
     refuel(s, 'guard-a'); refuel(s, 'guard-b');
     go(s, 'guard-b', { x: 6, y: 9 }); go(s, 'mender-a', { x: 8, y: 10 }); refuel(s, 'mender-a');
     go(s, 'mender-a', { x: 7, y: 12 }); go(s, 'mender-b', { x: 8, y: 10 }); refuel(s, 'mender-b');

@@ -325,8 +325,8 @@ export const seaMissions: AuthoredMission[] = [
   },
   {
     id: 'three-tides', name: 'Three Tides', goal: 'Open the coast · bring the salvage convoy inland',
-    challenge: 'Combine tree and rock work, forward land construction, staged naval combat and an inland salvage convoy.',
-    brief: 'The final reserve is split between camp and enemy salvage. Lift the dock tree, push the boulder north twice, then dig the two cleared dock tiles into water. Unload that dirt in the two gaps in the southern causeway. Patrol boats protect the shipping channel while Warden secures the far shore. A spare Marina kit on the east shore can replace a berth lost to a Gator. Ship a Bulk hauler kit first, then bring a loaded Bulk hauler to the inland flag with six green pieces and two recovered charged batteries.',
+    challenge: 'Combine tree and rock work and staged naval combat, then choose forward construction by ship or a land convoy through a restored causeway.',
+    brief: 'The final reserve is split between camp and enemy salvage. Lift the dock tree, push the boulder north twice, then dig the two cleared dock tiles into water. Unload that dirt in the southern causeway’s two gaps. Patrol boats protect the shipping channel while Warden secures the far shore. A spare Marina kit can replace a lost berth. Either ship a Bulk hauler kit to build on the east bank, or take the existing Forklift over the restored causeway. Reach the inland flag carrying six green pieces and a charged spare battery. The bonus requires Arborbot to bring a living camp tree across the causeway to the eastern grove.',
     grid: board([
       'wwwwwwwwwwwwwwwwwwwwwwww',
       'wwwwwww...~wwwwww~ww..ww',
@@ -351,7 +351,7 @@ export const seaMissions: AuthoredMission[] = [
     ]),
     rovers: [unit('arborbot', 'arborbot', { x: 6, y: 7 }), unit('dozer', 'dozer', { x: 7, y: 8 }), unit('scoop', 'scoop', { x: 7, y: 10 }), unit('forklift', 'camp-carrier', { x: 5, y: 10 }), unit('freighter', 'ship', { x: 12, y: 9 }), unit('patrolboat', 'patrol-a', { x: 12, y: 5 }), unit('patrolboat', 'patrol-b', { x: 12, y: 12 }), unit('marina', 'west-marina', { x: 10, y: 11 }), unit('marina', 'east-marina', { x: 17, y: 11 }), unit('pump', 'east-station', { x: 20, y: 10 })],
     piles: [pile(9, 7, recipeSupplies('dumptruck', 100)), pile(9, 8, stock(0, 0, 0, 2)), pile(21, 3, recipeSupplies('warden', 100)), pile(18, 12, recipeSupplies('marina'))],
-    goals: [{ id: 'three-tides-reserve', name: 'Island reserve', cell: { x: 22, y: 3 }, kinds: ['dumptruck'], cargo: manifest(0, 0, 0, 6, 2), clearEnemies: true }],
+    goals: [{ id: 'three-tides-reserve', name: 'Island reserve', cell: { x: 22, y: 3 }, kinds: ['dumptruck', 'forklift'], cargo: manifest(0, 0, 0, 6, 1), clearEnemies: true }],
     bonus: { kind: 'arrival', name: 'Last grove', description: 'Bring a camp tree to the far-island grove through the restored causeway.', cell: { x: 21, y: 16 }, unitId: 'arborbot', carryingTree: true },
     enemies: [enemy('water-crab', 'final-crab', { x: 15, y: 2 }), enemy('shark', 'final-shark-a', { x: 15, y: 6 }), enemy('shark', 'final-shark-b', { x: 15, y: 15 }), enemy('gator', 'final-gator', { x: 21, y: 9 })],
     blueprints: { dumptruck: 1, warden: 1, marina: 1 }, seed: 4312,

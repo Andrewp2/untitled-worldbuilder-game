@@ -12,6 +12,8 @@ Builder licenses use saved bonus stars: Class 1 initially, Class 2 at 12, Class 
 
 Blue ground plans add one construction use when a mobile unit walks onto their tile. A plan may appear after the main. Successful construction consumes stock; dismantling and destruction do not refund it. Donated batteries retain their charge, so rebuilding does not provide free movement. Warden attacks cost two power rather than one; repair support, static defenses and regrouping matter in the later fights. Those values remain provisional until player testing.
 
+The October 1 play-feel refinement adds alternative plans to Stone Gate, Forked Watch and Three Tides. Forked Watch’s authored patrols make distraction and crossing timing deliberate; most other enemies retain seeded wandering. All missions show a grounded construction preview with pictured missing ingredients and a short enemy-notice cue before distant pursuit. Adjacent combat remains automatic and immediate. No bonus checkpoint or undo was added. Public-command solutions cover both new plans and the full 36-mission main/bonus campaign; this is not a claim of complete human playtesting or final balance.
+
 ## Meadow Isles
 
 | # | Mission | Main decision | Bonus twist |
@@ -19,13 +21,13 @@ Blue ground plans add one construction use when a mobile unit walks onto their t
 | 1 | Hollow Reach | Duck finds Scout’s plan; build Scout for the land flag. | Duck reaches a shallow-water nest that Scout cannot enter. |
 | 2 | Parts and Paths | Build Trailbuggy to cross the rocky neck. | Find Dozer on the far side and reverse-push the lower rock gate for the original Scout. |
 | 3 | Siltwater Reach | Borrow land to bridge the channel for Snail. | Recycle Snail into Fish, then dig out the crossing to reopen the water route. |
-| 4 | Stone Gate | Build Dozer and push the gate clear from the useful side. | Recycle Dozer into Scoop; build a crossing to the isolated star. |
+| 4 | Stone Gate | Spend the shared kit on Dozer through the rock gate or Scoop along the lower shore. | Make an islet crossing, then reclaim the tool as Arborbot and bring a living wall tree to the garden. |
 | 5 | Tidal Workshop | Dismantle Duck for the yellow piece and battery needed by Trailbuggy. | Recycle Trailbuggy and construct Duck directly on the shallow star surrounded by deep water. |
 | 6 | Split Kit | Carry half a kit around the crescent; use diagonal construction to combine it with inaccessible island pieces. | Recycle Forklift with green stock into Arborbot; lift the tree gate and carry it to the garden. |
 | 7 | Flat Battery | Donate Hauler’s used battery to the original stranded Scout. | Recycle Scout into Warden and clear the Crab before reaching the bay star. |
 | 8 | Switchback Stations | Place two charging stops along a route the starting battery cannot cover. | Return with the far battery, restore the original empty Scout and guide it back to the start. |
 | 9 | Bramble Crossing | Find a finite Warden plan and defend the narrow crossing. | Recycle Scout with camp colors into Arborbot; bring an eastern tree to the star. |
-| 10 | Forked Watch | Place two finite Sentries at separate hostile crossings. | Recycle the western tower into Duck for the inlet route. |
+| 10 | Forked Watch | Draw the bridge patrol away with Scout while Hauler takes another crossing, or hold both with towers. | Reserve or reclaim a tower kit to build Duck for the water-only inlet. |
 | 11 | Orchard Convoy | Replant a tree, push the boulder along the causeway and bring the loaded Bulk hauler to Orchard. | Original Arborbot brings an eastern tree around the rock outcrop to the southern grove. |
 | 12 | Meadow Siege | Clear the tree gate, make a causeway, fight together and escort the original Snail. | Ferry a reserve to the river shore and build Frog for the water star. |
 
@@ -61,7 +63,7 @@ Blue ground plans add one construction use when a mobile unit walks onto their t
 | 33 | Island Handoffs | Ship a Bulk hauler kit first, then hand the green reserve to a land convoy around the rock spine. | Recycle the loaded carrier into Arborbot and bring the southern tree to the garden. |
 | 34 | Storm Line | Restore and fight with separate patrols in two channels. | Ferry blue salvage to the divider and construct Fish in the pond disconnected from both channels. |
 | 35 | Last Reserves | Turn the sole starting charged battery into combat salvage that restores the original Freighter. | Collect green, donate Freighter’s installed battery and build Frog on the northwest shore with at least 50 power. |
-| 36 | Three Tides | Move the tree and rock, excavate the dock, join the causeway, protect both shores, replace a lost berth if necessary and assemble an inland salvage convoy. | Original Arborbot retrieves the replanted camp tree and carries it across the restored causeway. |
+| 36 | Three Tides | Open the coast and fight for salvage; ship/build Bulk hauler on the far bank or take the original Forklift over the causeway with six green pieces and a charged spare. | Bring a living camp tree to the far-island grove through the restored causeway. |
 
 ## Verification
 

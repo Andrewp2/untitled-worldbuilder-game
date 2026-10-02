@@ -165,12 +165,13 @@ function rosterModel(kind: ModelKind): THREE.Group | null {
     }
   } else if (kind === 'snail') {
     oval(group, 0xa8cc72, .27, [.02, .095, 0], [1.55, .35, .70]);
-    ball(group, 0xa8cc72, .13, [.29, .21, 0]); oval(group, 0xb188c6, .25, [-.10, .33, 0], [1, 1, .78]);
+    const head = new THREE.Group(); head.name = 'head'; head.position.set(.29, .21, 0); group.add(head);
+    ball(head, 0xa8cc72, .13, [0, 0, 0]); oval(group, 0xb188c6, .25, [-.10, .33, 0], [1, 1, .78]);
     for (const z of [-.20, .20]) {
       const spiral = piece(group, new THREE.TorusGeometry(.13, .025, 8, 28, Math.PI * 1.7), 0x785b9d, -.10, .33, z); spiral.rotation.z = .4;
       ball(group, 0x785b9d, .046, [-.10, .33, z]);
     }
-    for (const z of [-.08, .08]) cylinder(group, 0xa8cc72, .02, .13, [.30, .36, z]); animalEyes(group, .31, .44, .08);
+    for (const z of [-.08, .08]) cylinder(head, 0xa8cc72, .02, .13, [.01, .15, z]); animalEyes(head, .02, .23, .08);
   } else if (kind === 'frog') {
     for (const sign of [-1, 1]) {
       oval(group, 0x78ad49, .13, [-.20, .13, sign * .19], [1.2, 1, 1]);
@@ -183,7 +184,8 @@ function rosterModel(kind: ModelKind): THREE.Group | null {
     for (const z of [-.13, .13]) box(group, 0xeaa044, [.22, .07, .14], [.03, .035, z]);
     oval(group, 0xf6dfa3, .25, [-.06, .27, 0], [1.18, .9, 1]);
     for (const sign of [-1, 1]) oval(group, 0xe9c576, .15, [-.09, .31, sign * .205], [1.1, .80, .30]);
-    ball(group, 0xffe7b6, .16, [.18, .51, 0]); box(group, 0xf1a843, [.18, .075, .22], [.34, .48, 0]); animalEyes(group, .24, .55, .09);
+    const head = new THREE.Group(); head.name = 'head'; head.position.set(.18, .51, 0); group.add(head);
+    ball(head, 0xffe7b6, .16, [0, 0, 0]); box(head, 0xf1a843, [.18, .075, .22], [.16, -.03, 0]); animalEyes(head, .06, .04, .09);
     fins(group, 0xe9c576, -.31, .27, .11);
   } else if (kind === 'fish' || kind === 'shark') {
     const shark = kind === 'shark', color = shark ? 0x6c9faf : 0x62aace;
@@ -474,9 +476,22 @@ export function pruneCargoModels(scene: Phaser.Scene, live: ReadonlySet<string>)
   }
 }
 
+/** A head gesture changes the silhouette without moving the support footprint. */
+export function toyReactionModel(reaction: 'look-left' | 'look-right' | 'tucked'): THREE.Group {
+  const model = toyModel(reaction === 'tucked' ? 'snail' : 'duck'), head = model.getObjectByName('head')!;
+  if (reaction === 'tucked') { head.position.set(-.02, .16, 0); head.scale.setScalar(.18); }
+  else head.rotation.y = reaction === 'look-left' ? .4 : -.4;
+  return model;
+}
+
 /** Empty roster portraits and world views share one planted atlas. */
 export function prepareToyModels(scene: Phaser.Scene): void {
   if (scene.textures.exists('toy-scout-se')) return;
   for (const kind of modelKinds) renderModel(scene, toyModel(kind), kind, [...unitKinds, ...enemyKinds].includes(kind as UnitKind), true);
+  // A few reusable head poses; the body, camera and contact plane stay identical.
+  for (const reaction of ['look-left', 'look-right', 'tucked'] as const) {
+    const kind = reaction === 'tucked' ? 'snail' : 'duck';
+    renderModel(scene, toyReactionModel(reaction), `${kind}-${reaction}`, true, false);
+  }
   scene.game.events.emit('toy-art-ready');
 }
