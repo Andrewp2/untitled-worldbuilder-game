@@ -10,6 +10,8 @@ Forked Watch was then played through both main and bonus objectives. Early attem
 
 Native captures also show Duck entering water, Snail gliding and tucking its head near a Crab in Canyon Rescue, and Frog moving and landing in Gator Backwater. These are bounded appearance checks, not complete playthroughs of the latter two missions. The Duck idle head-look timing was not separately captured.
 
+Later player feedback refined target selection: adjacent powered fighters now take first priority, followed by other powered fighters in detection range. Current chases remain stable among equally threatening targets, preserving unarmed distractions when no defender is nearby. Ten public-simulation checks cover all three fighting roles, battery replacement, defenders protecting carriers, cooldown continuity, range limits, target removal and roster-order independence. This behavior refinement has automated evidence rather than another native playthrough.
+
 ## Verification and remaining judgment
 
 - 25 focused tests pass for combat, target retention/reacquisition, patrols and alternative mission plans.

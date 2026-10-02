@@ -536,13 +536,17 @@ export class Simulation {
   private stepEnemies(seconds: number): void {
     for (const enemy of this.enemies) {
       const position = this.position(enemy);
-      const nearby = this.units.map(unit => ({ unit, distance: this.distance(position, this.position(unit)) }))
-        .filter(candidate => candidate.distance <= enemy.detectionRange)
-        .sort((a, b) => a.distance - b.distance || a.unit.id.localeCompare(b.unit.id))[0]?.unit;
-      const previous = this.units.find(unit => unit.id === enemy.target);
-      // A chase is a commitment: a passing courier should not steal a patrol
-      // from the unit deliberately drawing it away. Reacquire after escape.
-      const target = previous && this.distance(position, this.position(previous)) <= enemy.loseRange ? previous : nearby;
+      const target = this.units.map(unit => {
+        const distance = this.distance(position, this.position(unit));
+        // Fighters remain threats during their attack cooldown, but cannot
+        // protect a courier after running out of charge for another hit.
+        const armed = unit.damage > 0 && unit.battery >= attackEnergy(unit.kind);
+        return { unit, distance, current: unit.id === enemy.target, priority: armed ? distance <= 1.05 ? 2 : 1 : 0 };
+      }).filter(candidate => candidate.distance <= (candidate.current ? enemy.loseRange : enemy.detectionRange))
+        // Fight adjacent combatants first, then pursue other armed units.
+        // Keep the existing chase when priorities tie, including unarmed bait.
+        .sort((a, b) => b.priority - a.priority || Number(b.current) - Number(a.current)
+          || a.distance - b.distance || a.unit.id.localeCompare(b.unit.id))[0]?.unit;
       if (target && !enemy.target) {
         // Already adjacent opponents still trade their automatic first volley.
         // The notice beat gives warning before a distant predator begins a chase.
