@@ -1,9 +1,15 @@
-import { AUDIO_SAMPLE_RATE, makeEffect, makeMotor, makeMusic, type SoundCue } from './score';
+import { AUDIO_SAMPLE_RATE, makeEffect, makeMotor, type SoundCue } from './score';
+import musicUrl from './assets/little-expeditions.ogg?url';
 
 export type AudioState = { musicEnabled: boolean; effectsEnabled: boolean; started: boolean; available: boolean };
 // Prepare samples during startup, keeping synthesis work out of the first game click.
-const musicSamples = makeMusic();
 const motorSamples = makeMotor();
+type MusicLoader = (context: AudioContext, signal: AbortSignal) => Promise<AudioBuffer>;
+const loadMusic: MusicLoader = async (context, signal) => {
+  const response = await fetch(musicUrl, { signal });
+  if (!response.ok) throw new Error('Music could not be loaded');
+  return context.decodeAudioData(await response.arrayBuffer());
+};
 
 /** Owns audio only; simulation events and visible controls drive it. */
 export class GameAudio {
@@ -21,11 +27,17 @@ export class GameAudio {
   private moving = 0;
   private disposed = false;
   private resuming: Promise<void> | null = null;
+  private musicLoading: Promise<void> | null = null;
+  private musicBuffer: AudioBuffer | null = null;
+  private musicStarted = false;
+  private musicAbort = new AbortController();
+  private loadMusic: MusicLoader;
   private createContext: () => AudioContext;
   private onChange: (state: AudioState) => void;
 
-  constructor(options: { createContext?: () => AudioContext; onChange?: (state: AudioState) => void } = {}) {
+  constructor(options: { createContext?: () => AudioContext; loadMusic?: MusicLoader; onChange?: (state: AudioState) => void } = {}) {
     this.createContext = options.createContext ?? (() => new AudioContext({ latencyHint: 'interactive' }));
+    this.loadMusic = options.loadMusic ?? loadMusic;
     this.onChange = options.onChange ?? (() => {});
     this.state.available = !!options.createContext || typeof AudioContext !== 'undefined';
   }
@@ -35,10 +47,31 @@ export class GameAudio {
     buffer.copyToChannel(samples as Float32Array<ArrayBuffer>, 0);
     return buffer;
   }
-  private startLoop(samples: Float32Array, gain: GainNode): void {
+  private startLoop(buffer: AudioBuffer, gain: GainNode): void {
     const source = this.context!.createBufferSource();
-    source.buffer = this.buffer(samples); source.loop = true; source.connect(gain); source.start();
+    source.buffer = buffer; source.loop = true; source.connect(gain); source.start();
     this.loops.push(source);
+  }
+  private async ensureMusic(): Promise<void> {
+    if (this.disposed || this.hidden || !this.state.started || !this.state.musicEnabled || this.musicStarted || !this.context) return;
+    if (this.musicLoading) return this.musicLoading;
+    const start = () => {
+      if (!this.disposed && !this.hidden && this.state.musicEnabled) {
+        this.startLoop(this.musicBuffer!, this.musicGain!);
+        this.musicStarted = true;
+      }
+    };
+    if (this.musicBuffer) { start(); return; }
+    this.musicLoading = this.loadMusic(this.context, this.musicAbort.signal).then(buffer => {
+      if (this.disposed) return;
+      this.musicBuffer = buffer;
+      start();
+    }).catch(() => {
+      // A missing soundtrack must not disable effects or stop the game.
+      // The player can opt in again to retry a failed request.
+      if (!this.disposed) { this.state.musicEnabled = false; this.updateGains(); this.onChange(this.state); }
+    }).finally(() => { this.musicLoading = null; });
+    return this.musicLoading;
   }
   private initialize(): void {
     this.context = this.createContext();
@@ -49,8 +82,7 @@ export class GameAudio {
     this.musicGain.connect(this.context.destination);
     this.effectsGain.connect(this.context.destination);
     this.motorGain.connect(this.effectsGain);
-    this.startLoop(musicSamples, this.musicGain);
-    this.startLoop(motorSamples, this.motorGain);
+    this.startLoop(this.buffer(motorSamples), this.motorGain);
   }
   /** Called directly by a pointer/key gesture; no audio is created on page load. */
   async unlock(): Promise<void> {
@@ -66,6 +98,7 @@ export class GameAudio {
       this.state.started = true;
       this.updateGains(); this.onChange(this.state);
       for (const cue of this.pending.splice(0)) this.play(cue);
+      await this.ensureMusic();
     } catch {
       if (!this.disposed) { this.state.available = false; this.state.started = false; this.onChange(this.state); }
     }
@@ -87,6 +120,7 @@ export class GameAudio {
   setMusic(enabled: boolean): void {
     this.state.musicEnabled = enabled;
     this.updateGains(); this.onChange(this.state);
+    if (enabled) void this.ensureMusic();
   }
   setEffects(enabled: boolean): void {
     this.state.effectsEnabled = enabled;
@@ -123,9 +157,9 @@ export class GameAudio {
   }
   dispose(): void {
     if (this.disposed) return;
-    this.disposed = true; this.pending = []; this.stopEffects();
+    this.disposed = true; this.musicAbort.abort(); this.pending = []; this.stopEffects();
     for (const source of this.loops) { source.stop(); source.disconnect(); }
-    this.loops = []; this.buffers.clear();
+    this.loops = []; this.buffers.clear(); this.musicBuffer = null;
     void this.context?.close().catch(() => {});
   }
 }

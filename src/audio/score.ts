@@ -1,4 +1,4 @@
-/** Original, small PCM scores. No recordings or third-party audio assets. */
+/** Original synthesized effects and motor audio. Music is a separate recording. */
 export const AUDIO_SAMPLE_RATE = 22050;
 export type SoundCue = 'select' | 'order' | 'pickup' | 'drop' | 'build' | 'dismantle' | 'battery' | 'signal' | 'complete' | 'error' | 'hit' | 'wreck';
 type Instrument = 'bell' | 'pad' | 'bass' | 'metal';
@@ -32,28 +32,6 @@ function render(notes: Note[], seconds: number, loop = false): Float32Array {
   for (const sample of samples) peak = Math.max(peak, Math.abs(sample));
   if (peak > .7) for (let i = 0; i < samples.length; i++) samples[i] *= .7 / peak;
   return samples;
-}
-
-/** A relaxed eight-bar D-minor theme: rounded bells, soft bass, and slow chords. */
-export function makeMusic(): Float32Array {
-  const beat = 60 / 92;
-  const chords = [[50, 57, 60, 64], [46, 53, 57, 60], [48, 55, 57, 64], [48, 55, 62, 67],
-    [50, 57, 60, 65], [46, 53, 57, 62], [48, 55, 60, 64], [45, 52, 57, 62]];
-  const melody = [[74, 0, 77, 0, 81, 77, 0, 72], [74, 0, 72, 0, 69, 0, 65, 0],
-    [72, 0, 76, 77, 0, 76, 72, 0], [74, 0, 79, 0, 76, 0, 72, 0],
-    [77, 0, 81, 0, 84, 81, 77, 0], [74, 0, 77, 0, 72, 0, 69, 0],
-    [76, 0, 79, 0, 77, 76, 72, 0], [74, 0, 69, 0, 72, 0, 0, 0]];
-  const notes: Note[] = [];
-  chords.forEach((chord, bar) => {
-    const at = bar * 4 * beat;
-    for (const pitch of chord) notes.push({ pitch, at, duration: 5 * beat, volume: .025, instrument: 'pad' });
-    for (const offset of [0, 2]) notes.push({ pitch: chord[0] - 12, at: at + offset * beat, duration: 1.7 * beat, volume: .085, instrument: 'bass' });
-    melody[bar].forEach((pitch, step) => {
-      if (pitch) notes.push({ pitch, at: at + step * beat / 2, duration: 1.15 * beat, volume: step % 2 ? .07 : .095 });
-    });
-  });
-  // Wrap chord tails into the beginning so the loop has no cut or silent seam.
-  return render(notes, chords.length * 4 * beat, true);
 }
 
 export function makeEffect(cue: SoundCue): Float32Array {

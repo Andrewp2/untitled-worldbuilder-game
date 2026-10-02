@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { GameAudio } from '../src/audio/GameAudio';
-import { AUDIO_SAMPLE_RATE, makeEffect, makeMotor, makeMusic, type SoundCue } from '../src/audio/score';
+import { AUDIO_SAMPLE_RATE, makeEffect, makeMotor, type SoundCue } from '../src/audio/score';
 
 class Param {
   value = 1;
@@ -38,14 +38,14 @@ class Context {
   }
   createBufferSource() { const source = new Source(); this.sources.push(source); return source; }
 }
-const setup = () => {
+const setup = (loadMusic = vi.fn(async (_context: AudioContext, _signal: AbortSignal) => ({ duration: 64 }) as AudioBuffer)) => {
   const context = new Context();
   const createContext = vi.fn(() => context as unknown as AudioContext);
-  return { context, createContext, audio: new GameAudio({ createContext }) };
+  return { context, createContext, loadMusic, audio: new GameAudio({ createContext, loadMusic }) };
 };
 
 describe('game audio lifecycle and player controls', () => {
-  it('waits for activation, then reuses one context and two loops across repeated gestures', async () => {
+  it('waits for activation, then reuses one context and its enabled loops across repeated gestures', async () => {
     const { audio, context, createContext } = setup();
     audio.setEffects(true);
     audio.play('select'); audio.setSceneState(false, 1);
@@ -53,6 +53,8 @@ describe('game audio lifecycle and player controls', () => {
     await audio.unlock(); await audio.unlock();
     expect(createContext).toHaveBeenCalledTimes(1);
     expect(context.resume).toHaveBeenCalledTimes(1);
+    expect(context.sources.filter(source => source.loop && source.started)).toHaveLength(1);
+    audio.setMusic(true); await audio.unlock(); await audio.unlock();
     expect(context.sources.filter(source => source.loop && source.started)).toHaveLength(2);
     expect(context.gains[2].gain.value).toBeGreaterThan(0);
     audio.dispose();
@@ -64,8 +66,8 @@ describe('game audio lifecycle and player controls', () => {
     expect(context.sources.filter(source => !source.loop)).toHaveLength(1);
     audio.setEffects(false); audio.play('drop');
     expect(context.gains[1].gain.value).toBe(0);
-    expect(context.sources[2].stopped).toBe(true);
-    audio.setMusic(true);
+    expect(context.sources.find(source => !source.loop)!.stopped).toBe(true);
+    audio.setMusic(true); await audio.unlock();
     expect(context.gains[0].gain.value).toBeGreaterThan(0);
     expect(context.gains[1].gain.value).toBe(0);
     audio.setEffects(true);
@@ -143,10 +145,11 @@ describe('game audio lifecycle and player controls', () => {
   it('bounds simultaneous effects and frees voices after playback', async () => {
     const { audio, context } = setup(); audio.setEffects(true); await audio.unlock();
     for (let i = 0; i < 100; i++) audio.play('select');
-    expect(context.sources).toHaveLength(10);
-    context.sources[2].onended?.(); audio.play('pickup');
-    expect(context.sources).toHaveLength(11);
-    expect(context.sources[2].disconnected).toBe(true);
+    expect(context.sources.filter(source => !source.loop)).toHaveLength(8);
+    const ended = context.sources.find(source => !source.loop)!;
+    ended.onended?.(); audio.play('pickup');
+    expect(context.sources.filter(source => !source.loop)).toHaveLength(9);
+    expect(ended.disconnected).toBe(true);
     audio.dispose();
   });
   it('does not wake hidden or disposed audio when a delayed activation finishes', async () => {
@@ -160,12 +163,61 @@ describe('game audio lifecycle and player controls', () => {
       const activation = audio.unlock(); audio.play('pickup');
       if (deactivate === 'hide') audio.setHidden(true); else audio.dispose();
       finishResume(); await activation;
-      expect(context.sources).toHaveLength(2);
+      expect(context.sources).toHaveLength(1);
       expect(context.gains.every(gain => gain.gain.value === 0)).toBe(true);
       if (deactivate === 'hide') expect(context.state).toBe('suspended');
       else expect(context.sources.every(source => source.stopped)).toBe(true);
       audio.dispose();
     }
+  });
+});
+
+describe('recorded music loading', () => {
+  it('loads only after opting in, and never duplicates a loading or playing soundtrack', async () => {
+    let finish!: (buffer: AudioBuffer) => void;
+    const loader = vi.fn((_context: AudioContext, _signal: AbortSignal) => new Promise<AudioBuffer>(resolve => { finish = resolve; }));
+    const { audio, context, loadMusic } = setup(loader);
+    await audio.unlock();
+    expect(loadMusic).not.toHaveBeenCalled();
+    audio.setMusic(true); audio.setMusic(false); audio.setMusic(true);
+    expect(loadMusic).toHaveBeenCalledTimes(1);
+    finish({ duration: 64 } as AudioBuffer); await audio.unlock();
+    audio.setMusic(false); audio.setMusic(true); await audio.unlock();
+    expect(loadMusic).toHaveBeenCalledTimes(1);
+    expect(context.sources.filter(source => source.loop)).toHaveLength(2);
+    audio.dispose();
+  });
+  it.each(['mute', 'hide', 'dispose'] as const)('does not start music if %s happens during loading', async action => {
+    let finish!: (buffer: AudioBuffer) => void;
+    const loader = vi.fn((_context: AudioContext, _signal: AbortSignal) => new Promise<AudioBuffer>(resolve => { finish = resolve; }));
+    const { audio, context } = setup(loader);
+    await audio.unlock(); audio.setMusic(true);
+    const waiting = audio.unlock();
+    if (action === 'mute') audio.setMusic(false);
+    else if (action === 'hide') audio.setHidden(true);
+    else audio.dispose();
+    finish({ duration: 64 } as AudioBuffer); await waiting;
+    expect(context.sources).toHaveLength(1);
+    if (action === 'dispose') expect(loader.mock.calls[0][1].aborted).toBe(true);
+    else {
+      if (action === 'mute') audio.setMusic(true); else audio.setHidden(false);
+      await audio.unlock();
+      expect(loader).toHaveBeenCalledTimes(1);
+      expect(context.sources.filter(source => source.loop)).toHaveLength(2);
+    }
+    audio.dispose();
+  });
+  it('keeps effects working after a failed music load and allows a later retry', async () => {
+    const loader = vi.fn(async (_context: AudioContext, _signal: AbortSignal) => ({ duration: 64 }) as AudioBuffer)
+      .mockRejectedValueOnce(new Error('offline'));
+    const { audio, context } = setup(loader);
+    audio.setMusic(true); audio.setEffects(true); await audio.unlock();
+    expect(audio.state).toMatchObject({ available: true, musicEnabled: false, effectsEnabled: true });
+    audio.play('pickup'); expect(context.sources.some(source => !source.loop && source.started)).toBe(true);
+    audio.setMusic(true); await audio.unlock();
+    expect(loader).toHaveBeenCalledTimes(2);
+    expect(context.sources.filter(source => source.loop)).toHaveLength(2);
+    audio.dispose();
   });
 });
 
@@ -178,13 +230,6 @@ function levels(samples: Float32Array) {
   return { peak, rms: Math.sqrt(squares / samples.length) };
 }
 describe('authored audio signals', () => {
-  it('renders a non-silent music loop with headroom and a continuous seam', () => {
-    const music = makeMusic(), { peak, rms } = levels(music);
-    expect(music.length / AUDIO_SAMPLE_RATE).toBeGreaterThan(20);
-    expect(peak).toBeLessThanOrEqual(.701);
-    expect(rms).toBeGreaterThan(.01); expect(rms).toBeLessThan(.2);
-    expect(Math.abs(music[0] - music.at(-1)!)).toBeLessThan(.025);
-  });
   it('keeps action effects short, audible, and within safe sample bounds', () => {
     const cues: SoundCue[] = ['select','order','pickup','drop','build','dismantle','battery','signal','complete','error','hit','wreck'];
     for (const cue of cues) {
