@@ -3,10 +3,16 @@ import { createMission, missions } from '../src/levels/missions';
 import { build, go, refuel, work } from './helpers/campaign-play';
 import { openThreeTides } from './helpers/three-tides-play';
 import { connectIslandGarden, supplyIsland } from './helpers/island-handoffs-play';
+import { rescueReefCastaway, upgradeReefCourier } from './helpers/reef-courier-play';
 
 const play = (id: string) => createMission(missions.find(m => m.id === id)!);
 
 describe('alternative mission plans', () => {
+  it('upgrades Tugboat inside Reef Courier’s lagoon, then uses its successor to rescue the original Snail', () => {
+    const s = play('reef-courier');
+    rescueReefCastaway(s, upgradeReefCourier(s, 'lagoon'));
+  });
+
   it('lands beyond the Island Handoffs rock pass, then connects the garden using the same finite kit', () => {
     const s = play('island-handoffs');
     const carrier = supplyIsland(s, 'north');

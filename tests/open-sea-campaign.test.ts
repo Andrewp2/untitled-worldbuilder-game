@@ -1,5 +1,6 @@
 import { openThreeTides } from './helpers/three-tides-play';
 import { connectIslandGarden, supplyIsland } from './helpers/island-handoffs-play';
+import { rescueReefCastaway, upgradeReefCourier } from './helpers/reef-courier-play';
 import { describe, expect, it } from 'vitest';
 import { seaMissions } from '../src/levels/open-sea';
 import { createMission, missions } from '../src/levels/missions';
@@ -18,16 +19,7 @@ const solutions: Record<string, (s: Simulation) => void> = {
     expect(s.dismantle('duck').ok).toBe(true); build(s,'fish',s.setup.bonus!.cell);
   },
   'reef-courier': s => {
-    for (let i = 0; i < 2; i++) {
-      go(s, 'tug', { x: 8, y: 6 }); refuel(s, 'tug');
-      work(s, 'tug', 'pickup', { x: 6, y: 7 }); work(s, 'tug', 'drop', { x: 15, y: 6 });
-    }
-    const ship = build(s, 'freighter', { x: 14, y: 5 }); go(s, ship, s.setup.goals![0].cell);
-    expect(s.mainComplete).toBe(true);
-    go(s, ship, { x: 14, y: 3 });
-    deliver(s, ship, { x: 6, y: 9 }, { x: 15, y: 10 });
-    const snail = build(s, 'snail', { x: 15, y: 10 }); go(s, snail, s.setup.bonus!.cell);
-
+    rescueReefCastaway(s, upgradeReefCourier(s, 'camp'));
   },
   'deepwater-maze': s => {
     expect(s.preview('fish', s.setup.goals![0].cell)).toBeNull();

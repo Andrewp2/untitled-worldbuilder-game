@@ -102,8 +102,8 @@ export const missionHints: Record<string, MissionHints> = {
     bonus: ['The western tidepool is enclosed. A creature can be assembled where it cannot swim in.', 'Return Duck through the shallows and collect Fish’s plan. Take Duck apart beside the blue piece, then build Fish directly in the tidepool using a diagonal site.'],
   },
   'reef-courier': {
-    main: ['Tugboat’s small hold cannot carry the whole kit at once. The reef port also has an unusual entrance.', 'Make two deliveries to the eastern launch site, recharging at the camp Marina. Build Freighter in deep water and enter the eastern whirlpool to reach the sealed port.'],
-    bonus: ['The garden is inland, beyond a ship’s reach. Carry a land creature’s kit ashore.', 'Ship the western yellow piece and live battery to the eastern island. Build Snail on land and guide it to the garden star.'],
+    main: ['Explore the whirlpool before looking for more ship parts. Tugboat itself contains most of Freighter’s kit.', 'Send Tugboat through the eastern whirlpool and collect Freighter’s plan. Combine Tugboat’s recovered parts and battery with the camp red and blue pieces, then build Freighter and reach Reef port. You can upgrade at camp or ferry the extra pieces inside first.'],
+    bonus: ['Snail needs the rock gate opened from inside. A ship can bring in the pieces for a land tool, including its own battery.', 'Collect Dozer’s plan. Bring the camp’s two yellow pieces and four tires through the whirlpool and drop them on the inner quay. Dismantle Freighter beside the quay, build Dozer on shore and push the upper gate rock east twice. Park clear of the exit before guiding the original Snail home.'],
   },
   'deepwater-maze': {
     main: ['Fish needs connected water. Scoop needs somewhere to empty its bucket between digs.', 'Dig the three land plugs, unloading each dirt load into a southern waste pond. Keep Fish’s channel open all the way to Lagoon.'],
