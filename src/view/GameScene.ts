@@ -1,13 +1,14 @@
 import Phaser from 'phaser';
 import { constructionArea, key, neighbors, movementDestination, terrainAt, isWater, walkable, type Cell } from '../core/grid';
 import { toCell, toWorld, surfacePoint, WATER_DROP } from '../core/projection';
-import { BATTERY_CAPACITY, MOVE_ENERGY, blueprintNames, describeCost, describeSupplies, recipes, load, defaultAction, supportsAction, isMobile, usesBattery, unitSpecs, type Blueprint, type UnitKind, type Supplies } from '../core/catalog';
-import { ENEMY_NOTICE_SECONDS, type WorkAction, type BlueprintStock, type Goal, type BuildPreview } from '../core/simulation';
+import { BATTERY_CAPACITY, blueprintNames, describeCost, describeSupplies, recipes, load, defaultAction, supportsAction, isMobile, usesBattery, unitSpecs, type Blueprint, type UnitKind, type Supplies } from '../core/catalog';
+import { ENEMY_NOTICE_SECONDS, type Unit, type WorkAction, type BlueprintStock, type Goal, type BuildPreview } from '../core/simulation';
 import { createMission, missions, type Mission } from '../levels/missions';
 import { diamond, drawParts, drawRelay, drawTerrain, partsBadge, polygon } from './art';
 import { TOY_BACKGROUND, drawStar, groundShadow, poseToy, preloadToyArt, toyActor, toyFlag, toyImage, waveFlag, type ToyActor, type ToyFlag } from './toy-art';
 import { rewardPose } from './motion';
 import { wreckPieces, wreckPose } from './wreckage';
+import { previewOrder, routeSegments } from './route-preview';
 import { prepareToyModels, cargoModel, pruneCargoModels } from './toy-models';
 import { facingPicture } from './facing';
 import { groundOrigin, GROUND_MARK_DEPTH, STATUS_DEPTH, worldDepth } from './grounding';
@@ -280,6 +281,10 @@ export class GameScene extends Phaser.Scene {
   }
   private context(): string {
     if (!this.hover || this.mode === 'build') return '';
+    if (this.selectedRover()) {
+      const plan = previewOrder(this.simulation, this.selected!, this.mode, this.hover);
+      if (plan && !plan.power.canFinish) return plan.action ? 'Travel and work exceed current charge.' : 'Route exceeds current charge.';
+    }
     if ((this.mode === 'dig' || this.mode === 'fill') && this.selectedRover()) {
       const preview = this.simulation.terrainOrderPreview(this.selected!, this.mode, this.hover);
       return preview.ok ? this.mode === 'dig' ? 'Dig land · collect 1 dirt' : 'Fill water · use 1 dirt' : preview.reason;
@@ -616,6 +621,46 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
+  private drawRoute(u: Unit, route: Cell[], goal: Cell, preview = false, action?: WorkAction): void {
+    const selected = u.id === this.selected;
+    const power = selected ? this.simulation.routePower(u.id, route, action) : null;
+    const color = preview ? 0xf8efd1 : u.color;
+    const alpha = selected ? .85 : .45;
+    const width = preview ? 2 : selected ? 3 : 2;
+    for (const segment of routeSegments(this.simulation.grid, this.simulation.position(u), u.next, route)) {
+      const a = this.point(segment.from), b = this.point(segment.to);
+      const reachable = !power || segment.step < power.affordableSteps;
+      const stroke = (x1: number, y1: number, x2: number, y2: number) => {
+        this.routes.lineStyle(width + 2, 0x0b2e55, selected ? .55 : .2).lineBetween(x1, y1, x2, y2);
+        this.routes.lineStyle(width, reachable ? color : 0xf48c74, alpha).lineBetween(x1, y1, x2, y2);
+      };
+      if (reachable) stroke(a.x, a.y, b.x, b.y);
+      else {
+        const pieces = Math.max(1, Math.ceil(Math.hypot(b.x-a.x, b.y-a.y) / 12));
+        for (let i = 0; i < pieces; i++) {
+          const start = i / pieces, end = (i + .5) / pieces;
+          stroke(a.x + (b.x-a.x)*start, a.y + (b.y-a.y)*start, a.x + (b.x-a.x)*end, a.y + (b.y-a.y)*end);
+        }
+      }
+      this.routes.fillStyle(reachable ? color : 0xf48c74, alpha);
+      this.routes.fillCircle(b.x, b.y, reachable ? 2.5 : 1.5);
+    }
+    const end = this.point(goal);
+    this.routes.lineStyle(4, 0x0b2e55, selected ? .55 : .2);
+    diamond(this.routes, end.x, end.y, 48, 24); this.routes.strokePath();
+    this.routes.lineStyle(2, power && !power.canFinish ? 0xf48c74 : color, alpha);
+    diamond(this.routes, end.x, end.y, 48, 24); this.routes.strokePath();
+    if (power && !power.canFinish) {
+      const stop = this.point(power.lastReachable);
+      // Empty battery at the last affordable tile; dash pattern also distinguishes
+      // the unpaid trail without relying only on red/green color recognition.
+      this.markers.fillStyle(0x0b2e55, .95); this.markers.fillRoundedRect(stop.x-13, stop.y-17, 26, 18, 3);
+      this.markers.lineStyle(2, 0xffaa8e); this.markers.strokeRect(stop.x-8, stop.y-13, 14, 10);
+      this.markers.lineBetween(stop.x+8, stop.y-10, stop.x+8, stop.y-6);
+      this.markers.lineBetween(stop.x-6, stop.y-5, stop.x+4, stop.y-11);
+    }
+  }
+
   private drawOverlays(time: number): void {
     const phase = this.motionClock;
     const hovered = this.hover ? key(this.hover) : null;
@@ -647,6 +692,8 @@ export class GameScene extends Phaser.Scene {
       this.water.lineBetween(p.x - 10 + offset, p.y + WATER_DROP, p.x + 5 + offset, p.y + WATER_DROP);
     }
     this.routes.clear(); this.markers.clear();
+    const hoverPlan = this.hover && this.selectedRover() && this.mode !== 'build'
+      ? previewOrder(this.simulation, this.selected!, this.mode, this.hover) : null;
     this.buildGhost.setVisible(false);
     if (this.simulation.bonusUnlocked) {
     const bonusPoint = this.point(this.mission.bonus.cell);
@@ -663,23 +710,8 @@ export class GameScene extends Phaser.Scene {
     }
     for (const u of this.simulation.units) {
       const selected = u.id === this.selected;
-      const nodes = [this.simulation.position(u), ...(u.next ? [u.next] : []), ...u.route];
-      if (u.goal) {
-        this.routes.lineStyle(selected ? 3 : 2, u.color, selected ? 0.85 : 0.45);
-        this.routes.beginPath();
-        nodes.forEach((n, i) => {
-          const p = this.point(n);
-          if (i > 1 && terrainAt(this.simulation.grid, nodes[i - 1]) === 'whirlpool') {
-            const exit = this.point(movementDestination(this.simulation.grid, nodes[i - 1]));
-            this.routes.moveTo(exit.x, exit.y);
-          }
-          if (i) this.routes.lineTo(p.x, p.y); else this.routes.moveTo(p.x, p.y);
-        });
-        this.routes.strokePath();
-        for (const n of nodes.slice(1)) { const p = this.point(n); this.routes.fillStyle(u.color, selected ? 0.95 : 0.5); this.routes.fillCircle(p.x, p.y, 3); }
-        const end = this.point(u.goal);
-        this.routes.lineStyle(2, u.color); diamond(this.routes, end.x, end.y, 48, 24); this.routes.strokePath();
-      }
+      if (selected && hoverPlan) this.drawRoute(u, hoverPlan.route, hoverPlan.goal, true, hoverPlan.action);
+      else if (u.goal) this.drawRoute(u, u.route, u.goal, false, u.pending?.action);
       if (u.pending) {
         const p = this.point(u.pending.target);
         this.routes.lineStyle(2, u.color); diamond(this.routes, p.x, p.y, 62, 31); this.routes.strokePath();
@@ -754,10 +786,7 @@ export class GameScene extends Phaser.Scene {
     if (this.hover && terrainAt(this.simulation.grid, this.hover)) {
       const p = this.point(this.hover);
       const legal = this.mode === 'build' ? this.simulation.buildPreview(this.blueprint, this.hover).ok
-        : (this.mode === 'pickup' || this.mode === 'drop') && this.selected ? this.simulation.cargoOrderPreview(this.selected, this.mode, this.hover).ok
-        : (this.mode === 'dig' || this.mode === 'fill') && this.selected ? this.simulation.terrainOrderPreview(this.selected, this.mode, this.hover).ok
-        : (this.mode === 'push' || this.mode === 'uproot' || this.mode === 'plant') && this.selected ? this.simulation.obstacleOrderPreview(this.selected, this.mode, this.hover).ok
-        : (this.selectedRover()?.battery ?? 0) >= MOVE_ENERGY && !!this.selected && !!this.simulation.preview(this.selected, this.hover);
+        : !!hoverPlan && (!hoverPlan.route.length || hoverPlan.power.affordableSteps > 0);
       this.routes.fillStyle(legal ? 0xf8efd1 : 0xdf8373, 0.18); diamond(this.routes, p.x, p.y); this.routes.fillPath();
       this.routes.lineStyle(2, legal ? 0xf8efd1 : 0xf4a293, 0.9); diamond(this.routes, p.x, p.y); this.routes.strokePath();
       if (!legal) { this.routes.lineBetween(p.x - 6, p.y - 4, p.x + 6, p.y + 4); this.routes.lineBetween(p.x - 6, p.y + 4, p.x + 6, p.y - 4); }

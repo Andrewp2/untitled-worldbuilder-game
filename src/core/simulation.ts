@@ -26,6 +26,7 @@ export type BonusObjective = ArrivalObjective;
 export type BlueprintPickup = { cell: Cell; blueprint: Blueprint; afterMain?: boolean };
 export type BlueprintStock = Partial<Record<Blueprint, number>>;
 export type BuildPreview = { ok: boolean; problem: 'blueprints' | 'terrain' | 'occupied' | 'tree' | 'parts' | null; reason: string; available: Supplies; missing: Cost; batteryCharge: number | null };
+export type RoutePower = { required: number; affordableSteps: number; lastReachable: Cell; canFinish: boolean };
 export type SimulationEvent = { unitId: string; text: string; error: boolean } &
   ({ kind: 'whirlpool'; cell: Cell; destination: Cell } | { kind: 'cargo'; action: CargoAction } | { kind: 'terrain'; action: TerrainAction; cell: Cell } |
     { kind: 'obstacle'; action: ObstacleAction; cell: Cell; destination?: Cell } |
@@ -431,6 +432,19 @@ export class Simulation {
     return isMobile(u.kind) ? findPath(this.grid, u.next ? movementDestination(this.grid, u.next) : u.cell, movementDestination(this.grid, goal), this.blockedFor(id), unitSpecs[u.kind].mobility) : null;
   }
   private movementCost(cell: Cell): number { return terrainAt(this.grid, cell) === 'swamp' ? MOVE_ENERGY * 3 : MOVE_ENERGY; }
+  /** Current-charge estimate only: future combat and support can change it.
+   * The active edge has already been paid; routes start after that edge. */
+  routePower(id: string, route: readonly Cell[], action?: WorkAction): RoutePower {
+    const u = this.unit(id);
+    let required = 0, affordableSteps = 0;
+    let lastReachable = u.next ? movementDestination(this.grid, u.next) : u.cell;
+    for (const entry of route) {
+      required += this.movementCost(entry);
+      if (required <= u.battery) { affordableSteps++; lastReachable = movementDestination(this.grid, entry); }
+    }
+    if (action) required += action === 'pickup' || action === 'drop' ? TRANSFER_ENERGY : TERRAIN_ENERGY;
+    return { required, affordableSteps, lastReachable: { ...lastReachable }, canFinish: required <= u.battery };
+  }
   move(id: string, goal: Cell): OrderResult {
     const u = this.unit(id);
     if (!isMobile(u.kind) || !walkable(this.grid, goal, unitSpecs[u.kind].mobility)) return { ok: false, reason: 'terrain' };

@@ -134,7 +134,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     <div class="resource-key"><span>${resourceIcon('red')}Red</span><span>${resourceIcon('blue')}Blue</span><span>${resourceIcon('yellow')}Yellow</span><span>${resourceIcon('green')}Green</span><span>${resourceIcon('tires')}Tires</span><span>${resourceIcon('battery')}Battery</span><span>${resourceIcon('soil')}Dirt</span></div>
     <dl>
       <div><dt>Audio</dt><dd>Music and sound effects start off. Use the note and speaker buttons in Game menu to enable them for this tab.</dd></div>
-      <div><dt>Move</dt><dd>Click a rover (or press 1–9), then its destination. It keeps going when you select another rover.</dd></div>
+      <div><dt>Move</dt><dd>Click a rover (or press 1–9), then its destination. Hover to preview its route. A broken red trail lies beyond its current charge; charging and combat can change that. Work orders include the energy needed for the action. It keeps going when you select another rover.</dd></div>
       <div><dt>Pick up / Drop off</dt><dd>Choose an action, then a pile or drop-off tile. The rover drives beside it to transfer cargo. Space chooses Pick up when empty or Drop off when loaded.</dd></div>
       <div><dt>Cargo</dt><dd>Hauler carries 4 parts; Scout carries 2. Pick up fills free space, taking red, blue, yellow and green parts, then tires and batteries. Each tire takes one cargo slot. Drop off unloads everything.</dd></div>
       <div><dt>Scoop</dt><dd>Dig clear grass or sand to collect 1 dirt and leave water. Fill water to turn it into land. Scoop drives beside the target first; each action costs ${TERRAIN_ENERGY} charge. Space chooses Dig when empty or Fill when loaded. Its bucket is for terrain work; use a Hauler for cargo.</dd></div>
