@@ -1,4 +1,5 @@
 import { openThreeTides } from './helpers/three-tides-play';
+import { connectIslandGarden, supplyIsland } from './helpers/island-handoffs-play';
 import { describe, expect, it } from 'vitest';
 import { seaMissions } from '../src/levels/open-sea';
 import { createMission, missions } from '../src/levels/missions';
@@ -97,15 +98,7 @@ const solutions: Record<string, (s: Simulation) => void> = {
 
   },
   'island-handoffs': s => {
-    work(s, 'ship', 'pickup', { x: 6, y: 5 }); work(s, 'ship', 'drop', { x: 15, y: 7 });
-    const carrier = build(s, 'dumptruck', { x: 16, y: 7 });
-    go(s, 'ship', { x: 13, y: 6 }); refuel(s, 'ship');
-    work(s, 'ship', 'pickup', { x: 6, y: 8 });
-    expect(s.cargoOrderPreview('ship', 'drop', s.setup.goals![0].cell).ok).toBe(false);
-    work(s, 'ship', 'drop', { x: 15, y: 8 }); work(s, carrier, 'pickup', { x: 15, y: 8 });
-    go(s, carrier, s.setup.goals![0].cell); expect(s.mainComplete).toBe(true);
-    go(s, carrier, { x: 20, y: 4 }); expect(s.dismantle(carrier).ok).toBe(true);
-    const arbor = build(s, 'arborbot', { x: 20, y: 4 }); work(s, arbor, 'uproot', { x: 20, y: 11 }); go(s, arbor, s.setup.bonus!.cell);
+    connectIslandGarden(s, supplyIsland(s, 'south'));
   },
   'storm-line': s => {
     build(s, 'marina', { x: 6, y: 3 }); build(s, 'marina', { x: 6, y: 11 });

@@ -2,10 +2,21 @@ import { describe, expect, it } from 'vitest';
 import { createMission, missions } from '../src/levels/missions';
 import { build, go, refuel, work } from './helpers/campaign-play';
 import { openThreeTides } from './helpers/three-tides-play';
+import { connectIslandGarden, supplyIsland } from './helpers/island-handoffs-play';
 
 const play = (id: string) => createMission(missions.find(m => m.id === id)!);
 
 describe('alternative mission plans', () => {
+  it('lands beyond the Island Handoffs rock pass, then connects the garden using the same finite kit', () => {
+    const s = play('island-handoffs');
+    const carrier = supplyIsland(s, 'north');
+    expect(s.grid.tiles[9][20]).toBe('rock');
+    expect(s.blueprints.dozer).toBe(1);
+    connectIslandGarden(s, carrier);
+    expect(s.grid.tiles[9][20]).toBe('rock');
+    expect(s.blueprints.dozer).toBe(1);
+  });
+
   it('takes the Switchback coast without moving its shortcut rock, then powers and opens the Scout enclosure', () => {
     const s = play('switchback-stations');
     const goal = s.setup.goals![0].cell, home = s.setup.bonus!.cell;

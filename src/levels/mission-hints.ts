@@ -130,8 +130,8 @@ export const missionHints: Record<string, MissionHints> = {
     bonus: ['The original Frog must arrive with at least sixty power. The defeated Gators left a reserve.', 'Replace Frog’s battery with a charged Gator battery, then take a short shallow-water route to the eastern star.'],
   },
   'island-handoffs': {
-    main: ['The inland shipment exceeds the small carriers’ holds. Establish the land transport before delivering its load.', 'Ship the separate Bulk hauler kit first and build it ashore. Then ferry the twenty green pieces, transfer them to the hauler and drive inland. Use both charging berths.'],
-    bonus: ['The delivered green stock can combine with the land carrier’s own kit.', 'Collect Arborbot’s plan and dismantle Bulk hauler beside its green shipment. Build Arborbot and carry the southern tree to the grove star.'],
+    main: ['Choose your landing. The nearer quay has a rock pass; the northern quay lies beyond it. One kit can serve as more than one vehicle.', 'Either ship the kit to the northern quay and build Bulk hauler there, or build Dozer at the southern quay, push the pass rock north and return to the leftover parts. Recharge beside the pump, rebuild as Bulk hauler and collect the twenty green pieces for the inland flag.'],
+    bonus: ['The loaded hauler contains a tool for connecting the garden island. Its green cargo will help with the next transformation.', 'Collect Scoop’s plan and dismantle the loaded hauler near the northern quay. Build Scoop, borrow two clear coastal tiles and fill the garden’s two shallow gaps. Collect Arborbot’s plan across the crossing, return to the recovered kit and recycle Scoop into Arborbot. Carry a living tree to the garden star.'],
   },
   'storm-line': {
     main: ['The two channels have separate defenders, and the southern encounters need more recovery time.', 'Build a Marina beside each patrol. Clear the northern Reef crabs, and recharge the southern patrol between its two Shark fights.'],
