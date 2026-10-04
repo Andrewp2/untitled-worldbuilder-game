@@ -7,6 +7,7 @@ import { createMission, missions, type Mission } from '../levels/missions';
 import { diamond, drawParts, drawRelay, drawTerrain, partsBadge, polygon } from './art';
 import { TOY_BACKGROUND, drawStar, groundShadow, poseToy, preloadToyArt, toyActor, toyFlag, toyImage, waveFlag, type ToyActor, type ToyFlag } from './toy-art';
 import { rewardPose } from './motion';
+import { wreckPieces, wreckPose } from './wreckage';
 import { prepareToyModels, cargoModel, pruneCargoModels } from './toy-models';
 import { facingPicture } from './facing';
 import { groundOrigin, GROUND_MARK_DEPTH, STATUS_DEPTH, worldDepth } from './grounding';
@@ -50,6 +51,7 @@ export class GameScene extends Phaser.Scene {
   private creatures = new Map<string, ToyActor>();
   private relayPictures = new Map<string, Phaser.GameObjects.Image>();
   private puffs: { cell: Cell; elapsed: number }[] = [];
+  private wrecks: { cell: Cell; position: Cell; elapsed: number; pieces: Phaser.GameObjects.Image[] }[] = [];
   private pilePictures = new Map<string, Phaser.GameObjects.Container>();
   private flashes: { cell: Cell; until: number }[] = [];
   private paused = false;
@@ -136,6 +138,7 @@ export class GameScene extends Phaser.Scene {
   private drawWorld(): void {
     this.children.removeAll(true);
     this.objects = []; this.objectsSignature = ''; this.rovers.clear(); this.creatures.clear(); this.pileBadges.clear(); this.flashes = []; this.puffs = []; this.pilePictures.clear(); this.flags = []; this.rewards = [];
+    this.wrecks = [];
     this.workBeats.clear();
     this.alerts.clear();
     this.terrainObjects = drawTerrain(this, this.simulation.grid, 'bounded');
@@ -497,7 +500,7 @@ export class GameScene extends Phaser.Scene {
           this.startReward(event.cell); this.bridge.sound('complete'); this.bridge.message(event.text); continue;
         }
         if (event.kind === 'hit' || event.kind === 'destroyed') {
-          if (event.kind === 'destroyed') this.puff(event.cell);
+          if (event.kind === 'destroyed') this.breakApart(event.cell, event.position, event.salvage);
           else this.flashes.push({ cell: event.cell, until: time + 220 });
           this.flashes = this.flashes.slice(-16);
           this.bridge.sound(event.kind === 'hit' ? 'hit' : 'wreck');
@@ -550,6 +553,7 @@ export class GameScene extends Phaser.Scene {
     this.updateRewards(!this.paused || this.completionPending ? dt : 0);
     if (!this.paused) for (const puff of this.puffs) puff.elapsed += dt;
     this.puffs = this.puffs.filter(puff => puff.elapsed < (this.reducedMotion ? .25 : .7));
+    this.updateWrecks(!this.paused && !this.pageHidden ? dt : 0);
     this.drawOverlays(time);
     this.hudTimer += delta;
     // Publish earned progress in the same frame as its reward. Leaving during
@@ -561,6 +565,36 @@ export class GameScene extends Phaser.Scene {
   private puff(cell: Cell): void {
     this.puffs.push({ cell: { ...cell }, elapsed: 0 });
     this.puffs = this.puffs.slice(-16);
+  }
+
+  private breakApart(cell: Cell, position: Cell, salvage: Supplies): void {
+    this.puff(cell);
+    if (this.reducedMotion) return;
+    const pieces = wreckPieces(salvage).map(piece => {
+      const picture = toyImage(this, piece.picture, piece.picture === 'battery' ? 38 : 34);
+      if (piece.empty) picture.setTint(0x8491a0);
+      return picture;
+    });
+    this.wrecks.push({ cell: { ...cell }, position: { ...position }, elapsed: 0, pieces });
+    while (this.wrecks.length > 16) this.wrecks.shift()!.pieces.forEach(piece => piece.destroy());
+  }
+
+  private updateWrecks(dt: number): void {
+    this.wrecks = this.wrecks.filter(wreck => {
+      wreck.elapsed += dt;
+      if (wreckPose(0, wreck.pieces.length, wreck.elapsed, this.reducedMotion).done) {
+        wreck.pieces.forEach(piece => piece.destroy()); return false;
+      }
+      const start = this.point(wreck.position), end = this.point(wreck.cell);
+      wreck.pieces.forEach((piece, index) => {
+        const pose = wreckPose(index, wreck.pieces.length, wreck.elapsed, this.reducedMotion);
+        const ground = { x: start.x + (end.x - start.x) * pose.travel + pose.x,
+          y: start.y + (end.y - start.y) * pose.travel + pose.y };
+        piece.setPosition(ground.x, ground.y - pose.lift).setRotation(pose.rotation).setAlpha(pose.alpha)
+          .setDepth(worldDepth(ground, 'parts'));
+      });
+      return true;
+    });
   }
 
   private startReward(cell: Cell): void {
@@ -736,7 +770,8 @@ export class GameScene extends Phaser.Scene {
     }
     for (const [cell, picture] of this.pilePictures) {
       const puff = this.puffs.find(puff => key(puff.cell) === cell);
-      picture.setAlpha(puff ? Math.min(1, puff.elapsed / .35) : 1);
+      const wreck = this.wrecks.find(wreck => key(wreck.cell) === cell);
+      picture.setAlpha(wreck ? Math.max(0, Math.min(1, (wreck.elapsed - .35) / .3)) : puff ? Math.min(1, puff.elapsed / .35) : 1);
     }
     for (const puff of this.puffs) {
       const p = this.point(puff.cell), t = puff.elapsed / (this.reducedMotion ? .25 : .7);

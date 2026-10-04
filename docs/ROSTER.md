@@ -31,7 +31,7 @@ The game now covers the released LEGO World Builder 1 roster: 20 buildable roles
 | Speedboat | Patrol boat / boat | Fast fighter, no cargo | Shallow + deep water | Automatic adjacent combat |
 | Marina | Marina / structure | Stationary, no cargo | Shallow-water site | Restores adjacent boats |
 
-The additional Hauler is a land vehicle carrying 4 cargo. Signal relay is a battery-free dismantlable object built on grass/sand; it does not recharge units. Bristleback remains the land hostile in Bramble Crossing and drops no enemy salvage.
+The additional Hauler is a land vehicle carrying 4 cargo. Signal relay is a battery-free dismantlable object built on grass/sand; it does not recharge units. Bristleback is an additional land hostile used in the meadow missions; defeating one leaves two red parts and one fully charged battery.
 
 ## Hostile roles
 

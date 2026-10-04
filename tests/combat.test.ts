@@ -105,6 +105,23 @@ describe('wandering and pursuit', () => {
 });
 
 describe('wreckage and the second handcrafted mission', () => {
+  it('leaves Bristleback bricks and its battery available for a carrier to collect', () => {
+    const simulation = arena(); run(simulation, 4);
+    const cell = { x: 4, y: 3 };
+    expect(simulation.pileAt(cell)?.supplies).toMatchObject({ red: 2, batteries: [100] });
+    const recovery = new Simulation(grid, [unitDefinition('hauler', 'h', { x: 3, y: 3 })], { piles: simulation.piles });
+    expect(recovery.transfer('h', 'pickup', cell).ok).toBe(true);
+    expect(recovery.unit('h').cargo).toMatchObject({ red: 2, batteries: [100] });
+    expect(recovery.pileAt(cell)).toBeUndefined();
+  });
+  it('starts a moving enemy’s breakup at its visible position and leaves salvage at the nearer tile', () => {
+    const simulation = arena('warden', creature({ start: { x: 5, y: 3 }, maxHealth: 4, damage: 0, speed: 0 }));
+    Object.assign(simulation.enemies[0], { next: { x: 4, y: 3 }, progress: .97 });
+    simulation.step(.01);
+    const event = simulation.drainEvents().find(event => event.kind === 'destroyed');
+    expect(event).toMatchObject({ cell: { x: 4, y: 3 }, position: { x: 4.03, y: 3 } });
+    expect(simulation.pileAt({ x: 4, y: 3 })?.supplies.red).toBe(2);
+  });
   it('returns a destroyed moving rover’s recipe and cargo once, with an empty installed battery', () => {
     const simulation = arena('hauler', creature({ damage: 100 })), unit = simulation.unit('rover');
     unit.battery = 36; unit.cargo = { red: 2, blue: 1, batteries: [37] , yellow: 0, green: 0, tires: 0};
@@ -112,6 +129,8 @@ describe('wreckage and the second handcrafted mission', () => {
     run(simulation, 1);
     expect(simulation.units).toHaveLength(0);
     expect(simulation.pileAt({ x: 3, y: 3 })?.supplies).toEqual({ red: 4, blue: 2, batteries: [0,37], yellow: 0, green: 0, tires: 4 });
+    const event = simulation.drainEvents().find(event => event.kind === 'destroyed');
+    expect(event).toMatchObject({ faction: 'friendly', salvage: simulation.pileAt({ x: 3, y: 3 })!.supplies });
     expect(simulation.pileAt({ x: 7, y: 6 })).toBeUndefined();
     run(simulation, 2); expect(simulation.piles).toHaveLength(1);
     const rebuilt = simulation.build('hauler',{ x: 3, y: 3 }); expect(rebuilt.ok).toBe(true);

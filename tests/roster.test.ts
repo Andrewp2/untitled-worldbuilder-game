@@ -277,7 +277,7 @@ describe('automatic support', () => {
 });
 
 describe('all released hostile families', () => {
-  it.each(enemyKinds.filter(k => k !== 'bristleback'))('%s obeys terrain while wandering and drops charged salvage once when defeated', kind => {
+  it.each(enemyKinds)('%s obeys terrain while wandering and drops charged salvage once when defeated', kind => {
     const water = ['water-crab', 'shark'].includes(kind), grid = board(water ? 'deep-water' : 'grass');
     if (kind === 'scorpion' || kind === 'trex') grid.tiles[2][3] = 'rough';
     const enemy = { ...enemyDefinition(kind, 'e', { x: 3, y: 2 }), damage: 0 };
@@ -290,7 +290,14 @@ describe('all released hostile families', () => {
     const fighter = unitDefinition(water ? 'patrolboat' : 'warden', 'f', { x: 2, y: 2 }); fighter.damage = 100;
     const s = new Simulation(grid, [fighter], { enemies: [enemy] }); s.step(.01);
     expect(s.enemies).toHaveLength(0); expect(s.pileAt({ x: 3, y: 2 })?.supplies).toEqual(enemySpecs[kind].loot);
+    expect(load(enemySpecs[kind].loot)).toBeGreaterThan(1);
     expect(s.pileAt({ x: 3, y: 2 })?.supplies.batteries.every(charge => charge > 0)).toBe(true);
+    const event = s.drainEvents().find(event => event.kind === 'destroyed');
+    expect(event).toMatchObject({ faction: 'enemy', salvage: enemySpecs[kind].loot });
+    if (event?.kind !== 'destroyed') throw new Error('Missing wreck event');
+    expect(event.salvage).not.toBe(s.piles[0].supplies);
+    expect(event.salvage.batteries).not.toBe(s.piles[0].supplies.batteries);
+    expect(event.salvage.batteries).not.toBe(enemySpecs[kind].loot.batteries);
     const before = JSON.stringify(s.piles); s.step(3); expect(JSON.stringify(s.piles)).toBe(before);
   });
   it('lets a Gator cross a shoreline while a land Crab cannot', () => {

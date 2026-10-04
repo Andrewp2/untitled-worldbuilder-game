@@ -35,7 +35,7 @@ export type SimulationEvent = { unitId: string; text: string; error: boolean } &
     { kind: 'blueprint-found'; blueprint: Blueprint; cell: Cell } |
     { kind: 'enemy-alert'; targetId: string; cell: Cell } |
     { kind: 'hit'; attackerId: string; targetId: string; cell: Cell; damage: number } |
-    { kind: 'destroyed'; faction: 'friendly' | 'enemy'; cell: Cell });
+    { kind: 'destroyed'; faction: 'friendly' | 'enemy'; cell: Cell; position: Cell; salvage: Supplies });
 type Approach = { goal: Cell; route: Cell[] };
 
 export class Simulation {
@@ -627,20 +627,24 @@ export class Simulation {
       const unit = this.units[i];
       if (!destroyed.has(unit.id)) continue;
       const cell = { ...(unit.next && unit.progress >= .5 ? unit.next : unit.cell) };
-      this.addSupplies(cell, recipeSupplies(unit.kind, 0));
+      const salvage = recipeSupplies(unit.kind, 0);
+      for (const part of partKinds) salvage[part] += unit.cargo[part];
+      salvage.batteries.push(...unit.cargo.batteries);
+      if (unit.cargo.soil) salvage.soil = unit.cargo.soil;
+      this.addSupplies(cell, salvage);
       if (unit.carryingTree) this.looseTrees.push({ ...cell });
-      this.addSupplies(cell, unit.cargo); this.units.splice(i, 1);
-      this.events.push({ kind: 'destroyed', unitId: unit.id, faction: 'friendly', cell,
+      this.units.splice(i, 1);
+      this.events.push({ kind: 'destroyed', unitId: unit.id, faction: 'friendly', cell, position: this.position(unit), salvage,
         text: `${unit.name} destroyed. Its parts${usesBattery(unit.kind) ? ' and an empty battery' : ''} remain.`, error: true });
     }
     for (let i = this.enemies.length - 1; i >= 0; i--) {
       const enemy = this.enemies[i];
       if (enemy.health > 0) continue;
       const cell = { ...(enemy.next && enemy.progress >= .5 ? enemy.next : enemy.cell) };
-      const loot = enemySpecs[enemy.kind].loot;
-      if (load(loot)) this.addSupplies(cell, loot);
+      const salvage = cloneSupplies(enemySpecs[enemy.kind].loot);
+      if (load(salvage)) this.addSupplies(cell, salvage);
       this.enemies.splice(i, 1);
-      this.events.push({ kind: 'destroyed', unitId: enemy.id, faction: 'enemy', cell, text: `${enemy.name} defeated.`, error: false });
+      this.events.push({ kind: 'destroyed', unitId: enemy.id, faction: 'enemy', cell, position: this.position(enemy), salvage, text: `${enemy.name} defeated.`, error: false });
     }
     for (const unit of this.units) this.recordGoals(unit);
   }

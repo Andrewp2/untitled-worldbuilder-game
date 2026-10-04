@@ -100,7 +100,7 @@ export const unitSpecs: Record<UnitKind, UnitSpec> = {
   marina: { name: 'Marina', reference: 'Marina', description: 'Stationary · recharges adjacent boats in shallow water', color: 0x65b5d0, speed: 0, capacity: 0, damage: 0, mobility: 'shallow', family: 'structure', actions: [], recharge: 'boat' },
 };
 export const enemySpecs: Record<EnemyKind, { name: string; reference: string | null; mobility: Mobility; speed: number; health: number; damage: number; loot: Supplies }> = {
-  bristleback: { name: 'Bristleback', reference: null, mobility: 'land', speed: 1.75, health: 20, damage: 4, loot: emptySupplies() },
+  bristleback: { name: 'Bristleback', reference: null, mobility: 'land', speed: 1.75, health: 20, damage: 4, loot: { ...partCounts(2), batteries: [100] } },
   crab: { name: 'Crab', reference: 'Crab', mobility: 'land', speed: 1.6, health: 16, damage: 4, loot: { ...partCounts(3), batteries: [100] } },
   'water-crab': { name: 'Reef crab', reference: 'Water Crab', mobility: 'water', speed: 1.2, health: 12, damage: 4, loot: { ...partCounts(0, 3), batteries: [100] } },
   scorpion: { name: 'Scorpion', reference: 'Scorpion', mobility: 'rough', speed: 2.5, health: 28, damage: 6, loot: { ...partCounts(0, 0, 4), batteries: [100] } },
