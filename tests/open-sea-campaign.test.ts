@@ -1,6 +1,7 @@
 import { openThreeTides } from './helpers/three-tides-play';
 import { connectIslandGarden, supplyIsland } from './helpers/island-handoffs-play';
 import { rescueReefCastaway, upgradeReefCourier } from './helpers/reef-courier-play';
+import { patrolRelayHarbor, restoreRelayFreighter } from './helpers/marina-relay-play';
 import { describe, expect, it } from 'vitest';
 import { seaMissions } from '../src/levels/open-sea';
 import { createMission, missions } from '../src/levels/missions';
@@ -33,13 +34,7 @@ const solutions: Record<string, (s: Simulation) => void> = {
 
   },
   'marina-relay': s => {
-    expect(s.move('freighter', s.setup.goals![0].cell).ok).toBe(false);
-    for (let i = 0; i < 2; i++) { work(s, 'tug', 'pickup', { x: 6, y: 6 }); work(s, 'tug', 'drop', { x: 15, y: 6 }); }
-    go(s, 'tug', { x: 13, y: 5 }); build(s, 'marina', { x: 14, y: 6 }); refuel(s, 'freighter');
-    go(s, 'freighter', s.setup.goals![0].cell); expect(s.mainComplete).toBe(true);
-    go(s, 'freighter', { x: 12, y: 2 });
-    deliver(s, 'freighter', { x: 6, y: 9 }, { x: 10, y: 7 }); build(s, 'frog', s.setup.bonus!.cell);
-
+    patrolRelayHarbor(s, restoreRelayFreighter(s, 'berth'));
   },
   'harbor-run': s => {
     const guard = build(s, 'warden', { x: 17, y: 2 }); clearEnemies(s, [guard, 'patrol']);

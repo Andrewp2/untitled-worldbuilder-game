@@ -233,7 +233,7 @@ export class GameScene extends Phaser.Scene {
     }
     if (object?.kind === 'enemy') {
       const selected = this.selectedRover();
-      this.bridge.message(selected && !selected.damage ? `${selected.name} is unarmed. Use ${this.mission.blueprints.patrolboat ? 'Patrol boat' : 'Warden'} beside the creature to fight.` : 'Move beside the creature to fight automatically.'); return;
+      this.bridge.message(selected && !selected.damage ? `${selected.name} is unarmed. Move an armed unit beside the enemy.` : 'Move beside the creature to fight automatically.'); return;
     }
     if (object) { this.select(object.id); return; }
     const relay = this.simulation.relayAt(cell);

@@ -110,8 +110,8 @@ export const missionHints: Record<string, MissionHints> = {
     bonus: ['The excavator’s kit can become a different creature. The linked pools offer a shortcut.', 'Collect Duck’s plan and recycle Scoop’s yellow piece and battery. Use the linked whirlpools between the western pool and waste pond to shorten Duck’s journey.'],
   },
   'marina-relay': {
-    main: ['The empty Freighter needs a nearby berth. Tugboat must move a kit larger than its hold.', 'Ferry the Marina kit in two loads. Build in shallow water beside Freighter, keeping the delivery pile off the berth’s tile, and let both boats recharge.'],
-    bonus: ['Frog cannot cross the deep water around the island. It can be built from the shore.', 'Ship a green piece and battery to the island’s edge. Use diagonal construction to assemble Frog directly on the island.'],
+    main: ['The camp pieces are only part of the charging berth. The courier contains the rest.', 'Carry the three camp pieces to the inner quay beside Freighter. Take Tugboat apart nearby, combine its parts with the delivery and build Marina in the shallow berth. Recharge the original Freighter for Relay port.'],
+    bonus: ['The charger contains the missing color for your defender. Decide when it has finished its job.', 'Collect Patrol boat’s plan and return Freighter to Marina for a full charge. Take both apart together, then build Patrol boat using Marina’s yellow piece and Freighter’s charged battery. Clear the outer Shark before reaching the beacon.'],
   },
   'harbor-run': {
     main: ['Land and water threats need different defenders. Protect the cargo route before shipping the stores.', 'Build Warden from the eastern kit for Gator; use Patrol boat against the sea predators. Clear every enemy, then reach the berth with the camp stores aboard Freighter.'],

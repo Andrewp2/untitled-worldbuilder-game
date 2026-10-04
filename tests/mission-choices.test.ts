@@ -4,10 +4,16 @@ import { build, go, refuel, work } from './helpers/campaign-play';
 import { openThreeTides } from './helpers/three-tides-play';
 import { connectIslandGarden, supplyIsland } from './helpers/island-handoffs-play';
 import { rescueReefCastaway, upgradeReefCourier } from './helpers/reef-courier-play';
+import { patrolRelayHarbor, restoreRelayFreighter } from './helpers/marina-relay-play';
 
 const play = (id: string) => createMission(missions.find(m => m.id === id)!);
 
 describe('alternative mission plans', () => {
+  it('starts Marina Relay’s original ship with the donor battery, then builds and reclaims its charger for the patrol', () => {
+    const s = play('marina-relay');
+    patrolRelayHarbor(s, restoreRelayFreighter(s, 'battery'));
+  });
+
   it('upgrades Tugboat inside Reef Courier’s lagoon, then uses its successor to rescue the original Snail', () => {
     const s = play('reef-courier');
     rescueReefCastaway(s, upgradeReefCourier(s, 'lagoon'));
