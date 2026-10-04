@@ -132,7 +132,7 @@ export class GameScene extends Phaser.Scene {
     this.input.on('wheel', (p: Phaser.Input.Pointer, _objects: unknown[], _dx: number, dy: number) => this.zoomBy(dy > 0 ? 0.9 : 1.1, { x: p.x, y: p.y }));
     this.scale.on('resize', () => this.resizeView());
     this.ready = true;
-    this.initialView();
+    this.overview();
     this.emitState();
   }
 
@@ -304,7 +304,7 @@ export class GameScene extends Phaser.Scene {
       const exit = movementDestination(this.simulation.grid, this.hover);
       return `Whirlpool → ${exit.x + 1}, ${exit.y + 1} · shallow water · enter to jump`;
     }
-    if (selected && (terrain === 'rough' || isWater(terrain))) return `${terrain === 'rough' ? 'Rough ground' : terrain === 'deep-water' ? 'Deep water' : 'Shallow water'} · ${selected.name} ${walkable(this.simulation.grid, this.hover, unitSpecs[selected.kind].mobility) ? 'can cross' : 'cannot cross'}`;
+    if (selected && isMobile(selected.kind) && (terrain === 'rough' || isWater(terrain))) return `${terrain === 'rough' ? 'Rough ground' : terrain === 'deep-water' ? 'Deep water' : 'Shallow water'} · ${selected.name} ${walkable(this.simulation.grid, this.hover, unitSpecs[selected.kind].mobility) ? 'can cross' : 'cannot cross'}`;
     return '';
   }
   private syncObjects(): void {
@@ -397,7 +397,7 @@ export class GameScene extends Phaser.Scene {
     this.mode = 'move'; this.blueprint = 'relay'; this.paused = false; this.accumulator = 0; this.hover = null; this.down = null;
     this.completionPending = false; this.celebrationComplete = false; this.bonusCelebrationComplete = false; this.motionClock = 0;
     if (!this.ready) return;
-    this.drawWorld(); this.initialView(); this.bridge.message(`${mission.name}. ${mission.goal}.`); this.emitState();
+    this.drawWorld(); this.overview(); this.bridge.message(`${mission.name}. ${mission.goal}.`); this.emitState();
   }
   focusSelected(): void {
     if (!this.ready || !this.selected) return;
@@ -412,14 +412,6 @@ export class GameScene extends Phaser.Scene {
     this.viewWidth = this.scale.width; this.viewHeight = this.scale.height;
     const size = this.simulation.grid.width + this.simulation.grid.height;
     this.fitZoom = Math.min(this.scale.width / (size * 40 + 120), this.scale.height / (size * 20 + 150), 1.1);
-  }
-  private initialView(): void {
-    this.overview();
-    if (this.scale.width < 700 && this.fitZoom < 0.55) {
-      // Keep units large enough to select on narrow screens; Overview still fits the full board.
-      this.cameras.main.setZoom(0.65).centerOn(-160, 260);
-      this.emitState();
-    }
   }
   overview(): void {
     if (!this.ready) return;
