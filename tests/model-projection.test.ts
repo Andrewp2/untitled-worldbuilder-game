@@ -18,15 +18,20 @@ describe('model support plane matches the game grid', () => {
         model.rotation.y = angle; model.updateMatrixWorld(true);
         const bounds = new Box3().setFromObject(model);
         expect(bounds.min.y).toBeGreaterThanOrEqual(-.006); expect(bounds.min.y).toBeLessThan(.01);
+        const silhouette = { left: Infinity, right: -Infinity, top: Infinity, bottom: -Infinity };
         model.traverse(mesh => {
           if (!(mesh instanceof Mesh)) return;
           const vertices = mesh.geometry.getAttribute('position');
           for (let i = 0; i < vertices.count; i++) {
             const p = project(new Vector3().fromBufferAttribute(vertices, i).applyMatrix4(mesh.matrixWorld));
-            expect(p.x).toBeGreaterThan(0); expect(p.x).toBeLessThan(MODEL_SIZE);
-            expect(p.y).toBeGreaterThan(0); expect(p.y).toBeLessThan(MODEL_SIZE);
+            silhouette.left = Math.min(silhouette.left, p.x); silhouette.right = Math.max(silhouette.right, p.x);
+            silhouette.top = Math.min(silhouette.top, p.y); silhouette.bottom = Math.max(silhouette.bottom, p.y);
           }
         });
+        // Extrema cover every vertex without allocating four assertions per vertex.
+        const pose = `${reaction} at ${angle}`;
+        expect(silhouette.left, pose).toBeGreaterThan(0); expect(silhouette.right, pose).toBeLessThan(MODEL_SIZE);
+        expect(silhouette.top, pose).toBeGreaterThan(0); expect(silhouette.bottom, pose).toBeLessThan(MODEL_SIZE);
       }
     }
   });
