@@ -6,15 +6,17 @@ import { build, clearEnemies, deliver, go, refuel, until, work } from './helpers
 
 const solutions: Record<string, (s: Simulation) => void> = {
   'switchback-stations': s => {
-    go(s, 'carrier', { x: 13, y: 1 }); build(s, 'pump', { x: 14, y: 2 });
-    go(s, 'carrier', { x: 14, y: 1 }); refuel(s, 'carrier');
-    go(s, 'carrier', { x: 13, y: 5 }); build(s, 'pump', { x: 14, y: 6 });
-    go(s, 'carrier', { x: 14, y: 5 }); refuel(s, 'carrier');
+    build(s, 'pump', { x: 6, y: 6 });
+    go(s, 'carrier', { x: 6, y: 5 }); refuel(s, 'carrier'); refuel(s, 'gate-dozer');
+    work(s, 'gate-dozer', 'push', { x: 8, y: 6 });
+    go(s, 'gate-dozer', { x: 12, y: 7 });
     go(s, 'carrier', s.setup.goals![0].cell); expect(s.mainComplete).toBe(true);
-    work(s, 'carrier', 'pickup', { x: 2, y: 10 });
-    go(s, 'carrier', { x: 14, y: 7 }); refuel(s, 'carrier');
-    work(s, 'carrier', 'drop', { x: 15, y: 1 });
-    expect(s.replaceBattery('reserve-scout').ok).toBe(true); go(s, 'reserve-scout', s.setup.bonus!.cell);
+    go(s, 'carrier', { x: 14, y: 5 });
+    build(s, 'pump', { x: 13, y: 10 }); refuel(s, 'reserve-scout');
+    go(s, 'reserve-scout', { x: 12, y: 11 });
+    work(s, 'gate-dozer', 'push', { x: 11, y: 10 });
+    go(s, 'gate-dozer', { x: 12, y: 8 });
+    go(s, 'reserve-scout', s.setup.bonus!.cell);
 
   },
   'forked-watch': s => {

@@ -1,11 +1,37 @@
 import { describe, expect, it } from 'vitest';
 import { createMission, missions } from '../src/levels/missions';
-import { build, go, work } from './helpers/campaign-play';
+import { build, go, refuel, work } from './helpers/campaign-play';
 import { openThreeTides } from './helpers/three-tides-play';
 
 const play = (id: string) => createMission(missions.find(m => m.id === id)!);
 
 describe('alternative mission plans', () => {
+  it('takes the Switchback coast without moving its shortcut rock, then powers and opens the Scout enclosure', () => {
+    const s = play('switchback-stations');
+    const goal = s.setup.goals![0].cell, home = s.setup.bonus!.cell;
+    expect(s.preview('carrier', goal)!.length).toBeGreaterThan(s.unit('carrier').battery);
+    build(s, 'pump', { x: 6, y: 6 });
+    go(s, 'carrier', { x: 6, y: 5 });
+    refuel(s, 'carrier'); refuel(s, 'gate-dozer');
+    expect(s.blueprints.pump).toBe(0);
+    go(s, 'carrier', goal);
+    expect(s.mainComplete).toBe(true);
+    expect(s.grid.tiles[6][8]).toBe('rock');
+    expect(s.bonusReached).toBe(false);
+    go(s, 'carrier', { x: 14, y: 5 });
+    build(s, 'pump', { x: 13, y: 10 }); refuel(s, 'reserve-scout');
+    expect(s.preview('reserve-scout', home)).toBeNull();
+    go(s, 'gate-dozer', { x: 10, y: 10 });
+    expect(s.orderObstacle('gate-dozer', 'push', { x: 11, y: 10 }).ok).toBe(false);
+    go(s, 'reserve-scout', { x: 12, y: 11 });
+    work(s, 'gate-dozer', 'push', { x: 11, y: 10 });
+    go(s, 'gate-dozer', { x: 12, y: 8 });
+    go(s, 'reserve-scout', home);
+    expect(s.bonusReached).toBe(true);
+    expect(s.blueprints.pump).toBe(0);
+    expect(s.unit('reserve-scout').battery).toBeGreaterThan(0);
+  });
+
   it('opens Stone Gate by shore construction and saves the rock gate, then recycles into a gardener', () => {
     const s = play('stone-gate');
     go(s, 'scout', { x: 3, y: 5 }); go(s, 'scout', { x: 2, y: 2 });

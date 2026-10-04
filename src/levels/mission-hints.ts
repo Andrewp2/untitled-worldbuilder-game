@@ -30,8 +30,8 @@ export const missionHints: Record<string, MissionHints> = {
     bonus: ['Scout’s remaining charge can power a fighter. Look at the red and blue parts near home.', 'Collect Warden’s plan, then dismantle Scout beside the kit. Build Warden, defeat Crab and reach the bay star.'],
   },
   'switchback-stations': {
-    main: ['The starting charge will not last the whole journey. Look for places to refuel along the route.', 'Build Charging stations in the two side pockets beside their kits. Park Hauler adjacent until charged before continuing.'],
-    bonus: ['The original Scout is intact. A battery can travel as cargo even after it has been used.', 'Pick up the far battery, return along the charging stops and drop it beside Scout. Replace Scout’s battery and guide it to the start star.'],
+    main: ['A station can serve more than one vehicle. Compare the coastal route with the blocked shortcut before placing it.', 'Build the camp station east of its kit, beside the empty Dozer. Recharge Hauler for the northern coast, or use Dozer to push the shortcut rock east once and park clear.'],
+    bonus: ['Scout needs power before it can make room for the gate rock. A station can be built inside the enclosure from outside.', 'Collect the second station plan. Build on the clear tile east of Scout using the diagonal eastern kit. Charge Scout and move it down inside the grove; Dozer can then push the gate rock east once. Park Dozer clear and bring Scout home.'],
   },
   'bramble-crossing': {
     main: ['The camp has a combat plan and a separate powered kit. Unarmed couriers cannot fight the Bristleback.', 'Collect Warden’s plan, build beside the kit and move close to the Bristleback. Fighting is automatic; after it falls, send a creature to East.'],

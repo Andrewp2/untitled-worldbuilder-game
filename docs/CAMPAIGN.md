@@ -27,7 +27,7 @@ The October 1 play-feel refinement adds alternative plans to Stone Gate, Forked 
 | 5 | Tidal Workshop | Dismantle Duck for the yellow piece and battery needed by Trailbuggy. | Recycle Trailbuggy and construct Duck directly on the shallow star surrounded by deep water. |
 | 6 | Split Kit | Carry half a kit around the crescent; use diagonal construction to combine it with inaccessible island pieces. | Recycle Forklift with green stock into Arborbot; lift the tree gate and carry it to the garden. |
 | 7 | Flat Battery | Donate Hauler’s used battery to the original stranded Scout. | Recycle Scout into Warden and clear the Crab before reaching the bay star. |
-| 8 | Switchback Stations | Place two charging stops along a route the starting battery cannot cover. | Return with the far battery, restore the original empty Scout and guide it back to the start. |
+| 8 | Switchback Stations | Place shared power for Hauler and Dozer; take the northern coast or open a rock shortcut. | Build a charger inside the isolated grove using diagonal supplies. Charge Scout and move it aside so Dozer can push its gate open, then guide Scout home. |
 | 9 | Bramble Crossing | Find a finite Warden plan and defend the narrow crossing. | Recycle Scout with camp colors into Arborbot; bring an eastern tree to the star. |
 | 10 | Forked Watch | Draw the bridge patrol away with Scout while Hauler takes another crossing, or hold both with towers. | Reserve or reclaim a tower kit to build Duck for the water-only inlet. |
 | 11 | Orchard Convoy | Replant a tree, push the boulder along the causeway and bring the loaded Bulk hauler to Orchard. | Original Arborbot brings an eastern tree around the rock outcrop to the southern grove. |
