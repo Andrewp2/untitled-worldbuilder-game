@@ -4,7 +4,7 @@ import { board, pile, manifest, stock, type AuthoredMission } from './authored';
 /** Later Meadow puzzles build on the seven opening missions. */
 export const meadowAdditions: AuthoredMission[] = [
   {
-    id: 'switchback-stations', name: 'Switchback Stations', goal: 'Build charging stops · reach Switchback',
+    id: 'switchback-stations', name: 'Switchback Stations', goal: 'Bring Hauler to Switchback',
     challenge: 'Plan charging stops through a long switchback and power the return journey.',
     brief: 'Hauler starts with only twenty charge. Build charging stations in the two side pockets beside their kits. Park beside a station to refill. The bonus is a rescue: return with the far battery and restore the empty Scout beside the first charging stop.',
     grid: board([
@@ -25,11 +25,11 @@ export const meadowAdditions: AuthoredMission[] = [
     rovers: [unit('hauler', 'carrier', { x: 1, y: 1 }, 20), unit('scout', 'reserve-scout', { x: 16, y: 2 }, 0)],
     piles: [pile(13, 2, recipeSupplies('pump')), pile(13, 6, recipeSupplies('pump')), pile(2, 10, stock(0, 0, 1, 1, [60]))],
     goals: [{ id: 'switchback', name: 'Switchback', cell: { x: 2, y: 11 }, unitId: 'carrier', kinds: ['hauler'] }],
-    bonus: { kind: 'arrival', name: 'Reserve rescue', description: 'Bring the far battery back · restore Scout and guide it to the start star.', cell: { x: 2, y: 1 }, unitId: 'reserve-scout' },
+    bonus: { kind: 'arrival', name: 'Reserve rescue', description: 'Guide the original empty Scout to the start star.', cell: { x: 2, y: 1 }, unitId: 'reserve-scout' },
     enemies: [], blueprints: { pump: 2 }, seed: 4108,
   },
   {
-    id: 'forked-watch', name: 'Forked Watch', goal: 'Pass the patrols · reach Watch',
+    id: 'forked-watch', name: 'Forked Watch', goal: 'Bring Hauler to Watch',
     challenge: 'Choose between defending two crossings and drawing their patrols away with a faster Scout; reserve or reclaim a kit for the water-only bonus.',
     brief: 'Bristleback patrols a circuit through both bridges; Crab circles the eastern landing. Scout can draw them away while Hauler takes the other crossing, or build the two Sentry towers to hold the choke points. Enemies notice a nearby unit before chasing it. After Watch, collect Duck’s plan. Use an unspent tower kit or reclaim a tower to build Duck and paddle to the quiet inlet.',
     grid: board([
@@ -51,7 +51,7 @@ export const meadowAdditions: AuthoredMission[] = [
     rovers: [unit('hauler', 'carrier', { x: 3, y: 6 }), unit('scout', 'bait', { x: 3, y: 10 })],
     piles: [pile(7, 5, recipeSupplies('sentry', 100)), pile(14, 10, recipeSupplies('sentry', 100))],
     goals: [{ id: 'watch', name: 'Watch', cell: { x: 15, y: 11 }, kinds: ['hauler'] }],
-    bonus: { kind: 'arrival', name: 'Quiet inlet', description: 'Reserve or reclaim a tower kit for Duck · paddle to the inlet star.', cell: { x: 8, y: 1 }, kinds: ['duck'] },
+    bonus: { kind: 'arrival', name: 'Quiet inlet', description: 'Bring Duck to the quiet inlet.', cell: { x: 8, y: 1 }, kinds: ['duck'] },
     enemies: [
       { ...enemyDefinition('bristleback', 'bridge-bristle', { x: 8, y: 6 }), patrol: [{ x: 8, y: 6 }, { x: 13, y: 6 }, { x: 13, y: 9 }, { x: 7, y: 10 }, { x: 7, y: 6 }] },
       { ...enemyDefinition('crab', 'watch-crab', { x: 12, y: 10 }), patrol: [{ x: 12, y: 10 }, { x: 15, y: 10 }, { x: 13, y: 11 }, { x: 11, y: 10 }] },
@@ -112,7 +112,7 @@ export const meadowAdditions: AuthoredMission[] = [
     rovers: [unit('warden', 'guard-a', { x: 4, y: 4 }), unit('warden', 'guard-b', { x: 4, y: 5 }), unit('workshop', 'workshop', { x: 3, y: 4 }), unit('scoop', 'scoop', { x: 3, y: 6 }), unit('arborbot', 'arborbot', { x: 3, y: 7 }), unit('snail', 'snail', { x: 3, y: 9 }), unit('hauler', 'carrier', { x: 4, y: 10 })],
     piles: [pile(6, 10, stock(0, 2, 0, 4, [100]))],
     goals: [{ id: 'haven', name: 'Haven', cell: { x: 17, y: 4 }, unitId: 'snail', kinds: ['snail'], clearEnemies: true }],
-    bonus: { kind: 'arrival', name: 'River guest', description: 'Build Frog from the reserve · hop to the river star.', cell: { x: 10, y: 11 }, kinds: ['frog'] },
+    bonus: { kind: 'arrival', name: 'River guest', description: 'Bring Frog to the river star.', cell: { x: 10, y: 11 }, kinds: ['frog'] },
     enemies: [enemyDefinition('bristleback', 'north-bristle', { x: 13, y: 5 }), enemyDefinition('bristleback', 'south-bristle', { x: 14, y: 10 }), enemyDefinition('crab', 'haven-crab', { x: 17, y: 8 })],
     blueprints: {  }, seed: 4112,
     blueprintPickups: [{ blueprint: 'frog', cell: { x: 16, y: 4 }, afterMain: true }],

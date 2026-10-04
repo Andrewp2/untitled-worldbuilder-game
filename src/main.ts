@@ -12,6 +12,7 @@ import { WorldMapScene } from './view/WorldMapScene';
 import { worlds } from './levels/world-map';
 import { TOY_BACKGROUND } from './view/toy-art';
 import { attachResetControl } from './view/reset-control';
+import { HintProgress } from './view/mission-hints';
 
 let progressStorage: ProgressStorage | undefined;
 try { progressStorage = window.localStorage; } catch { /* A blocked store does not prevent play. */ }
@@ -125,7 +126,11 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   </dialog>
   <section id="help-panel" class="help-panel" aria-label="Controls" hidden>
     <div class="help-heading"><h2>How to play</h2><button id="help-close" aria-label="Close controls">${icon('close')}</button></div>
-    <p id="mission-brief" hidden></p>
+    <section id="mission-hints" aria-labelledby="hint-title" hidden>
+      <h3 id="hint-title">Mission hints</h3>
+      <div id="revealed-hints" aria-live="polite"></div>
+      <button id="reveal-hint" class="hint-button" aria-controls="revealed-hints">Show a hint</button>
+    </section>
     <div class="resource-key"><span>${resourceIcon('red')}Red</span><span>${resourceIcon('blue')}Blue</span><span>${resourceIcon('yellow')}Yellow</span><span>${resourceIcon('green')}Green</span><span>${resourceIcon('tires')}Tires</span><span>${resourceIcon('battery')}Battery</span><span>${resourceIcon('soil')}Dirt</span></div>
     <dl>
       <div><dt>Audio</dt><dd>Music and sound effects start off. Use the note and speaker buttons in Game menu to enable them for this tab.</dd></div>
@@ -187,6 +192,20 @@ const labels: Record<string, string> = { idle: 'Ready', moving: 'Moving', waitin
 const statusIcons: Record<string, string> = { idle:'check', moving:'move', waiting:'wait', fighting:'shield', depleted:'emptyBattery', paused:'pause' };
 const displayStatus = (state: ViewState, unit: ViewState['units'][number]) => state.paused && ['moving','waiting','fighting'].includes(unit.status) ? 'paused' : unit.status;
 let lastState = '', missionSignature = '', objectiveSignature = '';
+const hintProgress = new HintProgress();
+let hintSignature = '';
+function renderHints(): void {
+  const signature = JSON.stringify([hintProgress.visible, hintProgress.canReveal]);
+  if (signature === hintSignature) return;
+  hintSignature = signature;
+  el('revealed-hints').replaceChildren(...hintProgress.visible.map(text => {
+    const paragraph = document.createElement('p'); paragraph.textContent = text; return paragraph;
+  }));
+  const button = el<HTMLButtonElement>('reveal-hint');
+  button.disabled = !hintProgress.canReveal;
+  button.textContent = !hintProgress.canReveal ? 'All hints shown' : hintProgress.visible.length ? 'Show another hint' : 'Show a hint';
+}
+el('reveal-hint').onclick = () => { hintProgress.reveal(); renderHints(); };
 let pausedBeforeCompletion = false;
 let changingScreen = false;
 let licensePromotion = '';
@@ -236,9 +255,11 @@ function updateHud(state: ViewState): void {
     document.title = `${state.mission.name} · Untitled`;
     el('mission-name').textContent = state.mission.name;
     el('mission-goal').textContent = state.mission.goal;
-    el('mission-brief').textContent = state.mission.brief;
     for (const plan of plans) el(`build-${plan}`).hidden = state.mission.blueprints[plan] === undefined;
   }
+  hintProgress.update(state.mission.id, state.bonus.unlocked);
+  el('hint-title').textContent = state.bonus.unlocked ? 'Bonus hints' : 'Mission hints';
+  renderHints();
   const u = state.units.find(u => u.id === state.selected), relay = state.selectedRelay;
   const status = u ? displayStatus(state, u) : 'idle';
   el('selected-name').textContent = relay ? 'Signal relay' : u?.name ?? 'Select a rover';
@@ -430,7 +451,7 @@ function closeMissionPanels(): void {
 function showScreen(screen: 'world' | 'mission'): void {
   document.body.dataset.screen = screen;
   el('world-screen').hidden = screen !== 'world'; el('mission-screen').hidden = screen !== 'mission';
-  el('mission-brief').hidden = screen !== 'mission';
+  el('mission-hints').hidden = screen !== 'mission';
   for (const id of ['world-map', 'pause']) el(id).hidden = screen === 'world';
   progressReset.setScreen(screen);
   el(`${screen === 'world' ? 'world' : 'mission'}-game-host`).prepend(el('game'));
@@ -445,6 +466,7 @@ function showScreen(screen: 'world' | 'mission'): void {
 }
 function startMission(id: string): void {
   if (!campaign.start(id)) return;
+  hintProgress.reset();
   closeMissionPanels();
   if (game.scene.isActive('world')) game.scene.sleep('world');
   changingScreen = true; showScreen('mission'); changingScreen = false;

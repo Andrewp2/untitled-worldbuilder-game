@@ -4,6 +4,8 @@ All three worlds have twelve ordered missions. Each mission has one main goal an
 
 This pass responds to the repetitive delivery bonuses and rectangular banks in the first campaign. The seven opening missions have new layouts and solutions. The remaining 29 have revised coasts, obstacles or route geometry and reworked objective pairs. Some later mains retain their useful engineering or combat idea; their bonuses add another terrain, salvage or power decision. All flags require a mobile model on the target. Five convoy mains additionally require cargo aboard that model. Loose deposits never finish a goal, and no bonus is a block shipment.
 
+Normal objective text describes the destination and success conditions without giving away the conversion or route. Game menu → How to play offers two optional hints per main and bonus: a conceptual nudge first, concrete advice second. No hint appears until requested. Completing the main clears its revealed hints and makes the bonus hints available; restarting or revisiting starts with none revealed. Hints have no star penalty and do not change saved progress. The authored [hint table](../src/levels/mission-hints.ts) covers all 36 missions.
+
 Every wheeled recipe also needs four tires. Tires occupy one cargo slot each and survive dismantling or destruction along with colored parts. Blueprint counts still limit rebuilds.
 
 Linked whirlpools count as shallow water: entering one takes its unit and cargo to a predetermined exit without an extra battery cost. The exit is reserved while entering, and a unit must leave and re-enter before it jumps back. Reef Courier uses the pair to enter a sealed port; Deepwater Maze offers a power-saving pond detour.

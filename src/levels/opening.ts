@@ -4,7 +4,7 @@ import { board, pile, stock, type AuthoredMission } from './authored';
 /** Seven small, authored puzzles. Empty water is silhouette, not a second bank template. */
 export const openingMissions: AuthoredMission[] = [
   {
-    id: 'hollow-reach', name: 'Hollow Reach', goal: 'Build Scout · reach Shore',
+    id: 'hollow-reach', name: 'Hollow Reach', goal: 'Bring Scout to Shore',
     challenge: 'Find a plan with Duck, assemble Scout, then use the two models’ different terrain access.',
     brief: 'Move Duck onto the blue Scout plan. Build Scout beside the yellow, green, tire and battery pile. Scout reaches Shore by land; the bonus nest is in shallow water, where Duck can paddle.',
     grid: board([
@@ -16,11 +16,11 @@ export const openingMissions: AuthoredMission[] = [
     piles: [pile(3, 4, recipeSupplies('scout', 100))],
     blueprints: {}, blueprintPickups: [{ cell: { x: 4, y: 3 }, blueprint: 'scout' }],
     goals: [{ id: 'shore', name: 'Shore', cell: { x: 10, y: 6 }, kinds: ['scout'] }],
-    bonus: { kind: 'arrival', name: 'Duck nest', description: 'Guide Duck to the nest in the shallows.', cell: { x: 9, y: 8 }, unitId: 'duck' },
+    bonus: { kind: 'arrival', name: 'Duck nest', description: 'Guide the original Duck to its shallow-water nest.', cell: { x: 9, y: 8 }, unitId: 'duck' },
     enemies: [], seed: 5101,
   },
   {
-    id: 'parts-and-paths', name: 'Parts and Paths', goal: 'Build Trailbuggy · reach Ridge',
+    id: 'parts-and-paths', name: 'Parts and Paths', goal: 'Bring Trailbuggy to Ridge',
     challenge: 'Cross a rocky neck with a specialist, then open a different route from the far side for Scout.',
     brief: 'Scout cannot cross the gray ridge. Collect the Trailbuggy plan and build beside its kit. After Ridge, find the Dozer plan on the far side. Push the southern gate rock west twice to open a normal-ground route for the original Scout.',
     grid: board([
@@ -32,11 +32,11 @@ export const openingMissions: AuthoredMission[] = [
     piles: [pile(3, 5, recipeSupplies('trailbuggy', 100)), pile(12, 6, recipeSupplies('dozer', 100))],
     blueprints: {}, blueprintPickups: [{ cell: { x: 3, y: 4 }, blueprint: 'trailbuggy' }, { cell: { x: 12, y: 5 }, blueprint: 'dozer', afterMain: true }],
     goals: [{ id: 'ridge', name: 'Ridge', cell: { x: 14, y: 4 }, kinds: ['trailbuggy'] }],
-    bonus: { kind: 'arrival', name: 'Scout reunion', description: 'Open the rock gate from the far side · guide the original Scout to the star.', cell: { x: 14, y: 8 }, unitId: 'scout' },
+    bonus: { kind: 'arrival', name: 'Scout reunion', description: 'Bring the original Scout to the reunion star.', cell: { x: 14, y: 8 }, unitId: 'scout' },
     enemies: [], seed: 5102,
   },
   {
-    id: 'siltwater-reach', name: 'Siltwater Reach', goal: 'Make a crossing · guide Snail to Home',
+    id: 'siltwater-reach', name: 'Siltwater Reach', goal: 'Guide the original Snail to Home',
     challenge: 'Build a land crossing, then undo it to release a different creature through the enclosed channel.',
     brief: 'Scoop can borrow one shore tile to bridge the narrow channel for Snail. After Home, collect the Fish plan. Snail’s installed battery and the blue piece can build Fish on the water beside the shore. Dig out the crossing again so Fish can reach its upstream pool.',
     grid: board([
@@ -48,11 +48,11 @@ export const openingMissions: AuthoredMission[] = [
     piles: [pile(8, 7, stock(0, 1))],
     blueprints: {}, blueprintPickups: [{ cell: { x: 10, y: 6 }, blueprint: 'fish', afterMain: true }],
     goals: [{ id: 'home', name: 'Home', cell: { x: 11, y: 6 }, unitId: 'snail' }],
-    bonus: { kind: 'arrival', name: 'Upstream pool', description: 'Recycle Snail into Fish · reopen the channel to the upstream star.', cell: { x: 7, y: 2 }, kinds: ['fish'] },
+    bonus: { kind: 'arrival', name: 'Upstream pool', description: 'Bring Fish to the upstream pool.', cell: { x: 7, y: 2 }, kinds: ['fish'] },
     enemies: [], seed: 5103,
   },
   {
-    id: 'stone-gate', name: 'Stone Gate', goal: 'Choose a tool · reach Gate',
+    id: 'stone-gate', name: 'Stone Gate', goal: 'Bring Dozer or Scoop to Gate',
     challenge: 'Spend one shared kit on a rock gate or a shore crossing, then reclaim the machine to bring a tree to an offshore garden.',
     brief: 'Scout can collect both Dozer and Scoop plans, but their shared kit has only one battery. Dozer can push the gate rock east twice; Scoop can borrow two shore tiles to cross below the tree wall. Reach Gate with either machine. Afterward, collect Arborbot’s plan. Scoop can fill the gap to the southern islet; reclaim its kit beside the green pieces to build Arborbot. Lift a wall tree and bring it to the garden star.',
     grid: board([
@@ -64,11 +64,11 @@ export const openingMissions: AuthoredMission[] = [
     piles: [pile(4, 4, recipeSupplies('scoop', 100)), pile(10, 7, stock(0, 1, 0, 3))],
     blueprints: {}, blueprintPickups: [{ cell: { x: 3, y: 4 }, blueprint: 'dozer' }, { cell: { x: 3, y: 5 }, blueprint: 'scoop' }, { cell: { x: 11, y: 5 }, blueprint: 'arborbot', afterMain: true }],
     goals: [{ id: 'gate', name: 'Gate', cell: { x: 11, y: 3 }, kinds: ['dozer', 'scoop'] }],
-    bonus: { kind: 'arrival', name: 'Offshore garden', description: 'Make the islet crossing · recycle the tool into Arborbot and bring a wall tree to the star.', cell: { x: 10, y: 9 }, kinds: ['arborbot'], carryingTree: true },
+    bonus: { kind: 'arrival', name: 'Offshore garden', description: 'Bring a living tree to the offshore garden with Arborbot.', cell: { x: 10, y: 9 }, kinds: ['arborbot'], carryingTree: true },
     enemies: [], seed: 5104,
   },
   {
-    id: 'woodland-workshop', name: 'Tidal Workshop', goal: 'Recycle Duck · reach the rocky headland',
+    id: 'woodland-workshop', name: 'Tidal Workshop', goal: 'Bring Trailbuggy to Headland',
     challenge: 'Reuse the only yellow piece and its battery across two terrain specialists; build on water diagonally from the shore.',
     brief: 'Duck supplies the only yellow piece. Find the Trailbuggy plan, then take Duck apart beside the red/blue/tire kit and build Trailbuggy. After Headland, find the Duck plan. Recover Trailbuggy’s parts on the southeast shore and construct Duck directly on the isolated shallow-water star using the diagonal of its 3×3 building area.',
     grid: board([
@@ -80,11 +80,11 @@ export const openingMissions: AuthoredMission[] = [
     piles: [pile(4, 6, stock(1, 1, 0, 0, [], 4))],
     blueprints: {}, blueprintPickups: [{ cell: { x: 4, y: 4 }, blueprint: 'trailbuggy' }, { cell: { x: 11, y: 3 }, blueprint: 'duck', afterMain: true }],
     goals: [{ id: 'headland', name: 'Headland', cell: { x: 11, y: 4 }, kinds: ['trailbuggy'] }],
-    bonus: { kind: 'arrival', name: 'Secret nest', description: 'Build Duck directly on the shallow-water star beside the rocky shore.', cell: { x: 12, y: 6 }, kinds: ['duck'] },
+    bonus: { kind: 'arrival', name: 'Secret nest', description: 'Bring Duck to the isolated shallow-water nest.', cell: { x: 12, y: 6 }, kinds: ['duck'] },
     enemies: [], seed: 5105,
   },
   {
-    id: 'split-kit', name: 'Split Kit', goal: 'Join the kit · build Forklift at Depot',
+    id: 'split-kit', name: 'Split Kit', goal: 'Bring Forklift to Depot',
     challenge: 'Use a diagonal building area to join an inaccessible kit; reuse the big carrier as a tree-moving bot.',
     brief: 'Hauler brings the two yellow pieces and battery around the crescent to the red/blue kit. The rock beside that kit blocks pickup, but its diagonal still counts for construction. After Depot, collect Arborbot’s plan and the green pieces. Recycle Forklift into Arborbot, lift the grove gate tree and bring it to the star.',
     grid: board([
@@ -96,11 +96,11 @@ export const openingMissions: AuthoredMission[] = [
     piles: [pile(3, 4, stock(0, 0, 2, 0, [100])), pile(10, 4, stock(1, 1, 0, 0, [], 4)), pile(5, 9, stock(0, 0, 0, 3))],
     blueprints: {}, blueprintPickups: [{ cell: { x: 3, y: 5 }, blueprint: 'forklift' }, { cell: { x: 12, y: 7 }, blueprint: 'arborbot', afterMain: true }],
     goals: [{ id: 'depot', name: 'Depot', cell: { x: 14, y: 8 }, kinds: ['forklift'] }],
-    bonus: { kind: 'arrival', name: 'Grove guest', description: 'Recycle Forklift into Arborbot · bring the gate tree to the grove star.', cell: { x: 13, y: 2 }, kinds: ['arborbot'], carryingTree: true },
+    bonus: { kind: 'arrival', name: 'Grove guest', description: 'Bring the grove gate tree to the star with Arborbot.', cell: { x: 13, y: 2 }, kinds: ['arborbot'], carryingTree: true },
     enemies: [], seed: 5106,
   },
   {
-    id: 'flat-battery', name: 'Flat Battery', goal: 'Donate a battery · guide Scout home',
+    id: 'flat-battery', name: 'Flat Battery', goal: 'Guide the stranded Scout home',
     challenge: 'The only live battery belongs to the carrier; rescue Scout before spending the remaining power on a guarded bonus.',
     brief: 'There is no spare charged battery. Move Hauler beside the original stranded Scout and take Hauler apart; Scout can replace its battery from the recovered parts. After Home, find the Warden plan. Recycle Scout’s remaining power into Warden beside the red/blue kit, then clear Crab and reach the bonus bay.',
     grid: board([
@@ -112,7 +112,7 @@ export const openingMissions: AuthoredMission[] = [
     piles: [pile(4, 4, stock(1, 2))],
     blueprints: {}, blueprintPickups: [{ cell: { x: 5, y: 3 }, blueprint: 'warden', afterMain: true }],
     goals: [{ id: 'home', name: 'Home', cell: { x: 4, y: 3 }, unitId: 'stranded' }],
-    bonus: { kind: 'arrival', name: 'Crab bay', description: 'Recycle Scout into Warden · clear Crab and reach the bay star.', cell: { x: 13, y: 9 }, kinds: ['warden'], clearEnemies: true },
+    bonus: { kind: 'arrival', name: 'Crab bay', description: 'Clear Crab · bring Warden to the bay star.', cell: { x: 13, y: 9 }, kinds: ['warden'], clearEnemies: true },
     enemies: [enemyDefinition('crab', 'bay-crab', { x: 14, y: 9 })], seed: 5107,
   },
 ];

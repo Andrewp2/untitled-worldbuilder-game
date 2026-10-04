@@ -3,7 +3,7 @@ import { board, pile, manifest, stock, type AuthoredMission } from './authored';
 
 export const sunstoneAdditions: AuthoredMission[] = [
   {
-    id: 'ridge-post', name: 'Ridge Post', goal: 'Build a far-bank Warden · secure the Post',
+    id: 'ridge-post', name: 'Ridge Post', goal: 'Clear Crab · bring Warden to Post',
     challenge: 'A rough-ground courier must ferry a combat kit in two loads to a separate battlefield.',
     brief: 'Trailbuggy can cross the rough ridge but cannot fight. Warden can fight but cannot cross the ridge. Carry the four-item kit across in two loads, assemble Warden on the eastern sand and clear the Crab before reaching Post. For the bonus, Warden donates blue pieces and Crab donates red pieces and a live battery: combine their recovered kits with the four tires stored at Post to build Hauler on the far bank.',
     grid: board([
@@ -26,13 +26,13 @@ export const sunstoneAdditions: AuthoredMission[] = [
     rovers: [unit('trailbuggy', 'courier', { x: 3, y: 6 })],
     piles: [pile(4, 5, recipeSupplies('warden', 100)), pile(16, 4, stock(0, 0, 0, 0, [], 4))],
     goals: [{ id: 'post', name: 'Post', cell: { x: 17, y: 3 }, kinds: ['warden'], clearEnemies: true }],
-    bonus: { kind: 'arrival', name: 'Post carrier', description: 'Combine Crab salvage with Warden’s kit · build Hauler for the southern star.', cell: { x: 15, y: 13 }, kinds: ['hauler'] },
+    bonus: { kind: 'arrival', name: 'Post carrier', description: 'Bring Hauler to the southern star.', cell: { x: 15, y: 13 }, kinds: ['hauler'] },
     enemies: [enemyDefinition('crab', 'post-crab', { x: 17, y: 11 })],
     blueprints: { warden: 1 }, seed: 4202,
     blueprintPickups: [{ blueprint: 'hauler', cell: { x: 17, y: 4 }, afterMain: true }],
   },
   {
-    id: 'mudline', name: 'Mudline', goal: 'Conserve charge · reach the Dry bank',
+    id: 'mudline', name: 'Mudline', goal: 'Bring Hauler to Dry bank',
     challenge: 'The shortest route costs too much power; use waypoints to choose a longer dry path.',
     brief: 'Swamp tiles cost three charge per step. Hauler has thirty charge, so the direct route will strand it. Route around the bog via the northern dry bank. The far charging station supports the longer bonus supply runs. For the bonus, recharge Hauler and return by the dry route to the green pieces. Recycle its battery into Frog: the shallow bog pool is inaccessible to wheels.',
     grid: board([
@@ -55,12 +55,12 @@ export const sunstoneAdditions: AuthoredMission[] = [
     rovers: [unit('hauler', 'driver', { x: 3, y: 6 }, 30), unit('pump', 'far-station', { x: 15, y: 9 })],
     piles: [pile(4, 4, stock(0, 0, 0, 6))],
     goals: [{ id: 'dry-bank', name: 'Dry bank', cell: { x: 15, y: 8 }, unitId: 'driver', kinds: ['hauler'] }],
-    bonus: { kind: 'arrival', name: 'Bog pool', description: 'Donate Hauler’s power · build Frog and reach the pool in the bog.', cell: { x: 9, y: 7 }, kinds: ['frog'] },
+    bonus: { kind: 'arrival', name: 'Bog pool', description: 'Bring Frog to the pool in the bog.', cell: { x: 9, y: 7 }, kinds: ['frog'] },
     enemies: [], blueprints: {  }, seed: 4203,
     blueprintPickups: [{ blueprint: 'frog', cell: { x: 15, y: 7 }, afterMain: true }],
   },
   {
-    id: 'boulder-courtyard', name: 'Boulder Courtyard', goal: 'Unpick the rock gate · guide Snail home',
+    id: 'boulder-courtyard', name: 'Boulder Courtyard', goal: 'Guide the captive Snail to Home',
     challenge: 'Move the prisoner inside its holding bay so Dozer can reverse-push a pair of rocks.',
     brief: 'The rocks cannot simply be pushed forward. Move Snail down inside its holding bay, push the outside rock north, then push the inner rock west twice. Keep the bay’s empty tiles available for those pushes. After Home, combine Dozer’s yellow piece with Hauler’s blue piece by dismantling them beside each other. Build Trailbuggy to reach the rocky high court.',
     grid: board([
@@ -82,12 +82,12 @@ export const sunstoneAdditions: AuthoredMission[] = [
     rovers: [unit('snail', 'prisoner', { x: 2, y: 2 }), unit('dozer', 'dozer', { x: 6, y: 4 }), unit('hauler', 'carrier', { x: 5, y: 9 })],
     piles: [pile(14, 11, stock(2, 0, 2))],
     goals: [{ id: 'courtyard-home', name: 'Home', cell: { x: 14, y: 9 }, unitId: 'prisoner', kinds: ['snail'] }],
-    bonus: { kind: 'arrival', name: 'High court', description: 'Combine Dozer and Hauler’s recovered kits · take Trailbuggy to the rocky court.', cell: { x: 10, y: 5 }, kinds: ['trailbuggy'] },
+    bonus: { kind: 'arrival', name: 'High court', description: 'Bring Trailbuggy to the rocky high court.', cell: { x: 10, y: 5 }, kinds: ['trailbuggy'] },
     enemies: [], blueprints: {  }, seed: 4204,
     blueprintPickups: [{ blueprint: 'trailbuggy', cell: { x: 13, y: 9 }, afterMain: true }],
   },
   {
-    id: 'repair-column', name: 'Repair Column', goal: 'Escort Warden · clear the Scorpions',
+    id: 'repair-column', name: 'Repair Column', goal: 'Clear the Scorpions · reach Column end',
     challenge: 'Keep mobile repair support beside a combat unit through successive rough-edge encounters.',
     brief: 'Warden starts partly drained. Mender restores nearby bots using its own charge and can cross rough terrain. Recharge Warden before the first fight and keep Mender beside it. Scorpions leave charged batteries: use that field salvage to keep Mender moving for its bonus journey.',
     grid: board([
@@ -111,12 +111,12 @@ export const sunstoneAdditions: AuthoredMission[] = [
     rovers: [unit('warden', 'guard', { x: 3, y: 5 }, 35), unit('mender', 'mender', { x: 2, y: 5 }, 75)],
     piles: [],
     goals: [{ id: 'column', name: 'Column end', cell: { x: 17, y: 13 }, kinds: ['warden'], clearEnemies: true }],
-    bonus: { kind: 'arrival', name: 'Mender overlook', description: 'Guide the original Mender to the northern overlook star.', cell: { x: 17, y: 2 }, unitId: 'mender' },
+    bonus: { kind: 'arrival', name: 'Mender overlook', description: 'Guide the original Mender to the northern overlook.', cell: { x: 17, y: 2 }, unitId: 'mender' },
     enemies: [enemyDefinition('scorpion', 'north-scorpion', { x: 10, y: 5 }), enemyDefinition('scorpion', 'south-scorpion', { x: 15, y: 11 })],
     blueprints: { mender: 1 }, seed: 4205,
   },
   {
-    id: 'forward-foundry', name: 'Forward Foundry', goal: 'Power the far Warden · secure Foundry',
+    id: 'forward-foundry', name: 'Forward Foundry', goal: 'Clear enemies · guide the stranded Warden to Foundry',
     challenge: 'Build a forward bot power source from ferried parts rather than spending a fresh battery.',
     brief: 'The original far-bank Warden has an empty battery. Trailbuggy carries three parts, so ferry the six-piece Bot workshop kit across in two loads. Build the workshop beside Warden and let it restore charge before the two encounters. The camp station recharges Trailbuggy for the supply bonus. The bonus oasis is surrounded by rough ground. Ferry the green piece and battery onto the ridge, then build Frog directly in its water from a diagonal 3×3 site.',
     grid: board([
@@ -139,13 +139,13 @@ export const sunstoneAdditions: AuthoredMission[] = [
     rovers: [unit('trailbuggy', 'courier', { x: 3, y: 6 }), unit('pump', 'camp-station', { x: 3, y: 5 }), unit('warden', 'stranded-guard', { x: 12, y: 6 }, 0)],
     piles: [pile(4, 6, recipeSupplies('workshop')), pile(4, 9, stock(0, 0, 0, 1, [60]))],
     goals: [{ id: 'foundry', name: 'Foundry', cell: { x: 17, y: 3 }, unitId: 'stranded-guard', kinds: ['warden'], clearEnemies: true }],
-    bonus: { kind: 'arrival', name: 'Hidden oasis', description: 'Build Frog directly in the shallow oasis using the ridge’s diagonal building area.', cell: { x: 9, y: 11 }, kinds: ['frog'] },
+    bonus: { kind: 'arrival', name: 'Hidden oasis', description: 'Bring Frog to the hidden oasis.', cell: { x: 9, y: 11 }, kinds: ['frog'] },
     enemies: [enemyDefinition('crab', 'foundry-crab', { x: 17, y: 2 }), enemyDefinition('scorpion', 'foundry-scorpion', { x: 17, y: 11 })],
     blueprints: { workshop: 1 }, seed: 4207,
     blueprintPickups: [{ blueprint: 'frog', cell: { x: 8, y: 11 }, afterMain: true }],
   },
   {
-    id: 'canyon-rescue', name: 'Canyon Rescue', goal: 'Join the banks · guide Snail to Refuge',
+    id: 'canyon-rescue', name: 'Canyon Rescue', goal: 'Clear Crab · guide the original Snail to Refuge',
     challenge: 'Construct a four-tile crossing from opposite banks while defending the isolated crew.',
     brief: 'The rough upper ridge cannot carry Snail, Scoop or Forklift. Build a second Scoop from the far-bank kit and work from both shores to join the lower channel. Keep the eastern guardian beside its Mender while clearing the Crab, then bring the original Snail west. After Snail reaches Refuge, the far Scoop’s job is done. Collect Trailbuggy’s plan and recycle Scoop’s kit to use the rough upper ridge.',
     grid: board([
@@ -169,13 +169,13 @@ export const sunstoneAdditions: AuthoredMission[] = [
     rovers: [unit('scoop', 'west-worker', { x: 3, y: 7 }), unit('pump', 'west-station', { x: 5, y: 7 }), unit('warden', 'guardian', { x: 13, y: 12 }), unit('mender', 'mender', { x: 14, y: 13 }), unit('snail', 'snail', { x: 15, y: 12 }), unit('forklift', 'carrier', { x: 3, y: 11 })],
     piles: [pile(14, 11, recipeSupplies('scoop', 100)), pile(4, 11, stock(2, 2, 0, 6))],
     goals: [{ id: 'refuge', name: 'Refuge', cell: { x: 3, y: 1 }, unitId: 'snail', kinds: ['snail'], clearEnemies: true }],
-    bonus: { kind: 'arrival', name: 'Upper ridge', description: 'Recycle the far Scoop into Trailbuggy · reach the upper ridge star.', cell: { x: 10, y: 4 }, kinds: ['trailbuggy'] },
+    bonus: { kind: 'arrival', name: 'Upper ridge', description: 'Bring Trailbuggy to the upper ridge star.', cell: { x: 10, y: 4 }, kinds: ['trailbuggy'] },
     enemies: [enemyDefinition('crab', 'canyon-crab', { x: 16, y: 4 })],
     blueprints: { scoop: 1 }, seed: 4208,
     blueprintPickups: [{ blueprint: 'trailbuggy', cell: { x: 17, y: 12 }, afterMain: true }],
   },
   {
-    id: 'salvage-chain', name: 'Salvage Chain', goal: 'Recover a Dozer kit · rescue Snail',
+    id: 'salvage-chain', name: 'Salvage Chain', goal: 'Clear Scorpion · guide the original Snail home',
     challenge: 'Enemy salvage supplies a missing recipe color; later dismantling funds the bonus reserve.',
     brief: 'No loose yellow parts exist at camp. Defeat Scorpion to obtain yellow and a charged battery, haul the red piece and four camp tires to that salvage and build Dozer. Clear the rock gate for the original Snail. For the bonus, Dozer’s installed battery can power Frog. Bring a green piece from camp beside Dozer before dismantling it, then reach the eastern pool.',
     grid: board([
@@ -199,13 +199,13 @@ export const sunstoneAdditions: AuthoredMission[] = [
     rovers: [unit('warden', 'guard', { x: 3, y: 5 }), unit('mender', 'mender', { x: 3, y: 6 }), unit('snail', 'snail', { x: 3, y: 9 }), unit('hauler', 'carrier', { x: 3, y: 11 }), unit('pump', 'camp-station', { x: 4, y: 12 })],
     piles: [pile(5, 3, stock(1, 0, 0, 0, [], 4)), pile(4, 10, stock(0, 0, 0, 4))],
     goals: [{ id: 'chain-home', name: 'Home', cell: { x: 17, y: 11 }, unitId: 'snail', kinds: ['snail'], clearEnemies: true }],
-    bonus: { kind: 'arrival', name: 'Sun pool', description: 'Reuse Dozer’s battery with camp green pieces · build Frog for the eastern pool.', cell: { x: 13, y: 9 }, kinds: ['frog'] },
+    bonus: { kind: 'arrival', name: 'Sun pool', description: 'Bring Frog to the eastern pool.', cell: { x: 13, y: 9 }, kinds: ['frog'] },
     enemies: [enemyDefinition('scorpion', 'kit-scorpion', { x: 7, y: 6 })],
     blueprints: { dozer: 1 }, seed: 4209,
     blueprintPickups: [{ blueprint: 'frog', cell: { x: 17, y: 10 }, afterMain: true }],
   },
   {
-    id: 'two-fronts', name: 'Two Fronts', goal: 'Clear both fronts · reach the Sun flag',
+    id: 'two-fronts', name: 'Two Fronts', goal: 'Clear both fronts · bring the eastern Warden to Sun flag',
     challenge: 'A repair unit crosses a rough divide to prepare separated defenders; the worker needs a different route.',
     brief: 'The two Wardens occupy separate banks. Send Mender over the rough ridge to recharge the eastern defender before its two encounters. After the main, Arborbot must open both tree gates along the lower causeway to reach its bonus grove.',
     grid: board([
@@ -229,12 +229,12 @@ export const sunstoneAdditions: AuthoredMission[] = [
     rovers: [unit('warden', 'west-guard', { x: 4, y: 5 }, 75), unit('warden', 'east-guard', { x: 15, y: 5 }, 45), unit('mender', 'mender', { x: 4, y: 6 }), unit('arborbot', 'arborbot', { x: 4, y: 9 })],
     piles: [],
     goals: [{ id: 'sun', name: 'Sun flag', cell: { x: 17, y: 3 }, unitId: 'east-guard', kinds: ['warden'], clearEnemies: true }],
-    bonus: { kind: 'arrival', name: 'United grove', description: 'Open the lower causeway and guide the original Arborbot to the far grove.', cell: { x: 17, y: 13 }, unitId: 'arborbot' },
+    bonus: { kind: 'arrival', name: 'United grove', description: 'Guide the original Arborbot to the far grove.', cell: { x: 17, y: 13 }, unitId: 'arborbot' },
     enemies: [enemyDefinition('crab', 'west-crab', { x: 5, y: 12 }), enemyDefinition('scorpion', 'east-scorpion', { x: 16, y: 12 }), enemyDefinition('crab', 'east-crab', { x: 18, y: 10 })],
     blueprints: {  }, seed: 4210,
   },
   {
-    id: 'power-bridge', name: 'Power Bridge', goal: 'Move the workshop · open the Citadel gate',
+    id: 'power-bridge', name: 'Power Bridge', goal: 'Clear Scorpion · guide the stranded Warden to Citadel gate',
     challenge: 'Relocate a structure and manage distinct bot/vehicle power requirements on the far bank.',
     brief: 'Take apart the camp workshop and use Forklift to carry its six parts plus the spare battery over the lower bridge. Rebuild the workshop beside the original empty Warden. Dozer needs the loose battery, since a bot workshop cannot recharge wheels. Push the northern rock gate open after clearing Scorpion. After Citadel, collect Trailbuggy’s plan. Forklift’s recovered colored kit already supplies the rough-ground vehicle, opening the northern ridge for the bonus.',
     grid: board([
@@ -258,13 +258,13 @@ export const sunstoneAdditions: AuthoredMission[] = [
     rovers: [unit('workshop', 'camp-workshop', { x: 3, y: 6 }), unit('warden', 'stranded-guard', { x: 14, y: 7 }, 0), unit('dozer', 'stranded-dozer', { x: 13, y: 8 }, 0)],
     piles: [pile(5, 9, recipeSupplies('forklift', 100)), pile(4, 5, stock(0, 0, 0, 0, [70])), pile(4, 11, stock(2))],
     goals: [{ id: 'citadel-gate', name: 'Citadel gate', cell: { x: 17, y: 3 }, unitId: 'stranded-guard', kinds: ['warden'], clearEnemies: true }],
-    bonus: { kind: 'arrival', name: 'Ridge return', description: 'Recycle Forklift into Trailbuggy · explore the rough northern ridge.', cell: { x: 10, y: 2 }, kinds: ['trailbuggy'] },
+    bonus: { kind: 'arrival', name: 'Ridge return', description: 'Bring Trailbuggy to the northern ridge star.', cell: { x: 10, y: 2 }, kinds: ['trailbuggy'] },
     enemies: [enemyDefinition('scorpion', 'gate-scorpion', { x: 16, y: 12 })],
     blueprints: { forklift: 1, workshop: 1 }, seed: 4211,
     blueprintPickups: [{ blueprint: 'trailbuggy', cell: { x: 16, y: 4 }, afterMain: true }],
   },
   {
-    id: 'sunstone-citadel', name: 'Sunstone Citadel', goal: 'Clear Citadel · bring the salvage convoy',
+    id: 'sunstone-citadel', name: 'Sunstone Citadel', goal: 'Clear Citadel · bring the loaded salvage convoy',
     challenge: 'Engineer a freight route, sustain a squad against mixed predators and conserve its salvage for a manifest.',
     brief: 'Clear the tree at the lower river edge and build a three-tile heavy-transport crossing. Relocate the camp workshop beside the new crossing to supply a guard post. Lure the southern predators back to it, then restore the whole squad before pushing north. Keep Menders beside their guards and park workers clear of the crossing. Defeat both Scorpions and both Rexes, then combine the camp blue pieces with recovered green and charged batteries aboard Bulk hauler at Citadel. The bonus grove is isolated behind its own tree gate. Lift that tree and carry it into the sheltered garden.',
     grid: board([
@@ -288,7 +288,7 @@ export const sunstoneAdditions: AuthoredMission[] = [
     rovers: [unit('warden', 'guard-a', { x: 4, y: 5 }), unit('warden', 'guard-b', { x: 5, y: 5 }), unit('mender', 'mender-a', { x: 4, y: 6 }), unit('mender', 'mender-b', { x: 5, y: 6 }), unit('workshop', 'camp-workshop', { x: 3, y: 4 }), unit('scoop', 'scoop', { x: 3, y: 10 }), unit('arborbot', 'arborbot', { x: 3, y: 11 }), unit('dumptruck', 'bulk', { x: 5, y: 10 }), unit('pump', 'camp-station', { x: 4, y: 11 })],
     piles: [pile(4, 10, stock(0, 8))],
     goals: [{ id: 'citadel', name: 'Citadel', cell: { x: 17, y: 3 }, unitId: 'bulk', kinds: ['dumptruck'], cargo: manifest(0, 8, 0, 8, 2), clearEnemies: true }],
-    bonus: { kind: 'arrival', name: 'Citadel grove', description: 'Lift the tree gate into the sheltered grove · bring it to the star with the original Arborbot.', cell: { x: 15, y: 13 }, unitId: 'arborbot', carryingTree: true },
+    bonus: { kind: 'arrival', name: 'Citadel grove', description: 'Bring a living tree into the sheltered grove with the original Arborbot.', cell: { x: 15, y: 13 }, unitId: 'arborbot', carryingTree: true },
     enemies: [enemyDefinition('scorpion', 'citadel-scorpion-a', { x: 14, y: 3 }), enemyDefinition('trex', 'citadel-rex-a', { x: 16, y: 6 }), enemyDefinition('scorpion', 'citadel-scorpion-b', { x: 14, y: 10 }), enemyDefinition('trex', 'citadel-rex-b', { x: 17, y: 12 })],
     blueprints: { workshop: 1 }, seed: 4212,
   },

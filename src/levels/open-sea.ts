@@ -4,7 +4,7 @@ import { board, pile, manifest, stock, type AuthoredMission } from './authored';
 /** Shorelines and channels are individually authored; water depth matters to every route. */
 export const seaMissions: AuthoredMission[] = [
   {
-    id: 'tidepool-trail', name: 'Tidepool Trail', goal: 'Restore Frog · cross the shallows',
+    id: 'tidepool-trail', name: 'Tidepool Trail', goal: 'Clear enemies · guide the original Frog to Frog bank',
     challenge: 'Protect a shoreline battery transfer and rescue the original amphibian through a shallow route.',
     brief: 'Frog has an empty battery. Patrol boat must clear the Reef crab before Tugboat collects the shore battery and drops it beside Frog. Frog and Duck cross pale shallows but cannot use deep water. Restore the original Frog, then guide it to the eastern flag. For the bonus, bring Duck back through the shallows, collect Fish’s plan and donate Duck’s battery beside the blue piece. The enclosed western tidepool requires construction from a diagonal shore site.',
     grid: board([
@@ -28,12 +28,12 @@ export const seaMissions: AuthoredMission[] = [
     rovers: [unit('frog', 'frog', { x: 7, y: 7 }, 0), unit('duck', 'duck', { x: 16, y: 9 }), unit('tug', 'tug', { x: 10, y: 10 }), unit('patrolboat', 'patrol', { x: 10, y: 7 })],
     piles: [pile(8, 3, stock(0, 0, 0, 0, [100])), pile(5, 13, stock(0, 1))],
     goals: [{ id: 'frog-bank', name: 'Frog bank', cell: { x: 17, y: 4 }, unitId: 'frog', clearEnemies: true }],
-    bonus: { kind: 'arrival', name: 'Hidden tidepool', description: 'Recycle Duck’s battery with the shore blue piece · build Fish directly in the enclosed tidepool.', cell: { x: 4, y: 12 }, kinds: ['fish'] },
+    bonus: { kind: 'arrival', name: 'Hidden tidepool', description: 'Bring Fish to the enclosed western tidepool.', cell: { x: 4, y: 12 }, kinds: ['fish'] },
     enemies: [enemy('water-crab', 'tide-crab', { x: 10, y: 2 })], blueprints: {}, seed: 4301,
     blueprintPickups: [{ blueprint: 'fish', cell: { x: 6, y: 11 }, afterMain: true }],
   },
   {
-    id: 'reef-courier', name: 'Reef Courier', goal: 'Launch Freighter at the eastern dock',
+    id: 'reef-courier', name: 'Reef Courier', goal: 'Bring Freighter to Reef port',
     challenge: 'Ferry a six-piece ship kit with a five-piece Tug hold, then use a linked whirlpool to enter the sealed reef port.',
     brief: 'The Freighter kit is on the western shore. Tugboat can carry only five pieces, so it needs two shoreline deliveries to the eastern launch site. Its camp Marina provides power for the return. Build Freighter in deep water beside the new dock. Enter the eastern whirlpool: its partner leads into the sealed reef port. Enter the port whirlpool again to return; jumps cost no extra charge and keep the cargo aboard. For the bonus, ship the yellow piece and live battery from the western shore to the eastern island. Build Snail ashore; ships cannot reach its inland home.',
     grid: board([
@@ -57,12 +57,12 @@ export const seaMissions: AuthoredMission[] = [
     rovers: [unit('tug', 'tug', { x: 8, y: 6 }), unit('marina', 'camp-marina', { x: 7, y: 6 })],
     piles: [pile(6, 7, recipeSupplies('freighter', 100)), pile(6, 9, stock(0, 0, 1, 0, [80]))],
     goals: [{ id: 'reef-port', name: 'Reef port', cell: { x: 12, y: 2 }, kinds: ['freighter'] }],
-    bonus: { kind: 'arrival', name: 'Island home', description: 'Ferry a Snail kit ashore · build it on the remote island and reach Home.', cell: { x: 18, y: 10 }, kinds: ['snail'] },
+    bonus: { kind: 'arrival', name: 'Island home', description: 'Bring Snail to the island home.', cell: { x: 18, y: 10 }, kinds: ['snail'] },
     enemies: [], blueprints: { freighter: 1 }, seed: 4302,
     blueprintPickups: [{ blueprint: 'snail', cell: { x: 14, y: 3 }, afterMain: true }],
   },
   {
-    id: 'deepwater-maze', name: 'Deepwater Maze', goal: 'Excavate the canal · guide Fish to the Lagoon',
+    id: 'deepwater-maze', name: 'Deepwater Maze', goal: 'Guide the original Fish to Lagoon',
     challenge: 'Dig land barriers into connected water channels while disposing of each dirt load without sealing the fish route.',
     brief: 'Fish is trapped in the western pool. Scoop must dig three land plugs to join the pools. Each dig fills Scoop with dirt: use the southern waste ponds to unload between digs. The original Fish then swims through the canal to Lagoon. After Lagoon, Scoop’s yellow piece and battery can build Duck. The linked whirlpools join the western pool and southern waste pond. They save power on the bonus trip; the canal plugs still need digging to reach Lagoon.',
     grid: board([
@@ -86,12 +86,12 @@ export const seaMissions: AuthoredMission[] = [
     rovers: [unit('fish', 'fish', { x: 3, y: 7 }), unit('scoop', 'scoop', { x: 4, y: 4 }), unit('tug', 'tug', { x: 9, y: 12 }), unit('pump', 'station', { x: 6, y: 11 })],
     piles: [pile(7, 12, stock(0, 2, 0, 2, [60]))],
     goals: [{ id: 'lagoon', name: 'Lagoon', cell: { x: 17, y: 7 }, unitId: 'fish' }],
-    bonus: { kind: 'arrival', name: 'Waste-pond nest', description: 'Recycle Scoop into Duck · cross land to the disconnected southern pond.', cell: { x: 11, y: 12 }, kinds: ['duck'] },
+    bonus: { kind: 'arrival', name: 'Waste-pond nest', description: 'Bring Duck to the southern waste-pond nest.', cell: { x: 11, y: 12 }, kinds: ['duck'] },
     enemies: [], blueprints: {  }, seed: 4303,
     blueprintPickups: [{ blueprint: 'duck', cell: { x: 6, y: 9 }, afterMain: true }],
   },
   {
-    id: 'marina-relay', name: 'Marina Relay', goal: 'Build remote boat power · restore Freighter',
+    id: 'marina-relay', name: 'Marina Relay', goal: 'Guide the original Freighter to Relay port',
     challenge: 'Bootstrap a forward charging berth with a kit larger than the courier hold and a limited starting battery.',
     brief: 'Tugboat begins partly drained. Carry the six-piece Marina kit in two loads to the shallow launch site. Build Marina beside the original empty Freighter; keep the kit on a different tile from the structure so the dock stays clear. The new berth also powers Tugboat for the bonus. The bonus lies inside an island ringed by deep water. Ship the green piece and battery to its shore and build Frog from the diagonal; Frog cannot swim there from camp.',
     grid: board([
@@ -115,12 +115,12 @@ export const seaMissions: AuthoredMission[] = [
     rovers: [unit('tug', 'tug', { x: 8, y: 6 }, 45), unit('freighter', 'freighter', { x: 13, y: 6 }, 0)],
     piles: [pile(6, 6, recipeSupplies('marina')), pile(6, 9, stock(0, 0, 0, 1, [70]))],
     goals: [{ id: 'relay-port', name: 'Relay port', cell: { x: 12, y: 1 }, unitId: 'freighter' }],
-    bonus: { kind: 'arrival', name: 'Castaway island', description: 'Ship a Frog kit into the enclosed island · build it ashore at the star.', cell: { x: 11, y: 8 }, kinds: ['frog'] },
+    bonus: { kind: 'arrival', name: 'Castaway island', description: 'Bring Frog to the castaway island star.', cell: { x: 11, y: 8 }, kinds: ['frog'] },
     enemies: [], blueprints: { marina: 1 }, seed: 4304,
     blueprintPickups: [{ blueprint: 'frog', cell: { x: 12, y: 2 }, afterMain: true }],
   },
   {
-    id: 'harbor-run', name: 'Harbor Run', goal: 'Secure the harbor · bring loaded Freighter to the berth',
+    id: 'harbor-run', name: 'Harbor Run', goal: 'Clear the harbor · bring loaded Freighter to the berth',
     challenge: 'Coordinate naval protection and a separately built land defender before a real shoreline manifest.',
     brief: 'The sea predators and the land Gator threaten different routes. Build Warden from the eastern shore kit to clear Gator, while Patrol boat protects the shipping channel. Freighter reaches the outer berth with the camp stores aboard after every threat is defeated. Enemy salvage supplies the bonus. The bonus pond is sealed off from the channel. Bring blue salvage and a live battery to the western shoreline and build Fish directly in the pond using a diagonal site.',
     grid: board([
@@ -144,13 +144,13 @@ export const seaMissions: AuthoredMission[] = [
     rovers: [unit('tug', 'tug', { x: 8, y: 6 }), unit('freighter', 'freighter', { x: 10, y: 7 }), unit('patrolboat', 'patrol', { x: 9, y: 8 }), unit('marina', 'marina', { x: 7, y: 6 })],
     piles: [pile(6, 7, stock(2, 4, 0, 6)), pile(17, 3, recipeSupplies('warden', 100))],
     goals: [{ id: 'harbor-stores', name: 'Harbor stores', cell: { x: 15, y: 9 }, unitId: 'freighter', kinds: ['freighter'], cargo: manifest(2, 4, 0, 6), clearEnemies: true }],
-    bonus: { kind: 'arrival', name: 'Quay pond', description: 'Use Shark salvage to build Fish directly in the enclosed quay pond.', cell: { x: 5, y: 5 }, kinds: ['fish'] },
+    bonus: { kind: 'arrival', name: 'Quay pond', description: 'Bring Fish to the enclosed quay pond.', cell: { x: 5, y: 5 }, kinds: ['fish'] },
     enemies: [enemy('water-crab', 'reef-crab', { x: 12, y: 3 }), enemy('shark', 'harbor-shark', { x: 12, y: 12 }), enemy('gator', 'harbor-gator', { x: 18, y: 8 })],
     blueprints: { warden: 1, tug: 1 }, seed: 4305,
     blueprintPickups: [{ blueprint: 'fish', cell: { x: 7, y: 9 }, afterMain: true }],
   },
   {
-    id: 'wreck-recovery', name: 'Wreck Recovery', goal: 'Protect the wreck · restore the original ship',
+    id: 'wreck-recovery', name: 'Wreck Recovery', goal: 'Clear enemies · guide the stranded ship to Safe berth',
     challenge: 'Recover a battery beyond a hostile reef and ferry it to an immobile ship without substituting a rebuilt copy.',
     brief: 'Freighter is powerless in the northern inlet. Patrol boat must recover power from Reef crab before facing Shark; Marina restores the patrol between encounters. Tugboat brings the recovered battery to the original ship. For the bonus, send Patrol boat into the northern shallows and recover its yellow piece and battery. Build Duck on the neighboring shore to reach the island nest.',
     grid: board([
@@ -173,13 +173,13 @@ export const seaMissions: AuthoredMission[] = [
     ]),
     rovers: [unit('freighter', 'wreck', { x: 16, y: 1 }, 0), unit('tug', 'tug', { x: 8, y: 7 }), unit('patrolboat', 'patrol', { x: 8, y: 8 }), unit('marina', 'marina', { x: 7, y: 8 })],
     piles: [], goals: [{ id: 'safe-berth', name: 'Safe berth', cell: { x: 8, y: 5 }, unitId: 'wreck', clearEnemies: true }],
-    bonus: { kind: 'arrival', name: 'Northern nest', description: 'Recycle Patrol boat into Duck · walk to the northern island’s nest.', cell: { x: 14, y: 4 }, kinds: ['duck'] },
+    bonus: { kind: 'arrival', name: 'Northern nest', description: 'Bring Duck to the northern island nest.', cell: { x: 14, y: 4 }, kinds: ['duck'] },
     enemies: [enemy('water-crab', 'wreck-crab', { x: 10, y: 2 }), enemy('shark', 'wreck-shark', { x: 16, y: 12 })],
     blueprints: {  }, seed: 4306,
     blueprintPickups: [{ blueprint: 'duck', cell: { x: 8, y: 6 }, afterMain: true }],
   },
   {
-    id: 'canal-foundry', name: 'Canal Foundry', goal: 'Excavate launch canals · build Patrol boat',
+    id: 'canal-foundry', name: 'Canal Foundry', goal: 'Clear Reef crab · reach Launch patrol',
     challenge: 'Open land plugs to move a ship kit between isolated pools and build a combat ship beyond the barrier.',
     brief: 'Tugboat and the launch lagoon are in disconnected pools. Scoop opens the two land plugs and unloads dirt in the camp waste ponds. Ferry the Patrol boat kit to the eastern launch lagoon, then build it there to clear Reef crab. After clearing the launch lagoon, the patrol’s yellow piece and battery build Snail on the neighboring land. Ships cannot reach its garden star.',
     grid: board([
@@ -203,12 +203,12 @@ export const seaMissions: AuthoredMission[] = [
     rovers: [unit('tug', 'tug', { x: 3, y: 7 }), unit('scoop', 'scoop', { x: 5, y: 4 }), unit('pump', 'station', { x: 7, y: 10 })],
     piles: [pile(2, 5, recipeSupplies('patrolboat', 100)), pile(2, 9, stock(2, 0, 0, 4))],
     goals: [{ id: 'foundry-patrol', name: 'Launch patrol', cell: { x: 17, y: 7 }, kinds: ['patrolboat'], clearEnemies: true }],
-    bonus: { kind: 'arrival', name: 'Foundry garden', description: 'Recycle Patrol boat into Snail on the shore · guide it to the garden.', cell: { x: 18, y: 9 }, kinds: ['snail'] },
+    bonus: { kind: 'arrival', name: 'Foundry garden', description: 'Bring Snail to the inland garden.', cell: { x: 18, y: 9 }, kinds: ['snail'] },
     enemies: [enemy('water-crab', 'foundry-crab', { x: 18, y: 8 })], blueprints: { patrolboat: 1 }, seed: 4307,
     blueprintPickups: [{ blueprint: 'snail', cell: { x: 17, y: 6 }, afterMain: true }],
   },
   {
-    id: 'gator-backwater', name: 'Gator Backwater', goal: 'Defend the banks · open Fish’s escape',
+    id: 'gator-backwater', name: 'Gator Backwater', goal: 'Clear the Gators · guide the original Fish to freedom',
     challenge: 'Use shallow-water pursuit to lure amphibious threats into shore defenses before excavating a vulnerable rescue passage.',
     brief: 'Build the two shore towers before sending Frog to draw the Gators toward them. Fish stays safe in its enclosed pool until Scoop removes the land plug. Clear both Gators, open the passage and guide the original Fish to the eastern lagoon. Use short retreats so the Gators keep chasing. The first recovered battery can restore Frog before the second lure; keep the recovered power available for the bonus. For the bonus, restore the original bait Frog using a recovered Gator battery. Cross the shallows to the eastern shore with at least sixty charge remaining.',
     grid: board([
@@ -232,11 +232,11 @@ export const seaMissions: AuthoredMission[] = [
     rovers: [unit('frog', 'bait', { x: 5, y: 10 }), unit('fish', 'fish', { x: 3, y: 5 }), unit('scoop', 'scoop', { x: 4, y: 8 }), unit('tug', 'tug', { x: 7, y: 12 }), unit('pump', 'station', { x: 4, y: 11 })],
     piles: [pile(5, 9, recipeSupplies('sentry', 100)), pile(5, 10, recipeSupplies('sentry', 100))],
     goals: [{ id: 'fish-escape', name: 'Fish escape', cell: { x: 16, y: 6 }, unitId: 'fish', clearEnemies: true }],
-    bonus: { kind: 'arrival', name: 'Bait’s reward', description: 'Restore Frog with recovered power · reach the eastern shore with at least 60 charge.', cell: { x: 18, y: 12 }, unitId: 'bait', minimumCharge: 60 },
+    bonus: { kind: 'arrival', name: 'Bait’s reward', description: 'Bring the original Frog to the eastern shore with at least 60 charge.', cell: { x: 18, y: 12 }, unitId: 'bait', minimumCharge: 60 },
     enemies: [enemy('gator', 'gator-a', { x: 13, y: 8 }), enemy('gator', 'gator-b', { x: 15, y: 12 })], blueprints: { sentry: 2 }, seed: 4308,
   },
   {
-    id: 'island-handoffs', name: 'Island Handoffs', goal: 'Build Bulk hauler ashore · bring it inland loaded',
+    id: 'island-handoffs', name: 'Island Handoffs', goal: 'Bring loaded Bulk hauler to Inland reserve',
     challenge: 'Ships cannot reach the inland flag: build a land carrier on the far shore, then reuse its kit for the garden.',
     brief: 'Twenty green pieces must reach an inland flag that ships cannot approach. Build a far-shore Bulk hauler from its separate colored kit. Ship the construction kit first, then transfer the green reserve. Bulk hauler carries it inland in one trip. Each shore has the charging berth needed to keep this long supply chain moving. After the main manifest, its green stock and Bulk hauler’s recovered red/yellow kit can build Arborbot. Lift the southern tree and bring it to the grove star.',
     grid: board([
@@ -260,12 +260,12 @@ export const seaMissions: AuthoredMission[] = [
     rovers: [unit('freighter', 'ship', { x: 8, y: 6 }), unit('marina', 'west-marina', { x: 7, y: 6 }), unit('marina', 'east-marina', { x: 14, y: 6 }), unit('pump', 'east-station', { x: 16, y: 6 })],
     piles: [pile(6, 8, stock(0, 0, 0, 20)), pile(6, 5, recipeSupplies('dumptruck', 100)), pile(6, 10, stock(3, 2, 0, 0, [80]))],
     goals: [{ id: 'inland-reserve', name: 'Inland reserve', cell: { x: 20, y: 3 }, kinds: ['dumptruck'], cargo: manifest(0, 0, 0, 20) }],
-    bonus: { kind: 'arrival', name: 'Island gardener', description: 'Recycle Bulk hauler using the delivered green stock · bring a tree to the southern grove.', cell: { x: 20, y: 12 }, kinds: ['arborbot'], carryingTree: true },
+    bonus: { kind: 'arrival', name: 'Island gardener', description: 'Bring a living tree to the southern grove with Arborbot.', cell: { x: 20, y: 12 }, kinds: ['arborbot'], carryingTree: true },
     enemies: [], blueprints: { dumptruck: 1 }, seed: 4309,
     blueprintPickups: [{ blueprint: 'arborbot', cell: { x: 20, y: 4 }, afterMain: true }],
   },
   {
-    id: 'storm-line', name: 'Storm Line', goal: 'Restore the fleet · clear both channels',
+    id: 'storm-line', name: 'Storm Line', goal: 'Clear both channels · reach Storm berth with the southern patrol',
     challenge: 'Two separated patrols share limited repair berths while distinct water-depth routes isolate their encounters.',
     brief: 'The two Patrol boats begin with partial charge in separate channels. Build a Marina at each shallow berth before battle. The northern channel has two Reef crabs; the southern channel has two Sharks, so restore that patrol between encounters. For the bonus, ferry blue salvage and a live battery to the divider’s shoreline. The sheltered pond is disconnected from both ship channels: build Fish there from a diagonal.',
     grid: board([
@@ -289,13 +289,13 @@ export const seaMissions: AuthoredMission[] = [
     rovers: [unit('patrolboat', 'north', { x: 7, y: 3 }, 35), unit('patrolboat', 'south', { x: 7, y: 11 }, 45), unit('tug', 'tug', { x: 8, y: 4 })],
     piles: [pile(5, 3, recipeSupplies('marina')), pile(5, 11, recipeSupplies('marina'))],
     goals: [{ id: 'storm-berth', name: 'Storm berth', cell: { x: 12, y: 13 }, unitId: 'south', clearEnemies: true }],
-    bonus: { kind: 'arrival', name: 'Storm shelter', description: 'Use channel salvage to build Fish in the sheltered pond between the channels.', cell: { x: 10, y: 7 }, kinds: ['fish'] },
+    bonus: { kind: 'arrival', name: 'Storm shelter', description: 'Bring Fish to the sheltered pond between the channels.', cell: { x: 10, y: 7 }, kinds: ['fish'] },
     enemies: [enemy('water-crab', 'north-a', { x: 12, y: 2 }), enemy('water-crab', 'north-b', { x: 12, y: 5 }), enemy('shark', 'south-a', { x: 10, y: 12 }), enemy('shark', 'south-b', { x: 12, y: 14 })],
     blueprints: { marina: 2 }, seed: 4310,
     blueprintPickups: [{ blueprint: 'fish', cell: { x: 7, y: 10 }, afterMain: true }],
   },
   {
-    id: 'last-reserves', name: 'Last Reserves', goal: 'Turn the last battery into a fleet rescue',
+    id: 'last-reserves', name: 'Last Reserves', goal: 'Clear enemies · guide the original Freighter to Reserve port',
     challenge: 'A sole charged battery must first fund combat salvage, then restore an original immobile ship.',
     brief: 'Only one loose starting battery has charge. Tugboat carries it to the empty Patrol boat. Defeat Reef crab first and replace the patrol’s battery with its salvage before facing Shark. That second recovered battery powers the original Freighter. Keep the remaining reserve for the bonus. For the bonus, collect camp green pieces with Freighter and sail to the northwest shallows. Donate its installed battery to a Frog built on the neighboring shore; it must retain at least fifty charge.',
     grid: board([
@@ -319,12 +319,12 @@ export const seaMissions: AuthoredMission[] = [
     rovers: [unit('patrolboat', 'patrol', { x: 9, y: 8 }, 0), unit('freighter', 'freighter', { x: 0, y: 10 }, 0), unit('tug', 'tug', { x: 8, y: 7 }, 55)],
     piles: [pile(6, 7, stock(0, 0, 0, 0, [50])), pile(6, 9, stock(2, 0, 0, 2))],
     goals: [{ id: 'reserve-port', name: 'Reserve port', cell: { x: 12, y: 2 }, unitId: 'freighter', clearEnemies: true }],
-    bonus: { kind: 'arrival', name: 'Last castaway', description: 'Recycle Freighter’s remaining power with a green piece · build Frog ashore with at least 50 charge.', cell: { x: 5, y: 2 }, kinds: ['frog'], minimumCharge: 50 },
+    bonus: { kind: 'arrival', name: 'Last castaway', description: 'Bring Frog to the northwest shore star with at least 50 charge.', cell: { x: 5, y: 2 }, kinds: ['frog'], minimumCharge: 50 },
     enemies: [enemy('water-crab', 'reserve-crab', { x: 12, y: 2 }), enemy('shark', 'reserve-shark', { x: 12, y: 12 })], blueprints: {  }, seed: 4311,
     blueprintPickups: [{ blueprint: 'frog', cell: { x: 11, y: 2 }, afterMain: true }],
   },
   {
-    id: 'three-tides', name: 'Three Tides', goal: 'Open the coast · bring the salvage convoy inland',
+    id: 'three-tides', name: 'Three Tides', goal: 'Clear enemies · bring the loaded convoy to Island reserve',
     challenge: 'Combine tree and rock work and staged naval combat, then choose forward construction by ship or a land convoy through a restored causeway.',
     brief: 'The final reserve is split between camp and enemy salvage. Lift the dock tree, push the boulder north twice, then dig the two cleared dock tiles into water. Unload that dirt in the southern causeway’s two gaps. Patrol boats protect the shipping channel while Warden secures the far shore. A spare Marina kit can replace a lost berth. Either ship a Bulk hauler kit to build on the east bank, or take the existing Forklift over the restored causeway. Reach the inland flag carrying six green pieces and a charged spare battery. The bonus requires Arborbot to bring a living camp tree across the causeway to the eastern grove.',
     grid: board([
@@ -352,7 +352,7 @@ export const seaMissions: AuthoredMission[] = [
     rovers: [unit('arborbot', 'arborbot', { x: 6, y: 7 }), unit('dozer', 'dozer', { x: 7, y: 8 }), unit('scoop', 'scoop', { x: 7, y: 10 }), unit('forklift', 'camp-carrier', { x: 5, y: 10 }), unit('freighter', 'ship', { x: 12, y: 9 }), unit('patrolboat', 'patrol-a', { x: 12, y: 5 }), unit('patrolboat', 'patrol-b', { x: 12, y: 12 }), unit('marina', 'west-marina', { x: 10, y: 11 }), unit('marina', 'east-marina', { x: 17, y: 11 }), unit('pump', 'east-station', { x: 20, y: 10 })],
     piles: [pile(9, 7, recipeSupplies('dumptruck', 100)), pile(9, 8, stock(0, 0, 0, 2)), pile(21, 3, recipeSupplies('warden', 100)), pile(18, 12, recipeSupplies('marina'))],
     goals: [{ id: 'three-tides-reserve', name: 'Island reserve', cell: { x: 22, y: 3 }, kinds: ['dumptruck', 'forklift'], cargo: manifest(0, 0, 0, 6, 1), clearEnemies: true }],
-    bonus: { kind: 'arrival', name: 'Last grove', description: 'Bring a camp tree to the far-island grove through the restored causeway.', cell: { x: 21, y: 16 }, unitId: 'arborbot', carryingTree: true },
+    bonus: { kind: 'arrival', name: 'Last grove', description: 'Bring a living camp tree to the far-island grove with the original Arborbot.', cell: { x: 21, y: 16 }, unitId: 'arborbot', carryingTree: true },
     enemies: [enemy('water-crab', 'final-crab', { x: 15, y: 2 }), enemy('shark', 'final-shark-a', { x: 15, y: 6 }), enemy('shark', 'final-shark-b', { x: 15, y: 15 }), enemy('gator', 'final-gator', { x: 21, y: 9 })],
     blueprints: { dumptruck: 1, warden: 1, marina: 1 }, seed: 4312,
   },

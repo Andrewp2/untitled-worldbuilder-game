@@ -10,9 +10,9 @@ import { openingMissions } from './opening';
 
 export type Mission = { challenge?: string; id: string; name: string; goal: string; brief: string; grid: Grid; rovers: UnitDefinition[]; piles: Pile[]; goals: Goal[]; bonus: BonusObjective; enemies: EnemyDefinition[]; blueprints: BlueprintStock; blueprintPickups?: BlueprintPickup[]; seed: number };
 const originalMissions: Mission[] = [
-  { id: 'bramble-crossing', name: 'Bramble Crossing', goal: 'Clear the crossing · reach the East flag', brief: 'Collect the blue Warden plan beside camp, then build beside the Warden kit. Move it near the Bristleback to fight automatically, then move a rover onto the East flag. Battery charge powers movement and absorbs damage; wrecks leave an empty installed battery. After East, find Arborbot’s plan. Scout’s yellow/green kit plus the camp red/green pieces can build the tree mover. Bring an eastern tree to the garden star.',
+  { id: 'bramble-crossing', name: 'Bramble Crossing', goal: 'Clear the crossing · reach East', brief: 'Collect the blue Warden plan beside camp, then build beside the Warden kit. Move it near the Bristleback to fight automatically, then move a rover onto the East flag. Battery charge powers movement and absorbs damage; wrecks leave an empty installed battery. After East, find Arborbot’s plan. Scout’s yellow/green kit plus the camp red/green pieces can build the tree mover. Bring an eastern tree to the garden star.',
     grid: brambleCrossing, rovers: crossingRovers, piles: crossingPiles, goals: crossingGoals,
-    bonus: { kind: 'arrival', name: 'Bramble garden', description: 'Recycle Scout with camp pieces into Arborbot · bring an eastern tree to the star.', cell: { x: 17, y: 10 }, kinds: ['arborbot'], carryingTree: true },
+    bonus: { kind: 'arrival', name: 'Bramble garden', description: 'Bring an eastern tree to the garden with Arborbot.', cell: { x: 17, y: 10 }, kinds: ['arborbot'], carryingTree: true },
     enemies: crossingEnemies, blueprints: {}, seed: 20260929,
     blueprintPickups: [{ blueprint: 'warden', cell: { x: 3, y: 6 } }, { blueprint: 'arborbot', cell: { x: 16, y: 9 }, afterMain: true }] },
   ...rosterMissions,

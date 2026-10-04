@@ -41,7 +41,12 @@ main { position:relative; }
 .goal-marker { display:flex; color:#b8d5ef; width:20px; height:22px; }
 .goal-marker svg { width:20px; height:20px; }
 .goal-marker.complete { color:#c9ec65; }
-#mission-brief { margin-top:14px; }
+#mission-hints { margin-top:18px; margin-bottom:18px; }
+#mission-hints h3 { margin:0 0 8px; font-size:13px; }
+#revealed-hints p { margin:0 0 10px; font-size:12px; line-height:1.5; color:var(--muted); }
+.hint-button { border:0; border-radius:8px; padding:8px 12px; background:var(--ink); color:var(--paper); font-size:12px; font-weight:800; }
+.hint-button:hover:not(:disabled) { background:#ffdc59; }
+.hint-button:disabled { background:transparent; color:var(--muted); padding-left:0; cursor:default; }
 .bonus-marker { color:#ffdc59; }
 .bonus-marker.complete svg { fill:#ffdc59; }
 .detail-panel { padding:16px; background:var(--paper); font-size:12px; line-height:1.5; border-radius:8px; box-shadow:0 6px 18px #001e4550; }
