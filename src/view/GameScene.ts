@@ -155,10 +155,6 @@ export class GameScene extends Phaser.Scene {
       const flag = toyFlag(this, 66);
       flag.root.setPosition(p.x - 17, p.y).setDepth(worldDepth(p, 'flag'));
       this.flags.push(flag);
-      this.add.text(p.x, p.y + 25, pad.name, {
-        fontFamily: 'Nunito Sans Variable, sans-serif', fontSize: '16px', color: '#ffffff',
-        backgroundColor: '#103c70', padding: { x: 7, y: 3 }, resolution: 2,
-      }).setOrigin(.5, 0).setDepth(STATUS_DEPTH);
     }
     this.syncObjects();
   }
@@ -179,6 +175,8 @@ export class GameScene extends Phaser.Scene {
     if (object?.kind === 'rover') return this.simulation.unit(object.id).cell;
     if (object?.kind === 'relay') return object.cell;
     if (object?.kind === 'enemy') return this.simulation.enemies.find(enemy => enemy.id === object.id)!.cell;
+    const flagIndex = this.flags.findIndex(flag => pictureContains(p, flag.cloth));
+    if (flagIndex >= 0) return this.mission.goals[flagIndex].cell;
     const pile = this.simulation.piles.find(r => {
       const w = this.point(r.cell); return Math.hypot(p.x - w.x, p.y - (w.y - 10)) < 23;
     });
@@ -296,6 +294,8 @@ export class GameScene extends Phaser.Scene {
     if (this.simulation.bonusUnlocked && key(this.hover) === key(this.mission.bonus.cell)) return `${this.mission.bonus.name} · ${this.simulation.bonusReached ? 'Bonus star earned' : this.mission.bonus.description}`;
     const plan = this.simulation.visibleBlueprints.find(plan => key(plan.cell) === key(this.hover!));
     if (plan) return `${blueprintNames[plan.blueprint]} blueprint · move a creature here to collect`;
+    const goal = this.mission.goals.find(goal => key(goal.cell) === key(this.hover!));
+    if (goal) return `${goal.name}${this.simulation.reached.has(goal.id) ? ' · Reached' : ''}`;
     if (this.simulation.relayAt(this.hover)) return `Signal relay · take apart for ${describeCost(recipes.relay)}`;
     const enemy = this.simulation.enemies.find(enemy => key(enemy.cell) === key(this.hover!));
     if (enemy) return `${enemy.name} · ${enemy.health}/${enemy.maxHealth} health${enemy.kind === 'crab' ? ' · cannot cross rough ground' : ''}`;
