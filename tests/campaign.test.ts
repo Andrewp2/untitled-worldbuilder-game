@@ -161,7 +161,8 @@ describe('world map and mission completion', () => {
     const mission = missions[0], storage = memoryStorage(), campaign = new Campaign(ids, storage);
     campaign.start(mission.id);
     const simulation = createMission(mission);
-    expect(simulation.move('duck',{x:4,y:3}).ok).toBe(true); simulation.step(3);
+    const scoutPlan = mission.blueprintPickups!.find(plan => plan.blueprint === 'scout')!;
+    expect(simulation.move('duck', scoutPlan.cell).ok).toBe(true); simulation.step(3);
     simulation.move('duck',{x:4,y:2}); simulation.step(3);
     const scout=simulation.build('scout',{x:4,y:4}); expect(scout.ok).toBe(true);
     if(!scout.ok)throw new Error('Scout kit must build.');
