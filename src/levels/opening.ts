@@ -14,7 +14,7 @@ export const openingMissions: AuthoredMission[] = [
     ]),
     rovers: [unit('duck', 'duck', { x: 3, y: 3 })],
     piles: [pile(3, 4, recipeSupplies('scout', 100))],
-    blueprints: {}, blueprintPickups: [{ cell: { x: 4, y: 3 }, blueprint: 'scout' }],
+    blueprints: {}, blueprintPickups: [{ cell: { x: 2, y: 3 }, blueprint: 'scout' }],
     goals: [{ id: 'shore', name: 'Shore', cell: { x: 10, y: 6 }, kinds: ['scout'] }],
     bonus: { kind: 'arrival', name: 'Duck nest', description: 'Guide the original Duck to its shallow-water nest.', cell: { x: 9, y: 8 }, unitId: 'duck' },
     enemies: [], seed: 5101,

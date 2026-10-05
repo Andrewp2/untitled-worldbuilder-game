@@ -6,7 +6,7 @@ import { build, clearEnemies, go, work } from './helpers/campaign-play';
 
 const solutions: ((s: Simulation) => void)[] = [
   s => {
-    expect(s.blueprints.scout).toBeUndefined(); go(s, 'duck', { x: 4, y: 3 });
+    expect(s.blueprints.scout).toBeUndefined(); go(s, 'duck', { x: 2, y: 3 });
     go(s, 'duck', { x: 4, y: 2 }); const scout = build(s, 'scout', { x: 4, y: 4 });
     go(s, scout, s.setup.goals![0].cell); expect(s.mainComplete).toBe(true);
     expect(s.preview(scout, s.setup.bonus!.cell)).toBeNull(); go(s, 'duck', s.setup.bonus!.cell);

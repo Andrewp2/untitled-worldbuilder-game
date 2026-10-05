@@ -20,3 +20,13 @@ Later player feedback refined target selection: adjacent powered fighters now ta
 - The accepted improvement pass is complete. Wider human playtesting is still needed to judge pacing, discovery and overall fun; scripted solvability does not settle those questions.
 
 The uncommitted matte-shading trial is preserved separately. Native captures include it while published code retains the prior materials.
+
+## Opening mission playthrough · October 4, 2026
+
+Hollow Reach, Parts and Paths, and Siltwater Reach were each completed through the visible controls, including the final bonus popup and saved map star. These were replays in an existing save, not a fresh campaign-unlocking test. Hollow's Scout plan was obscured by the tree canopy; it now sits in clear space beside Duck. Parts and Paths exercised Trailbuggy's rocky route and Dozer opening the lower passage from the far side for the original Scout.
+
+Siltwater exposed two input problems. An immediate Snail crossing order failed while Scoop was still stepping aside. Orders can now plan through a departing friendly unit when no currently clear route exists, while actual movement still waits for exclusive tile reservations. Stationary units, enemies and the departing unit's anticipated stopping tile remain obstacles. The repeated native sequence accepted Snail's order without a second click and reached the main flag.
+
+Building Fish at the center of a shoreline water tile instead snapped to a nearby land pile. Build mode now uses the tile under the pointer without pile snapping. A repeat click at the same water-tile center built Fish successfully; Scoop dug out the crossing and Fish reached the final bonus. Seven focused traffic-order regressions cover waiting without battery drain, both roster orders, a friend stopping or exhausting its battery, blocked destinations, whirlpool reservations and delayed cargo transfer. The campaign checks still solve all 36 main/bonus pairs. These checks establish working inputs and solvability, not final pacing or enjoyment.
+
+The enemy-wreck fix was also checked again in Bramble Crossing through native automatic combat. Captured frames show Bristleback disappearing into smoke with red bricks scattering above it, then a ground pile. Hauler collected two red pieces and a fully charged battery from the wreck. The 103 focused combat, roster and wreckage checks pass; this does not claim a native defeat of every enemy species.

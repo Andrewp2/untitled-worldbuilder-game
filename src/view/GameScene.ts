@@ -177,7 +177,7 @@ export class GameScene extends Phaser.Scene {
     if (object?.kind === 'enemy') return this.simulation.enemies.find(enemy => enemy.id === object.id)!.cell;
     const flagIndex = this.flags.findIndex(flag => pictureContains(p, flag.cloth));
     if (flagIndex >= 0) return this.mission.goals[flagIndex].cell;
-    const pile = this.simulation.piles.find(r => {
+    const pile = this.mode === 'build' ? undefined : this.simulation.piles.find(r => {
       const w = this.point(r.cell); return Math.hypot(p.x - w.x, p.y - (w.y - 10)) < 23;
     });
     const plan = this.simulation.visibleBlueprints.find(plan => { const at = this.point(plan.cell); return Math.hypot(p.x - at.x, (p.y - at.y) * 2) < 28; });

@@ -130,6 +130,20 @@ export class Simulation {
     }
     return blocked;
   }
+  /** A fallback for issuing orders, never permission to enter an occupied tile. */
+  private planningBlockedFor(id: string): Set<string> {
+    const blocked = this.blockedFor(id);
+    const departing = this.units.filter(u => u.id !== id && isMobile(u.kind)
+      && (u.next || u.goal && u.route.length && u.battery >= this.movementCost(u.route[0])));
+    for (const u of departing) {
+      blocked.delete(key(u.cell));
+      if (u.next) { blocked.delete(key(u.next)); blocked.delete(key(movementDestination(this.grid, u.next))); }
+    }
+    // Their destinations still obstruct the route, including an earlier stop
+    // forced by their current charge. Waiting for a parking unit cannot help.
+    for (const u of departing) blocked.add(key(this.routePower(u.id, u.route).lastReachable));
+    return blocked;
+  }
   pileAt(cell: Cell): Pile | undefined { return this.piles.find(p => sameCell(p.cell, cell)); }
   relayAt(cell: Cell): Relay | undefined { return this.relays.find(r => sameCell(r.cell, cell)); }
   private addSupplies(cell: Cell, supplies: Supplies): void {
@@ -182,8 +196,8 @@ export class Simulation {
     u.status = u.battery ? 'idle' : 'depleted';
     return { ok: true };
   }
-  private approach(id: string, target: Cell, eligible: (cell: Cell) => boolean = () => true): Approach | null {
-    const u = this.unit(id), from = u.next ? movementDestination(this.grid, u.next) : u.cell, blocked = this.blockedFor(id);
+  private approach(id: string, target: Cell, eligible: (cell: Cell) => boolean = () => true, blocked = this.blockedFor(id)): Approach | null {
+    const u = this.unit(id), from = u.next ? movementDestination(this.grid, u.next) : u.cell;
     let best: Approach | null = null;
     for (const goal of neighbors(target)) {
       if (!eligible(goal)) continue;
@@ -192,10 +206,14 @@ export class Simulation {
     }
     return best;
   }
+  private plannedApproach(id: string, target: Cell, eligible?: (cell: Cell) => boolean): Approach | null {
+    return this.approach(id, target, eligible)
+      ?? this.approach(id, target, eligible, this.planningBlockedFor(id));
+  }
   cargoOrderPreview(id: string, action: CargoAction, target: Cell): { ok: true; approach: Approach } | { ok: false; reason: string } {
     const reason = this.targetProblem(id, action, target);
     if (reason) return { ok: false, reason };
-    const approach = this.approach(id, target);
+    const approach = this.plannedApproach(id, target);
     if (!approach) return { ok: false, reason: 'Cannot reach a tile beside that spot. Choose another target.' };
     return { ok: true, approach };
   }
@@ -235,7 +253,7 @@ export class Simulation {
   terrainOrderPreview(id: string, action: TerrainAction, target: Cell): { ok: true; approach: Approach } | { ok: false; reason: string } {
     const reason = this.terrainTargetProblem(id, action, target);
     if (reason) return { ok: false, reason };
-    const approach = this.approach(id, target);
+    const approach = this.plannedApproach(id, target);
     return approach ? { ok: true, approach } : { ok: false, reason: 'Cannot reach a tile beside that spot.' };
   }
   orderTerrain(id: string, action: TerrainAction, target: Cell): ActionResult {
@@ -339,7 +357,7 @@ export class Simulation {
   obstacleOrderPreview(id: string, action: ObstacleAction, target: Cell): { ok: true; approach: Approach } | { ok: false; reason: string } {
     const reason = this.obstacleTargetProblem(id, action, target);
     if (reason) return { ok: false, reason };
-    const approach = this.approach(id, target, action === 'push' ? cell => this.canPushFrom(cell, target) : undefined);
+    const approach = this.plannedApproach(id, target, action === 'push' ? cell => this.canPushFrom(cell, target) : undefined);
     return approach ? { ok: true, approach } : { ok: false, reason: 'Cannot reach a working position beside that spot.' };
   }
   orderObstacle(id: string, action: ObstacleAction, target: Cell): ActionResult {
@@ -429,7 +447,10 @@ export class Simulation {
   }
   preview(id: string, goal: Cell): Cell[] | null {
     const u = this.unit(id);
-    return isMobile(u.kind) ? findPath(this.grid, u.next ? movementDestination(this.grid, u.next) : u.cell, movementDestination(this.grid, goal), this.blockedFor(id), unitSpecs[u.kind].mobility) : null;
+    if (!isMobile(u.kind)) return null;
+    const from = u.next ? movementDestination(this.grid, u.next) : u.cell, to = movementDestination(this.grid, goal), mobility = unitSpecs[u.kind].mobility;
+    return findPath(this.grid, from, to, this.blockedFor(id), mobility)
+      ?? findPath(this.grid, from, to, this.planningBlockedFor(id), mobility);
   }
   private movementCost(cell: Cell): number { return terrainAt(this.grid, cell) === 'swamp' ? MOVE_ENERGY * 3 : MOVE_ENERGY; }
   /** Current-charge estimate only: future combat and support can change it.
@@ -448,7 +469,7 @@ export class Simulation {
   move(id: string, goal: Cell): OrderResult {
     const u = this.unit(id);
     if (!isMobile(u.kind) || !walkable(this.grid, goal, unitSpecs[u.kind].mobility)) return { ok: false, reason: 'terrain' };
-    if (this.blockedFor(id).has(key(goal))) return { ok: false, reason: 'occupied' };
+    if (this.blockedFor(id).has(key(goal)) && this.planningBlockedFor(id).has(key(goal))) return { ok: false, reason: 'occupied' };
     const route = this.preview(id, goal);
     if (!route) return { ok: false, reason: 'unreachable' };
     if (route.length && u.battery < this.movementCost(route[0])) return { ok: false, reason: 'energy' };
